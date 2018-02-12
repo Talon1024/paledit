@@ -5,6 +5,10 @@
   text-align: center;
 }
 
+.palmain {
+  display: flex;
+}
+
 .palette {
   display: flex;
   flex-wrap: wrap;
@@ -18,5 +22,5 @@
   font-family: monospace;
   justify-content: center;
   align-items: center;
-  margin: 2px;
+  margin: 1px;
 }

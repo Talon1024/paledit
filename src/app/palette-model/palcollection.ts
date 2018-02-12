@@ -36,6 +36,19 @@ export class Palcollection {
     return palCollection;
   }
 
+  toData():Uint8ClampedArray {
+    let palBytes:Uint8ClampedArray = new Uint8ClampedArray(this.palettes.length * 768);
+    let curPal = 0;
+    for (let pal of this.palettes) {
+      for (let palIdx = 0; palIdx < 768; palIdx++) {
+        palBytes[curPal * 768 + palIdx] = this.palettes[curPal].data[palIdx];
+      }
+
+      curPal += 1;
+    }
+    return palBytes;
+  }
+
   generateFor(tintTypes:string, palette:Palette) {
     // tintTypes is a DSL
     // 0 - normal palette
@@ -91,16 +104,4 @@ export class Palcollection {
     }
   }
 
-  toData():Uint8ClampedArray {
-    var palBytes:Uint8ClampedArray = new Uint8ClampedArray(this.palettes.length * 768);
-    var curPal = 0;
-    var palIdx = 0;
-    for (let pal of this.palettes) {
-      palBytes[curPal * 768 + palIdx] = this.palettes[curPal].data[palIdx];
-
-      curPal += 1;
-      palIdx = 0;
-    }
-    return palBytes;
-  }
 }

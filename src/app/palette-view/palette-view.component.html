@@ -12,9 +12,14 @@
 <div class="palindex" *ngIf="collection">
   Palette {{colPalIndex + 1}}/{{collection.palettes.length}}
 </div>
-<div class="palette">
-  <div *ngFor="let colour of palColours; index as idx"
-       class="palcolour" [ngStyle]="colour.getStyles()">
-    #{{idx}}
+<div class="palmain">
+  <div class="palette">
+    <div *ngFor="let colour of palColours; let idx = index"
+         class="palcolour" [ngStyle]="colour.getStyles()">
+      #{{idx}}
+    </div>
+  </div>
+  <div class="ranges">
+    Range list
   </div>
 </div>
