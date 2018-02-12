@@ -9,12 +9,12 @@
     </div>
   </label>
 </div>
-<div class="palindex">
-  Palette {{}}
+<div class="palindex" *ngIf="collection">
+  Palette {{colPalIndex + 1}}/{{collection.palettes.length}}
 </div>
 <div class="palette">
-  <div *ngFor="let colour of palColours"
+  <div *ngFor="let colour of palColours; index as idx"
        class="palcolour" [ngStyle]="colour.getStyles()">
-    #{{index}}
+    #{{idx}}
   </div>
 </div>

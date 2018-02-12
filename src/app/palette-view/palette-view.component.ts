@@ -12,6 +12,7 @@ import { HttpClient } from '@angular/common/http';
 export class PaletteViewComponent implements OnInit {
 
   private collection:Palcollection;
+  private colPalIndex:number;
   private palette:Palette;
   private palColours:Palcolour[] = new Array();
   private fileReader:FileReader = new FileReader();
@@ -62,8 +63,9 @@ export class PaletteViewComponent implements OnInit {
     });
   }
 
-  setPalIndex(palindex:number) {
-    this.setPalette(this.collection[palindex]);
+  setPalIndex(palIndex:number) {
+    this.colPalIndex = palIndex;
+    this.setPalette(this.collection.palettes[palIndex]);
   }
 
   setPalette(pal:Palette) {
@@ -76,7 +78,9 @@ export class PaletteViewComponent implements OnInit {
   ngOnInit() {
     this.httpClient.get(`${this.assetUrl}/bwpal.pal`, {
       responseType: 'arraybuffer'
-    }).subscribe((resp:ArrayBuffer) => this.setPalette(Palette.fromData(new Uint8ClampedArray(resp))));
+    }).subscribe((resp:ArrayBuffer) => {
+      this.setPalette(Palette.fromData(new Uint8ClampedArray(resp)))
+    });
   }
 
 }
