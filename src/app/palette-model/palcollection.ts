@@ -16,9 +16,23 @@ class PalTintSpec {
 export class Palcollection {
   palettes:Palette[];
 
+  constructor() {
+    this.palettes = new Array();
+  }
+
   static withInitialPal(pal:Palette):Palcollection {
     let palCollection = new Palcollection();
     palCollection.palettes = [pal];
+    return palCollection;
+  }
+
+  static fromData(data:Uint8ClampedArray):Palcollection {
+    let validPals = Math.floor(data.length / 768);
+    let palCollection = new Palcollection();
+    for (let i = 0; i < validPals; i++) {
+      let curSlice = data.slice(i * 768, i * 768 + 768);
+      palCollection.palettes[i] = Palette.fromData(curSlice);
+    }
     return palCollection;
   }
 
@@ -75,16 +89,6 @@ export class Palcollection {
       let tintType = tintRgb[tintLetters.indexOf(tintTypeChar)];
       prevPalLetter = tintTypeChar;
     }
-  }
-
-  static fromData(data:Uint8ClampedArray):Palcollection {
-    let validPals = Math.floor(data.length / 768);
-    let palCollection = new Palcollection();
-    for (let i = 0; i < validPals; i++) {
-      let curSlice = data.slice(i * 768, i * 768 + 768);
-      palCollection.palettes[i] = Palette.fromData(curSlice);
-    }
-    return palCollection;
   }
 
   toData():Uint8ClampedArray {

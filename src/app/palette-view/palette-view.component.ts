@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Palette } from '../palette-model/palette';
 import { Palcolour } from '../palette-model/palcolour';
 import { Palcollection } from '../palette-model/palcollection';
@@ -11,7 +11,7 @@ import { HttpClient } from '@angular/common/http';
 })
 export class PaletteViewComponent implements OnInit {
 
-  @Input() palfile;
+  private collection:Palcollection;
   private palette:Palette;
   private palColours:Palcolour[] = new Array();
   private fileReader:FileReader = new FileReader();
@@ -55,11 +55,15 @@ export class PaletteViewComponent implements OnInit {
       this.fileReader.onload = () => res(this.fileReader.result);
       this.fileReader.onerror = () => rej(this.fileReader.error);
     }).then((data:ArrayBuffer) => {
-      let collection = Palcollection.fromData(new Uint8ClampedArray(data));
-      this.setPalette(collection.palettes[0]);
+      this.collection = Palcollection.fromData(new Uint8ClampedArray(data));
+      this.setPalIndex(0);
     }).catch((error) => {
       console.error(error);
     });
+  }
+
+  setPalIndex(palindex:number) {
+    this.setPalette(this.collection[palindex]);
   }
 
   setPalette(pal:Palette) {

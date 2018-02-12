@@ -9,8 +9,11 @@
     </div>
   </label>
 </div>
+<div class="palindex">
+  Palette {{}}
+</div>
 <div class="palette">
-  <div *ngFor="let colour of palColours; index as index"
+  <div *ngFor="let colour of palColours"
        class="palcolour" [ngStyle]="colour.getStyles()">
     #{{index}}
   </div>
