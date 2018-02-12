@@ -77,6 +77,16 @@ export class Palcollection {
     }
   }
 
+  static fromData(data:Uint8ClampedArray):Palcollection {
+    let validPals = Math.floor(data.length / 768);
+    let palCollection = new Palcollection();
+    for (let i = 0; i < validPals; i++) {
+      let curSlice = data.slice(i * 768, i * 768 + 768);
+      palCollection.palettes[i] = Palette.fromData(curSlice);
+    }
+    return palCollection;
+  }
+
   toData():Uint8ClampedArray {
     var palBytes:Uint8ClampedArray = new Uint8ClampedArray(this.palettes.length * 768);
     var curPal = 0;

@@ -18,11 +18,22 @@ export class Palette {
     return rgb;
   }
 
+  setColour(index:number, colour:Palcolour) {
+    let start = index * 3;
+    this.data[start] = colour.red;
+    this.data[start + 1] = colour.green;
+    this.data[start + 2] = colour.blue;
+  }
+
   static fromData(data:Uint8ClampedArray):Palette {
     let pal = new Palette();
     if (data.length !== 768) return null;
     pal.data = data;
     return pal;
+  }
+
+  toData():Uint8ClampedArray {
+    return this.data;
   }
 
   getLength():number {

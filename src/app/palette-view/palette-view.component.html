@@ -1,3 +1,14 @@
+<div class="dragon-drop"
+    (dragenter)="handleDragEnter($event)"
+    (dragover)="handleDragOver($event)"
+    (drop)="dropPalette($event)">
+  <label>
+    <div>Select palette:</div>
+    <div>
+      <input type="file" (change)="selectPalette($event)">
+    </div>
+  </label>
+</div>
 <div class="palette">
   <div *ngFor="let colour of palColours; index as index"
        class="palcolour" [ngStyle]="colour.getStyles()">

@@ -1,3 +1,9 @@
+.dragon-drop {
+  padding: 30px 0;
+  border: 2px solid #eeeeee;
+  text-align: center;
+}
+
 .palette {
   display: grid;
   grid-template-columns: 32px 1fr;
