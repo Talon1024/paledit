@@ -1,0 +1,16 @@
+.palette {
+  display: grid;
+  grid-template-columns: 32px 1fr;
+  grid-template-rows: 32px 1fr;
+}
+
+.palcolour {
+  display: flex;
+  width: 32px;
+  height: 32px;
+  font-size: 10px;
+  font-family: monospace;
+  justify-content: center;
+  align-items: center;
+  margin: 2px;
+}

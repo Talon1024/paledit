@@ -1,0 +1,6 @@
+<div class="palette">
+  <div *ngFor="let colour of palColours; index as index"
+       class="palcolour" [ngStyle]="colour.getStyles()">
+    #{{index}}
+  </div>
+</div>
