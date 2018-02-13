@@ -1,1 +1,10 @@
 /* You can add global styles to this file, and also import other style files */
+
+.button {
+  border: 1px solid black;
+  border-radius: 6px;
+  margin: 2px;
+  min-width: 20px;
+  display: inline-block;
+  text-align: center;
+}

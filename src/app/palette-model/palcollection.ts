@@ -49,6 +49,10 @@ export class Palcollection {
     return palBytes;
   }
 
+  copyRangesTo(palFrom:number, palTo:number) {
+    this.palettes[palTo].ranges = this.palettes[palFrom].ranges.slice();
+  }
+
   generateFor(tintTypes:string, palette:Palette) {
     // tintTypes is a DSL
     // 0 - normal palette

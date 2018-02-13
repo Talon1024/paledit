@@ -29,3 +29,19 @@
   align-items: center;
   margin: 1px;
 }
+
+.firstPal::before {
+  content: "<<";
+}
+
+.prevPal::before {
+  content: "<";
+}
+
+.nextPal::before {
+  content: ">";
+}
+
+.lastPal::before {
+  content: ">>";
+}

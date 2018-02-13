@@ -10,7 +10,7 @@
   </label>
 </div>
 <div class="palindex" *ngIf="collection">
-  Palette {{colPalIndex + 1}}/{{collection.palettes.length}}
+  <span>Palette <span class="button firstPal"></span><span class="button prevPal"></span>{{colPalIndex + 1}}/{{collection.palettes.length}}<span class="button nextPal"></span><span class="button lastPal"></span> </span>
 </div>
 <div class="palmain">
   <div class="palette">
