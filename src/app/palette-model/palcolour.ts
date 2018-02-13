@@ -1,19 +1,22 @@
-export class Palcolour {
+class Rgbstruct {
   red:number;
   green:number;
   blue:number;
-
-  readonly colourComponents = [ 'red', 'green', 'blue' ];
 
   constructor(red:number = 0, green:number = 0, blue:number = 0) {
     this.red = red & 0xFF;
     this.green = green & 0xFF;
     this.blue = blue & 0xFF;
   }
+}
+
+export class Palcolour extends Rgbstruct {
+
+  static readonly components = [ 'red', 'green', 'blue' ];
 
   toHex():string {
-    let rgb = {red:0, green:0, blue:0};
-    for (let part of this.colourComponents) {
+    let rgb = new Rgbstruct();
+    for (let part of Palcolour.components) {
       rgb[part] = this[part].toString(16);
       if (rgb[part].length < 2) rgb[part] = `0${rgb[part]}`;
     }
@@ -44,23 +47,30 @@ export class Palcolour {
     };
   }
 
-  blend(percentage:number, func:(p:number, c:Palcolour) => Palcolour):Palcolour {
-    return func(percentage, this);
+  static round(colour:Palcolour):Palcolour {
+    for (let part of Palcolour.components) {
+      Math.round(colour[part]);
+    }
+    return colour;
   }
 
-  tint(percentage:number, colour:Palcolour):Palcolour {
+  blend(percentage:number, colour:Palcolour, func:(p:number, c:Palcolour, d:Palcolour) => Palcolour):Palcolour {
+    return Palcolour.round(func(percentage, this, colour));
+  }
+
+  static tint(percentage:number, colour:Palcolour, otherColour:Palcolour):Palcolour {
     const thisPct = 1 - percentage;
     let newColour = new Palcolour();
-    for (let part of this.colourComponents) {
-      newColour[part] = this[part] * thisPct + colour[part] * percentage;
+    for (let part of Palcolour.components) {
+      newColour[part] = colour[part] * thisPct + otherColour[part] * percentage;
     }
     return newColour;
   }
 
-  add(percentage:number, colour:Palcolour):Palcolour {
+  static add(percentage:number, colour:Palcolour, otherColour:Palcolour):Palcolour {
     let newColour = new Palcolour();
-    for (let part of this.colourComponents) {
-      newColour[part] = this[part] + colour[part] * percentage;
+    for (let part of Palcolour.components) {
+      newColour[part] = colour[part] + otherColour[part] * percentage;
     }
     return newColour;
   }
