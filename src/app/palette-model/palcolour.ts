@@ -3,6 +3,8 @@ export class Palcolour {
   green:number;
   blue:number;
 
+  readonly colourComponents = [ 'red', 'green', 'blue' ];
+
   constructor(red:number = 0, green:number = 0, blue:number = 0) {
     this.red = red & 0xFF;
     this.green = green & 0xFF;
@@ -10,12 +12,12 @@ export class Palcolour {
   }
 
   toHex():string {
-    let red = this.red.toString(16);
-    if (red.length < 2) red = `0${red}`;
-    let green = this.green.toString(16);
-    if (green.length < 2) green = `0${green}`;
-    let blue = this.blue.toString(16);
-    if (blue.length < 2) blue = `0${blue}`;
+    let rgb = {red:0, green:0, blue:0};
+    for (let part of this.colourComponents) {
+      rgb[part] = this[part].toString(16);
+      if (rgb[part].length < 2) rgb[part] = `0${rgb[part]}`;
+    }
+    let { red, green, blue } = rgb;
     return `#${red}${green}${blue}`;
   }
 
@@ -48,13 +50,18 @@ export class Palcolour {
 
   tint(percentage:number, colour:Palcolour):Palcolour {
     const thisPct = 1 - percentage;
-    const colourComponents = [ 'red', 'green', 'blue' ];
     let newColour = new Palcolour();
-
-    for (let part of colourComponents) {
+    for (let part of this.colourComponents) {
       newColour[part] = this[part] * thisPct + colour[part] * percentage;
     }
+    return newColour;
+  }
 
+  add(percentage:number, colour:Palcolour):Palcolour {
+    let newColour = new Palcolour();
+    for (let part of this.colourComponents) {
+      newColour[part] = this[part] + colour[part] * percentage;
+    }
     return newColour;
   }
 
