@@ -3,14 +3,14 @@ import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 
 import { AppComponent } from './app.component';
-import { PaletteViewComponent } from './palette-view/palette-view.component';
+import { MainEditorViewComponent } from './main-editor-view/main-editor-view.component';
 
 const assetUrl = "/assets/";
 
 @NgModule({
   declarations: [
     AppComponent,
-    PaletteViewComponent
+    MainEditorViewComponent
   ],
   imports: [
     BrowserModule,

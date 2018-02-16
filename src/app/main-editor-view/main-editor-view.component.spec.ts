@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PaletteViewComponent } from './palette-view.component';
+import { MainEditorViewComponent } from './main-editor-view.component';
 
-describe('PaletteViewComponent', () => {
-  let component: PaletteViewComponent;
-  let fixture: ComponentFixture<PaletteViewComponent>;
+describe('MainEditorViewComponent', () => {
+  let component: MainEditorViewComponent;
+  let fixture: ComponentFixture<MainEditorViewComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ PaletteViewComponent ]
+      declarations: [ MainEditorViewComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(PaletteViewComponent);
+    fixture = TestBed.createComponent(MainEditorViewComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

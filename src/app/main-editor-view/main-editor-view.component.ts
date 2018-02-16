@@ -5,11 +5,11 @@ import { Palcollection } from '../palette-model/palcollection';
 import { HttpClient } from '@angular/common/http';
 
 @Component({
-  selector: 'app-palette-view',
-  templateUrl: './palette-view.component.html',
-  styleUrls: ['./palette-view.component.css']
+  selector: 'app-main-editor-view',
+  templateUrl: './main-editor-view.component.html',
+  styleUrls: ['./main-editor-view.component.css']
 })
-export class PaletteViewComponent implements OnInit {
+export class MainEditorViewComponent implements OnInit {
 
   private collection:Palcollection;
   private colPalIndex:number;
