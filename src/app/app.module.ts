@@ -4,13 +4,15 @@ import { NgModule } from '@angular/core';
 
 import { AppComponent } from './app.component';
 import { MainEditorViewComponent } from './main-editor-view/main-editor-view.component';
+import { PaletteViewComponent } from './palette-view/palette-view.component';
 
 const assetUrl = "/assets/";
 
 @NgModule({
   declarations: [
     AppComponent,
-    MainEditorViewComponent
+    MainEditorViewComponent,
+    PaletteViewComponent
   ],
   imports: [
     BrowserModule,

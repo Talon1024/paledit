@@ -15,6 +15,9 @@ export class Palette {
     rgb.green = this.data[start + 1];
     rgb.blue = this.data[start + 2];
 
+    rgb.index = index;
+    rgb.palette = this;
+
     return rgb;
   }
 

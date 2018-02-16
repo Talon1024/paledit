@@ -15,6 +15,7 @@ export class MainEditorViewComponent implements OnInit {
   private colPalIndex:number;
   private palette:Palette;
   private palColours:Palcolour[] = new Array();
+  private palRows:Array<Palcolour>[];
   private fileReader:FileReader = new FileReader();
 
   private readonly assetUrl = "/assets";
@@ -72,6 +73,21 @@ export class MainEditorViewComponent implements OnInit {
     this.palette = pal;
     for (let i = 0; i < this.palette.getLength(); i++) {
       this.palColours[i] = this.palette.colourAt(i);
+    }
+  }
+
+  updateRows() {
+    // Just in case I decide to load palettes where length != 256
+    let palLength = this.palette.getLength();
+    let rowLength = Math.floor(Math.sqrt(palLength));
+    for (let idx = 0, row = 0, col = 0; idx < palLength; idx++) {
+      if (idx % rowLength == 0) {
+        this.palRows[row] = new Array(rowLength);
+        row += 1;
+        col = 0;
+      }
+      this.palRows[row][col] = this.collection.palettes[this.colPalIndex].colourAt(idx);
+      col += 1;
     }
   }
 

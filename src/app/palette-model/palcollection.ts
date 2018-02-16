@@ -1,5 +1,4 @@
 import { Palette } from './palette';
-import { Palcolour } from './palcolour';
 
 class PalTintColour {
   red:number;
