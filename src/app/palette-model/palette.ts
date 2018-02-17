@@ -7,14 +7,14 @@ export class Palette {
 
   colourAt(index:number):Palcolour {
     if (index > 255 || index < 0) return null;
-
-    let rgb:Palcolour = new Palcolour();
     let start = index * 3;
 
-    rgb.red = this.data[start];
-    rgb.green = this.data[start + 1];
-    rgb.blue = this.data[start + 2];
+    // RGB
+    let red = this.data[start];
+    let green = this.data[start + 1];
+    let blue = this.data[start + 2];
 
+    let rgb:Palcolour = new Palcolour(red, green, blue);
     rgb.index = index;
     rgb.palette = this;
 

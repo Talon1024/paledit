@@ -10,13 +10,8 @@
   background-color: #FFFFAA;
 }
 
-.palmain {
+.palmain, .palrow {
   display: flex;
-}
-
-.palette {
-  display: flex;
-  flex-wrap: wrap;
 }
 
 .palcolour {
@@ -31,7 +26,7 @@
 }
 
 .firstPal::before {
-  content: "<<";
+  content: "«";
 }
 
 .prevPal::before {
@@ -43,5 +38,5 @@
 }
 
 .lastPal::before {
-  content: ">>";
+  content: "»";
 }

@@ -20,7 +20,9 @@ export class MainEditorViewComponent implements OnInit {
 
   private readonly assetUrl = "/assets";
 
-  constructor(private httpClient:HttpClient) {}
+  constructor(private httpClient:HttpClient) {
+    this.palRows = new Array<Array<Palcolour>>();
+  }
 
   private cancelEvent(e:Event) {
     e.stopPropagation();
@@ -74,19 +76,21 @@ export class MainEditorViewComponent implements OnInit {
     for (let i = 0; i < this.palette.getLength(); i++) {
       this.palColours[i] = this.palette.colourAt(i);
     }
+    this.updateRows();
   }
 
   updateRows() {
     // Just in case I decide to load palettes where length != 256
     let palLength = this.palette.getLength();
     let rowLength = Math.floor(Math.sqrt(palLength));
-    for (let idx = 0, row = 0, col = 0; idx < palLength; idx++) {
-      if (idx % rowLength == 0) {
-        this.palRows[row] = new Array(rowLength);
+
+    for (let idx = 0, row = -1, col = 0; idx < palLength; idx++) {
+      if (idx % rowLength === 0) {
         row += 1;
+        this.palRows[row] = new Array(rowLength);
         col = 0;
       }
-      this.palRows[row][col] = this.collection.palettes[this.colPalIndex].colourAt(idx);
+      this.palRows[row][col] = this.palette.colourAt(idx);
       col += 1;
     }
   }

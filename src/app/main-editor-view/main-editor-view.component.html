@@ -14,9 +14,8 @@
 </div>
 <div class="palmain">
   <div class="palette">
-    <div *ngFor="let colour of palColours; let idx = index"
-         class="palcolour" [ngStyle]="colour.getStyles()">
-      #{{idx}}
+    <div *ngFor="let row of palRows" class="palrow">
+      <div *ngFor="let colour of row" class="palcolour" [ngStyle]="colour.getStyles()">#{{colour.index}}</div>
     </div>
   </div>
   <div class="ranges">

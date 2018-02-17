@@ -78,7 +78,7 @@ export class Palcollection {
     ];
 
     const tintGame = tintTypes.toLowerCase();
-    if (tintGame == 'doom' || tintGame == 'heretic') {
+    if (tintGame === 'doom' || tintGame === 'heretic') {
       tintTypes = '0PPPPPPPPBBBBG';
     }
 

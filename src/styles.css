@@ -5,6 +5,9 @@
   border-radius: 6px;
   margin: 2px;
   min-width: 20px;
-  display: inline-block;
-  text-align: center;
+  min-height: 20px;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  font-family: monospace;
 }
