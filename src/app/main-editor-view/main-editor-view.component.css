@@ -40,3 +40,7 @@
 .lastPal::before {
   content: "»";
 }
+
+.palIndexInput {
+  width: 2rem;
+}

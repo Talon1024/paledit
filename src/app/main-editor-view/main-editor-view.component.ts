@@ -12,7 +12,7 @@ import { HttpClient } from '@angular/common/http';
 export class MainEditorViewComponent implements OnInit {
 
   private collection:Palcollection;
-  private colPalIndex:number;
+  private colPalIndex:number; // User input (actually index + 1)
   private palette:Palette;
   private palColours:Palcolour[] = new Array();
   private palRows:Array<Palcolour>[];
@@ -21,6 +21,7 @@ export class MainEditorViewComponent implements OnInit {
   private readonly assetUrl = "/assets";
 
   constructor(private httpClient:HttpClient) {
+    this.colPalIndex = 1;
     this.palRows = new Array<Array<Palcolour>>();
   }
 
@@ -60,7 +61,7 @@ export class MainEditorViewComponent implements OnInit {
       this.fileReader.onerror = () => rej(this.fileReader.error);
     }).then((data:ArrayBuffer) => {
       this.collection = Palcollection.fromData(new Uint8ClampedArray(data));
-      this.setPalIndex(0);
+      this.setPalIndex(1);
     }).catch((error) => {
       console.error(error);
     });
@@ -68,7 +69,28 @@ export class MainEditorViewComponent implements OnInit {
 
   setPalIndex(palIndex:number) {
     this.colPalIndex = palIndex;
-    this.setPalette(this.collection.palettes[palIndex]);
+    let realIndex = palIndex - 1;
+    this.setPalette(this.collection.palettes[realIndex]);
+  }
+
+  nextPal() {
+    if (this.colPalIndex < this.collection.palettes.length) this.colPalIndex += 1;
+    this.setPalIndex(this.colPalIndex);
+  }
+
+  prevPal() {
+    if (this.colPalIndex > 1) this.colPalIndex -= 1;
+    this.setPalIndex(this.colPalIndex);
+  }
+
+  firstPal() {
+    this.colPalIndex = 1;
+    this.setPalIndex(this.colPalIndex);
+  }
+
+  lastPal() {
+    this.colPalIndex = this.collection.palettes.length;
+    this.setPalIndex(this.colPalIndex);
   }
 
   setPalette(pal:Palette) {
@@ -99,8 +121,14 @@ export class MainEditorViewComponent implements OnInit {
     this.httpClient.get(`${this.assetUrl}/bwpal.pal`, {
       responseType: 'arraybuffer'
     }).subscribe((resp:ArrayBuffer) => {
-      this.setPalette(Palette.fromData(new Uint8ClampedArray(resp)))
+      let palette = Palette.fromData(new Uint8ClampedArray(resp));
+      this.collection = Palcollection.withInitialPal(palette);
+      this.setPalIndex(1);
     });
+  }
+
+  savePalette() {
+    console.log(this.palette.toBase64());
   }
 
 }
