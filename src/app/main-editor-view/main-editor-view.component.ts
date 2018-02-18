@@ -14,15 +14,17 @@ export class MainEditorViewComponent implements OnInit {
   private collection:Palcollection;
   private colPalIndex:number; // User input (actually index + 1)
   private palette:Palette;
-  private palColours:Palcolour[] = new Array();
+  private palColours:Palcolour[];
   private palRows:Array<Palcolour>[];
-  private fileReader:FileReader = new FileReader();
+  private fileReader:FileReader;
 
   private readonly assetUrl = "/assets";
 
   constructor(private httpClient:HttpClient) {
     this.colPalIndex = 1;
+    this.palColours = new Array<Palcolour>();
     this.palRows = new Array<Array<Palcolour>>();
+    this.fileReader = new FileReader();
   }
 
   private cancelEvent(e:Event) {
