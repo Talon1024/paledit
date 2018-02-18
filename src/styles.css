@@ -2,7 +2,7 @@
 
 .button {
   border: 1px solid black;
-  border-radius: 6px;
+  border-radius: 8px;
   margin: 2px;
   min-width: 20px;
   min-height: 20px;
@@ -10,4 +10,14 @@
   justify-content: center;
   align-items: center;
   font-family: monospace;
+  background-color: #fff;
+  cursor: pointer;
+}
+
+.button:hover {
+  background-color: #eee;
+}
+
+.button:active {
+  background-color: #ccc;
 }

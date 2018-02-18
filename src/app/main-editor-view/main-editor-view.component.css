@@ -26,19 +26,19 @@
 }
 
 .firstPal::before {
-  content: "«";
+  content: "\AB";
 }
 
 .prevPal::before {
-  content: "<";
+  content: "\2039";
 }
 
 .nextPal::before {
-  content: ">";
+  content: "\203A";
 }
 
 .lastPal::before {
-  content: "»";
+  content: "\BB";
 }
 
 .palIndexInput {
