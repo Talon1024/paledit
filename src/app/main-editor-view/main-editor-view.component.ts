@@ -3,7 +3,6 @@ import { Palette } from '../palette-model/palette';
 import { Palcolour } from '../palette-model/palcolour';
 import { Palcollection } from '../palette-model/palcollection';
 import { HttpClient } from '@angular/common/http';
-import * as base64 from 'base64-js';
 
 @Component({
   selector: 'app-main-editor-view',
