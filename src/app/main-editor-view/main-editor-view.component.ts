@@ -3,6 +3,7 @@ import { Palette } from '../palette-model/palette';
 import { Palcolour } from '../palette-model/palcolour';
 import { Palcollection } from '../palette-model/palcollection';
 import { HttpClient } from '@angular/common/http';
+import * as base64 from 'base64-js';
 
 @Component({
   selector: 'app-main-editor-view',
@@ -130,7 +131,8 @@ export class MainEditorViewComponent implements OnInit {
   }
 
   savePalette() {
-    console.log(this.palette.toBase64());
+    let data = this.collection.toBase64();
+    window.location.replace(`data:application/octet-stream;base64,${data}`);
   }
 
 }

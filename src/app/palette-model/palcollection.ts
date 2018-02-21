@@ -1,4 +1,5 @@
 import { Palette } from './palette';
+import * as base64 from "base64-js";
 
 class PalTintColour {
   red:number;
@@ -46,6 +47,11 @@ export class Palcollection {
       curPal += 1;
     }
     return palBytes;
+  }
+
+  toBase64():String {
+    let data = this.toData();
+    return base64.fromByteArray(data);
   }
 
   copyRangesTo(palFrom:number, palTo:number) {
