@@ -11,12 +11,21 @@
 </div>
 <div class="palmain">
   <div class="palette">
-    <div *ngFor="let row of palRows" class="palrow">
-      <div *ngFor="let colour of row" class="palcolour" [ngStyle]="colour.getStyles()">#{{colour.index}}</div>
-    </div>
+    <div *ngFor="let colour of palColours" class="palcolour" [ngStyle]="colour.getStyles()">#{{colour.index}}</div>
   </div>
   <div class="ranges">
-    Range list
+    <div>
+      <h3>Colour Ranges</h3>
+      <ol>
+        <li>Range list</li>
+        <li>Range list</li>
+        <li>Range list</li>
+        <li>Range list</li>
+      </ol>
+    </div>
+    <div>
+      <h3>Translations</h3>
+    </div>
   </div>
   <div class="pallist" *ngIf="collection">
     <div>Palette: <input type="number"
