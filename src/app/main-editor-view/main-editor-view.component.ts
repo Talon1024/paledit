@@ -15,7 +15,7 @@ export class MainEditorViewComponent implements OnInit {
   private colPalIndex:number; // User input (actually index + 1)
   private palette:Palette;
   private palColours:Palcolour[];
-  private palRows:Array<Palcolour>[];
+  // private palRows:Array<Palcolour>[];
   private fileReader:FileReader;
 
   private readonly assetUrl = "/assets";
@@ -23,7 +23,7 @@ export class MainEditorViewComponent implements OnInit {
   constructor(private httpClient:HttpClient) {
     this.colPalIndex = 1;
     this.palColours = new Array<Palcolour>();
-    this.palRows = new Array<Array<Palcolour>>();
+    // this.palRows = new Array<Array<Palcolour>>();
     this.fileReader = new FileReader();
   }
 
@@ -100,9 +100,10 @@ export class MainEditorViewComponent implements OnInit {
     for (let i = 0; i < this.palette.getLength(); i++) {
       this.palColours[i] = this.palette.colourAt(i);
     }
-    this.updateRows();
+    //this.updateRows();
   }
 
+  /*
   updateRows() {
     // Just in case I decide to load palettes where length != 256
     let palLength = this.palette.getLength();
@@ -118,6 +119,7 @@ export class MainEditorViewComponent implements OnInit {
       col += 1;
     }
   }
+  */
 
   ngOnInit() {
     this.httpClient.get(`${this.assetUrl}/bwpal.pal`, {

@@ -21,15 +21,25 @@
   display: flex;
 }
 
+@keyframes colorHover {
+  from {
+    border-color: #000;
+  }
+  to {
+    border-color: #fff;
+  }
+}
+
 .palcolour {
   display: flex;
-  width: 32px;
-  height: 32px;
-  font-size: 10px;
   font-family: monospace;
   justify-content: center;
   align-items: center;
-  margin: 1px;
+  border: 2px solid rgba(0,0,0,0);
+}
+
+.palcolour:hover {
+  animation: .3s ease-in-out 0s infinite alternate forwards running colorHover;
 }
 
 .firstPal::before {
