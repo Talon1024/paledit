@@ -27,11 +27,17 @@ export class Palcollection {
   }
 
   static fromData(data:Uint8ClampedArray):Palcollection {
-    let validPals = Math.floor(data.length / 768);
+    let validPals = Math.max(1, Math.floor(data.length / 768));
     let palCollection = new Palcollection();
-    for (let i = 0; i < validPals; i++) {
-      let curSlice = data.slice(i * 768, i * 768 + 768);
-      palCollection.palettes[i] = Palette.fromData(curSlice);
+    if (data.byteLength < 768) {
+      let palBytes = new Uint8ClampedArray(768);
+      palBytes.set(data, 0);
+      palCollection.palettes[0] = Palette.fromData(palBytes);
+    } else {
+      for (let i = 0; i < validPals; i++) {
+        let curSlice:Uint8ClampedArray = data.slice(i * 768, i * 768 + 768);
+        palCollection.palettes[i] = Palette.fromData(curSlice);
+      }
     }
     return palCollection;
   }
