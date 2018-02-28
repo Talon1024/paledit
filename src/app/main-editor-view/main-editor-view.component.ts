@@ -136,4 +136,8 @@ export class MainEditorViewComponent implements OnInit {
     window.location.replace(`data:application/octet-stream;base64,${data}`);
   }
 
+  saveColourmap() {
+    console.log("Saving colourmap...");
+  }
+
 }

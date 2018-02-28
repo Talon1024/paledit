@@ -9,28 +9,42 @@
     </div>
   </label>
 </div>
-<div class="palmain">
+<div class="editor-main">
   <div class="palette">
     <div *ngFor="let colour of palColours" class="palcolour" [ngStyle]="colour.getStyles()">#{{colour.index}}</div>
   </div>
-  <div class="ranges">
+  <div class="widget">
+    <h3>Colour Ranges</h3>
+    <ol>
+      <li>Range list</li>
+      <li>Range list</li>
+      <li>Range list</li>
+      <li>Range list</li>
+    </ol>
     <div>
-      <h3>Colour Ranges</h3>
-      <ol>
-        <li>Range list</li>
-        <li>Range list</li>
-        <li>Range list</li>
-        <li>Range list</li>
-      </ol>
+      <button>+</button>
+      <button>-</button>
     </div>
     <div>
-      <h3>Translations</h3>
-      <ol>
-        <li>Translation</li>
-        <li>Translation</li>
-        <li>Translation</li>
-        <li>Translation</li>
-      </ol>
+      <button>Import</button>
+      <button>Export</button>
+    </div>
+  </div>
+  <div class="widget">
+    <h3>Translations</h3>
+    <ol>
+      <li>Translation</li>
+      <li>Translation</li>
+      <li>Translation</li>
+      <li>Translation</li>
+    </ol>
+    <div>
+      <button>+</button>
+      <button>-</button>
+    </div>
+    <div>
+      <button>Import</button>
+      <button>Export</button>
     </div>
   </div>
   <div class="pallist" *ngIf="collection">
@@ -47,4 +61,4 @@
     </div>
   </div>
 </div>
-<button (click)="savePalette()">Save</button>
+<button (click)="savePalette()">Save Palette</button><button (click)="saveColourmap()">Save Colourmap</button>

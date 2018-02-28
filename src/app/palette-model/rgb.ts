@@ -1,4 +1,10 @@
-export class Rgbcolour {
+export interface Rgb {
+  red:number;
+  green:number;
+  blue:number;
+}
+
+export class Rgbcolour implements Rgb {
   red:number;
   green:number;
   blue:number;
