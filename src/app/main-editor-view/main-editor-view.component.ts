@@ -17,6 +17,10 @@ export class MainEditorViewComponent implements OnInit {
   private palColours:Palcolour[];
   // private palRows:Array<Palcolour>[];
   private fileReader:FileReader;
+  private selectedColourIdx:number;
+
+  private ctrlOn:boolean = false;
+  private shiftOn:boolean = false;
 
   private readonly assetUrl = "/assets";
 
@@ -53,6 +57,47 @@ export class MainEditorViewComponent implements OnInit {
     let targ = <HTMLInputElement>(event.target);
     if (targ.files && targ.files.length > 0) {
       this.readPaletteFile(targ.files[0]);
+    }
+  }
+
+  /*
+  // Doesn't seem to work.
+  keyDown(event:KeyboardEvent) {
+    if (event.key === 'Control') {
+      this.ctrlOn = true;
+    }
+    if (event.key === 'Shift') {
+      this.shiftOn = true;
+    }
+  }
+
+  keyUp(event:KeyboardEvent) {
+    if (event.key === 'Control') {
+      this.ctrlOn = false;
+    }
+    if (event.key === 'Shift') {
+      this.shiftOn = false;
+    }
+  }
+  */
+
+  selectPalColour(colourIndex:number) {
+    //console.log(colourIndex);
+    this.palColours[colourIndex].selected = !this.palColours[colourIndex].selected;
+
+    let numSelected = 0;
+    let selectedIndex = 0;
+    for (let colour of this.palColours) {
+      if (!this.ctrlOn && !this.shiftOn && colour.index != colourIndex) {
+        colour.selected = false;
+      }
+      if (colour.selected) {
+        numSelected++;
+        selectedIndex = colour.index;
+      }
+    }
+    if (numSelected === 1) {
+      this.selectedColourIdx = colourIndex;
     }
   }
 

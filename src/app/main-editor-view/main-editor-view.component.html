@@ -9,9 +9,9 @@
     </div>
   </label>
 </div>
-<div class="editor-main">
+<div class="editor-main" (keydown)="keyDown($event)" (keyup)="keyUp($event)">
   <div class="palette">
-    <div *ngFor="let colour of palColours" class="palcolour" [ngStyle]="colour.getStyles()">#{{colour.index}}</div>
+    <div *ngFor="let colour of palColours" class="palcolour" [ngStyle]="colour.getStyles()" [class.selected]="colour.selected" (click)="selectPalColour(colour.index)">#{{colour.index}}<div></div></div>
   </div>
   <div class="widget">
     <h3>Colour Ranges</h3>
@@ -46,6 +46,9 @@
       <button>Import</button>
       <button>Export</button>
     </div>
+  </div>
+  <div class="widget">
+    <h3>Selected colour</h3>
   </div>
   <div class="pallist" *ngIf="collection">
     <div>Palette: <input type="number"

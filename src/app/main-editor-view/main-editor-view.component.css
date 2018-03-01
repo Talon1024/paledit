@@ -30,6 +30,15 @@
   }
 }
 
+@keyframes colorSelected {
+  from {
+    background-color: rgba(0,0,0,.3);
+  }
+  to {
+    background-color: rgba(255,255,255,.3);
+  }
+}
+
 .palcolour {
   display: flex;
   font-family: monospace;
@@ -42,6 +51,19 @@
 
 .palcolour:hover {
   animation: .3s ease-in-out 0s infinite alternate forwards running colorHover;
+}
+
+.palcolour.selected {
+  position: relative;
+}
+
+.palcolour.selected > div {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  animation: .3s ease-in-out 0s infinite alternate forwards running colorSelected;
 }
 
 .firstPal::before {
