@@ -3,6 +3,8 @@ import { Palette } from '../palette-model/palette';
 import { Palcolour } from '../palette-model/palcolour';
 import { Palcollection } from '../palette-model/palcollection';
 import { HttpClient } from '@angular/common/http';
+//import { PaletteIoService } from '../palette-io.service';
+import { KeyboardService } from '../keyboard.service';
 
 @Component({
   selector: 'app-main-editor-view',
@@ -15,19 +17,16 @@ export class MainEditorViewComponent implements OnInit {
   private colPalIndex:number; // User input (actually index + 1)
   private palette:Palette;
   private palColours:Palcolour[];
-  // private palRows:Array<Palcolour>[];
   private fileReader:FileReader;
   private selectedColourIdx:number;
 
-  private ctrlOn:boolean = false;
-  private shiftOn:boolean = false;
+  private keyState:Object = {}
 
   private readonly assetUrl = "/assets";
 
-  constructor(private httpClient:HttpClient) {
+  constructor(private httpClient:HttpClient, private keyboard:KeyboardService) {
     this.colPalIndex = 1;
     this.palColours = new Array<Palcolour>();
-    // this.palRows = new Array<Array<Palcolour>>();
     this.fileReader = new FileReader();
   }
 
@@ -60,27 +59,6 @@ export class MainEditorViewComponent implements OnInit {
     }
   }
 
-  /*
-  // Doesn't seem to work.
-  keyDown(event:KeyboardEvent) {
-    if (event.key === 'Control') {
-      this.ctrlOn = true;
-    }
-    if (event.key === 'Shift') {
-      this.shiftOn = true;
-    }
-  }
-
-  keyUp(event:KeyboardEvent) {
-    if (event.key === 'Control') {
-      this.ctrlOn = false;
-    }
-    if (event.key === 'Shift') {
-      this.shiftOn = false;
-    }
-  }
-  */
-
   selectPalColour(colourIndex:number) {
     //console.log(colourIndex);
     this.palColours[colourIndex].selected = !this.palColours[colourIndex].selected;
@@ -88,7 +66,7 @@ export class MainEditorViewComponent implements OnInit {
     let numSelected = 0;
     let selectedIndex = 0;
     for (let colour of this.palColours) {
-      if (!this.ctrlOn && !this.shiftOn && colour.index != colourIndex) {
+      if (!this.keyState["Control"] && !this.keyState["Shift"] && colour.index != colourIndex) {
         colour.selected = false;
       }
       if (colour.selected) {
@@ -107,9 +85,11 @@ export class MainEditorViewComponent implements OnInit {
       this.fileReader.onload = () => res(this.fileReader.result);
       this.fileReader.onerror = () => rej(this.fileReader.error);
     }).then((data:ArrayBuffer) => {
-      this.collection = Palcollection.fromData(new Uint8ClampedArray(data));
+      let collection = Palcollection.fromData(new Uint8ClampedArray(data));
+      console.log(collection);
+      this.collection = collection;
       this.setPalIndex(1);
-    }).catch((error) => {
+    }).catch((error:any) => {
       console.error(error);
     });
   }
@@ -145,28 +125,15 @@ export class MainEditorViewComponent implements OnInit {
     for (let i = 0; i < this.palette.getLength(); i++) {
       this.palColours[i] = this.palette.colourAt(i);
     }
-    //this.updateRows();
   }
-
-  /*
-  updateRows() {
-    // Just in case I decide to load palettes where length != 256
-    let palLength = this.palette.getLength();
-    let rowLength = Math.floor(Math.sqrt(palLength));
-
-    for (let idx = 0, row = -1, col = 0; idx < palLength; idx++) {
-      if (idx % rowLength === 0) {
-        row += 1;
-        this.palRows[row] = new Array(rowLength);
-        col = 0;
-      }
-      this.palRows[row][col] = this.palette.colourAt(idx);
-      col += 1;
-    }
-  }
-  */
 
   ngOnInit() {
+    this.keyboard.keyStateObservable.subscribe((k:Object) => {
+      let theKeys = Object.entries(k);
+      for (let theKey of theKeys) {
+        this.keyState[theKey[0]] = theKey[1];
+      }
+    });
     this.httpClient.get(`${this.assetUrl}/bwpal.pal`, {
       responseType: 'arraybuffer'
     }).subscribe((resp:ArrayBuffer) => {
