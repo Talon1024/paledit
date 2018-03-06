@@ -3,8 +3,8 @@ import { Palette } from '../palette-model/palette';
 import { Palcolour } from '../palette-model/palcolour';
 import { Palcollection } from '../palette-model/palcollection';
 import { HttpClient } from '@angular/common/http';
-//import { PaletteIoService } from '../palette-io.service';
-import { KeyboardService } from '../keyboard.service';
+import { PaletteIoService } from '../palette-io.service';
+import { KeyboardService, KeyState } from '../keyboard.service';
 
 @Component({
   selector: 'app-main-editor-view',
@@ -24,7 +24,9 @@ export class MainEditorViewComponent implements OnInit {
 
   private readonly assetUrl = "/assets";
 
-  constructor(private httpClient:HttpClient, private keyboard:KeyboardService) {
+  constructor(private httpClient:HttpClient,
+      private paletteIo:PaletteIoService,
+      private keyboard:KeyboardService) {
     this.colPalIndex = 1;
     this.palColours = new Array<Palcolour>();
     this.fileReader = new FileReader();
@@ -79,6 +81,7 @@ export class MainEditorViewComponent implements OnInit {
     }
   }
 
+  // Without PaletteIoService
   readPaletteFile(file) {
     this.fileReader.readAsArrayBuffer(file);
     new Promise((res, rej) => {
@@ -93,6 +96,21 @@ export class MainEditorViewComponent implements OnInit {
       console.error(error);
     });
   }
+
+  // With PaletteIoService
+  // I have no idea why, but I get "this is undefined" if I do it this way. Strangely enough, it doesn't happen if I set every property of PaletteIoService as static.
+  /*
+  readPaletteFile(file) {
+    this.paletteIo.getPaletteFile(file)
+        .subscribe((collection:Palcollection) => {
+      console.log(collection);
+      this.collection = collection;
+      this.setPalIndex(1);
+    }, (error:any) => {
+      console.error(error);
+    });
+  }
+  */
 
   setPalIndex(palIndex:number) {
     this.colPalIndex = palIndex;
@@ -128,11 +146,9 @@ export class MainEditorViewComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.keyboard.keyStateObservable.subscribe((k:Object) => {
-      let theKeys = Object.entries(k);
-      for (let theKey of theKeys) {
-        this.keyState[theKey[0]] = theKey[1];
-      }
+    this.keyboard.keyStateObservable.subscribe((k:KeyState) => {
+      //console.log(k);
+      this.keyState[k.key] = k.state;
     });
     this.httpClient.get(`${this.assetUrl}/bwpal.pal`, {
       responseType: 'arraybuffer'
@@ -144,8 +160,11 @@ export class MainEditorViewComponent implements OnInit {
   }
 
   savePalette() {
-    let data = this.collection.toBase64();
-    window.location.replace(`data:application/octet-stream;base64,${data}`);
+    this.paletteIo.savePalCollection(this.collection).subscribe((data:string) => {
+      location.replace(`data:application/octet-stream;base64,${data}`);
+    }, (error:any) => {
+      console.error(error);
+    });
   }
 
   saveColourmap() {

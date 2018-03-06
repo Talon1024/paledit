@@ -12,7 +12,7 @@ export class PaletteIoService {
   private fileReader:FileReader;
 
   constructor() {
-    this.fileReader = new FileReader();
+    this.fileReader = this.fileReader || new FileReader();
   }
 
   // Wrapper for rxjs bindNodeCallback
@@ -37,6 +37,12 @@ export class PaletteIoService {
   getPaletteFile(file:File):Observable<Palcollection> {
     var observableFile = bindNodeCallback(this.readPaletteFile);
     return observableFile(file);
+  }
+
+  savePalCollection(collection:Palcollection):Observable<string> {
+    let colData = collection.toData();
+    let data64 = base64.fromByteArray(colData);
+    return of(data64);
   }
 
   private handleError<T>(operation:string = 'operation', result?: T) {

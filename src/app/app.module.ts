@@ -26,8 +26,8 @@ const assetUrl = "/assets/";
     ColorPickerModule
   ],
   providers: [
-    KeyboardService
-    //PaletteIoService
+    KeyboardService,
+    PaletteIoService
   ],
   bootstrap: [AppComponent]
 })

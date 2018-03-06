@@ -1,7 +1,6 @@
 import { Rgbcolour } from './rgb';
 import { Palcolour } from "./palcolour";
 import { ColourRange } from "./colour-range";
-import * as base64 from "base64-js";
 
 export class Palette {
   data:Uint8ClampedArray = new Uint8ClampedArray(768);
@@ -44,10 +43,6 @@ export class Palette {
 
   toData():Uint8ClampedArray {
     return this.data;
-  }
-
-  toBase64():String {
-    return base64.fromByteArray(this.data);
   }
 
   getLength():number {

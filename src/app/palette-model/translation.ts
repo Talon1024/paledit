@@ -60,7 +60,7 @@ export class PalTranslation {
     if (PalTranslation.isRgb(this.dest)) {
       let effect = this.dest.effect || "";
       dstPart = `${effect}[${this.dest.start.red},${this.dest.start.green},${this.dest.start.blue}]`;
-      if (effect != '@') {
+      if (!effect.startsWith('@')) { // tint (@amount)
         dstPart += `:[${this.dest.end.red},${this.dest.end.green},${this.dest.end.blue}]`;
       }
     } else {
