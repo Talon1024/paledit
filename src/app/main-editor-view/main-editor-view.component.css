@@ -48,6 +48,7 @@
   min-height: 30px;
   border: 2px solid rgba(0,0,0,0);
   box-sizing: border-box;
+  user-select: none;
 }
 
 .palcolour:hover {
