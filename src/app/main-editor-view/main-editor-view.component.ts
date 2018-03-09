@@ -83,21 +83,34 @@ export class MainEditorViewComponent implements OnInit {
     */
 
     // closures to help selection
-    let deselectAll = () => {
+    var deselectAll = () => {
       for (let colour of this.palColours) colour.selected = false;
     }
 
-    let selectRange = (rStart:number, rEnd:number) => {
+    var selectRange = (rStart:number, rEnd:number) => {
       if (rStart === rEnd) return;
-      let increment = rEnd - rStart;
+
+      let rCur = rStart;
+      let increment = rEnd - rCur;
       if (increment >= 1) {
         increment = 1;
       } else {
         increment = -1;
       }
-      while (rStart !== rEnd) {
-        rStart += increment;
-        this.palColours[rStart].selected = true;
+
+      let allSelected:boolean = this.palColours[rCur].selected;
+      while (rCur !== rEnd) {
+        rCur += increment;
+        if (!(this.palColours[rCur].selected)) allSelected = false;
+      }
+
+      let select = !allSelected;
+      rCur = rStart;
+
+      this.palColours[rCur].selected = select;
+      while (rCur !== rEnd) {
+        rCur += increment;
+        this.palColours[rCur].selected = select;
       }
     }
 
@@ -115,7 +128,8 @@ export class MainEditorViewComponent implements OnInit {
     } else {
       this.palColours[colourIndex].selected = true;
     }
-    this.lastSelectedIndex = colourIndex;
+
+    if (this.palColours[colourIndex].selected) this.lastSelectedIndex = colourIndex;
   }
 
   getPalSelectionIndices():number[] {
