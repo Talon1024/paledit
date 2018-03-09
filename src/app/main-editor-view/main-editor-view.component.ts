@@ -95,9 +95,9 @@ export class MainEditorViewComponent implements OnInit {
       } else {
         increment = -1;
       }
-      while (rStart != rEnd) {
-        this.palColours[rStart].selected = true;
+      while (rStart !== rEnd) {
         rStart += increment;
+        this.palColours[rStart].selected = true;
       }
     }
 
