@@ -18,7 +18,8 @@ export class MainEditorViewComponent implements OnInit {
   private palette:Palette;
   private palColours:Palcolour[];
   private fileReader:FileReader;
-  private selectedColourIdx:number;
+  private lastSelectedIndex:number = -1;
+  private selectedIndices:number[];
 
   private keyState:Object = {}
 
@@ -62,23 +63,75 @@ export class MainEditorViewComponent implements OnInit {
   }
 
   selectPalColour(colourIndex:number) {
-    //console.log(colourIndex);
-    this.palColours[colourIndex].selected = !this.palColours[colourIndex].selected;
+    /*
+    If nothing is selected:
+    select the colour
 
-    let numSelected = 0;
-    let selectedIndex = 0;
+    If a colour is selected:
+      If shift is being held down:
+        If all colours from the last index from the new index are selected:
+          deselect all of the colours from the last index to the given index.
+        otherwise:
+          select from the last index to the given index.
+      If ctrl is being held down:
+        if the colour is selected:
+          deselect the colour
+        otherwise:
+          select the colour.
+    otherwise:
+      deselect the previous selected colour.
+      select the colour
+    */
+
+    // closures to help selection
+    function deselectAll() {
+      for (let colour of this.palColours) colour.selected = false;
+    }
+
+    function selectRange(rStart:number, rEnd:number) {
+      let increment = rEnd - rStart;
+      if (increment >= 1) {
+        increment = 1;
+      } else {
+        increment = -1;
+      }
+      while (rStart != rEnd) {
+        this.palColours[rStart].selected = true;
+        rStart += increment;
+      }
+    }
+
+    if (this.lastSelectedIndex >= 0) {
+      if (this.keyState["Shift"]) {
+        selectRange(this.lastSelectedIndex, colourIndex);
+      } else if (this.keyState["Control"]) {
+        this.palColours[colourIndex].selected = !this.palColours[colourIndex].selected;
+      } else if (this.keyState["Control"] && this.keyState["Shift"]) {
+        // Unknown
+      } else if (!this.keyState["Control"] && !this.keyState["Shift"]) {
+        deselectAll();
+        this.palColours[colourIndex].selected = true;
+      }
+    } else {
+      this.palColours[colourIndex].selected = true;
+    }
+    this.lastSelectedIndex = colourIndex;
+  }
+
+  getPalSelectionIndices():number[] {
+    let indices:number[] = [];
     for (let colour of this.palColours) {
-      if (!this.keyState["Control"] && !this.keyState["Shift"] && colour.index != colourIndex) {
-        colour.selected = false;
-      }
-      if (colour.selected) {
-        numSelected++;
-        selectedIndex = colour.index;
-      }
+      if (colour.selected) indices.push(colour.index);
     }
-    if (numSelected === 1) {
-      this.selectedColourIdx = colourIndex;
+    return indices;
+  }
+
+  getPalSelection():Palcolour[] {
+    let colours:Palcolour[] = [];
+    for (let idx of this.selectedIndices) {
+      colours.push(this.palette.colourAt(idx));
     }
+    return colours;
   }
 
   // Without PaletteIoService
