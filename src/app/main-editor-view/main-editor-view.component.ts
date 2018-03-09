@@ -19,7 +19,6 @@ export class MainEditorViewComponent implements OnInit {
   private palColours:Palcolour[];
   private fileReader:FileReader;
   private lastSelectedIndex:number = -1;
-  private selectedIndices:number[];
 
   private keyState:Object = {}
 
@@ -128,8 +127,8 @@ export class MainEditorViewComponent implements OnInit {
 
   getPalSelection():Palcolour[] {
     let colours:Palcolour[] = [];
-    for (let idx of this.selectedIndices) {
-      colours.push(this.palette.colourAt(idx));
+    for (let colour of this.palColours) {
+      if (colour.selected) colours.push(colour);
     }
     return colours;
   }
