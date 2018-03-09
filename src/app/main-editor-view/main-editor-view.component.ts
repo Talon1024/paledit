@@ -83,11 +83,12 @@ export class MainEditorViewComponent implements OnInit {
     */
 
     // closures to help selection
-    function deselectAll() {
+    let deselectAll = () => {
       for (let colour of this.palColours) colour.selected = false;
     }
 
-    function selectRange(rStart:number, rEnd:number) {
+    let selectRange = (rStart:number, rEnd:number) => {
+      if (rStart === rEnd) return;
       let increment = rEnd - rStart;
       if (increment >= 1) {
         increment = 1;
@@ -101,9 +102,9 @@ export class MainEditorViewComponent implements OnInit {
     }
 
     if (this.lastSelectedIndex >= 0) {
-      if (this.keyState["Shift"]) {
+      if (this.keyState["Shift"] && !this.keyState["Control"]) {
         selectRange(this.lastSelectedIndex, colourIndex);
-      } else if (this.keyState["Control"]) {
+      } else if (this.keyState["Control"] && !this.keyState["Shift"]) {
         this.palColours[colourIndex].selected = !this.palColours[colourIndex].selected;
       } else if (this.keyState["Control"] && this.keyState["Shift"]) {
         // Unknown
