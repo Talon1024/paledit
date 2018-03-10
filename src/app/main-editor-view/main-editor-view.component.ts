@@ -97,13 +97,16 @@ export class MainEditorViewComponent implements OnInit {
       } else {
         increment = -1;
       }
+      rCur += increment;
 
+      // Are all these colours selected or not?
       let allSelected:boolean = this.palColours[rCur].selected;
       while (rCur !== rEnd) {
         rCur += increment;
         if (!(this.palColours[rCur].selected)) allSelected = false;
       }
 
+      // Select (or deselect) all the colours
       let select = !allSelected;
       rCur = rStart;
 
@@ -129,7 +132,7 @@ export class MainEditorViewComponent implements OnInit {
       this.palColours[colourIndex].selected = true;
     }
 
-    if (this.palColours[colourIndex].selected) this.lastSelectedIndex = colourIndex;
+    this.lastSelectedIndex = colourIndex;
   }
 
   getPalSelectionIndices():number[] {
