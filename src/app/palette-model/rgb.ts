@@ -17,6 +17,31 @@ export class Rgbcolour implements Rgb {
     this.blue = blue & 0xFF;
   }
 
+  static fromHSV(hue:number, saturation:number, value:number):Rgbcolour {
+    if (hue >= 360 || hue < 0) return new Rgbcolour(0,0,0);
+
+    // https://en.wikipedia.org/wiki/HSL_and_HSV#From_HSV
+    let chroma = value * saturation;
+    let colourSection = hue / 60.0;
+    let x = chroma * (1 - Math.abs(colourSection % 2 - 1));
+
+    let hueSections = new Array<Rgb>(6);
+    hueSections[0] = {red: chroma, green: x, blue: 0};
+    hueSections[1] = {red: x, green: chroma, blue: 0};
+    hueSections[2] = {red: 0, green: chroma, blue: x};
+    hueSections[3] = {red: 0, green: x, blue: chroma};
+    hueSections[4] = {red: x, green: 0, blue: chroma};
+    hueSections[5] = {red: chroma, green: 0, blue: x};
+
+    let m = value - chroma;
+    let colour = hueSections[Math.floor(colourSection)];
+    return new Rgbcolour(colour.red + m, colour.green + m, colour.blue + m);
+  }
+
+  getHue():number {
+    return 0;
+  }
+
   toHex():string {
     let rgb = new Rgbcolour();
     for (let part of Rgbcolour.components) {
