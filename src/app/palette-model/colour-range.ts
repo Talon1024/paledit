@@ -12,4 +12,12 @@ export class ColourRange {
     }
     return indices;
   }
+
+  getLength():number {
+    let length = 0;
+    for (let subRange of this.subRanges) {
+      length += subRange.length();
+    }
+    return length;
+  }
 }
