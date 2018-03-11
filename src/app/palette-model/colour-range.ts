@@ -16,7 +16,7 @@ export class ColourRange {
   getLength():number {
     let length = 0;
     for (let subRange of this.subRanges) {
-      length += subRange.length();
+      length += subRange.getLength();
     }
     return length;
   }
