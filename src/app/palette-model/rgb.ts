@@ -39,6 +39,17 @@ export class Rgbcolour implements Rgb {
   }
 
   getHue():number {
+    // WIP!!
+    let lowest = Math.min(this.red, this.green, this.blue);
+    let lowestComponent = [this.red, this.green, this.blue].findIndex(e => e === lowest);
+
+    let hueSections = new Array(6);
+    hueSections[0] = [2, 1, 0];
+    hueSections[1] = [1, 2, 0];
+    hueSections[2] = [0, 2, 1];
+    hueSections[3] = [0, 1, 2];
+    hueSections[4] = [1, 0, 2];
+    hueSections[5] = [2, 0, 1];
     return 0;
   }
 
@@ -77,7 +88,7 @@ export class Rgbcolour implements Rgb {
 
   static round(colour:Rgbcolour):Rgbcolour {
     for (let part of Rgbcolour.components) {
-      Math.round(colour[part]);
+      colour[part] = Math.round(colour[part]);
     }
     return colour;
   }
