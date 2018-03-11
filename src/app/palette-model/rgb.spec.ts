@@ -4,12 +4,12 @@ describe('Rgbcolour', () => {
   it('should create an instance', () => {
     expect(new Rgbcolour()).toBeTruthy();
   });
-  it('should create a 50% tint between red and blue', () => {
+  it('should add 100% red and 50% blue together to create pink', () => {
     let red = new Rgbcolour(255);
-    let blue = new Rgbcolour(0, 0, 255);
-    let expected = new Rgbcolour(128, 0, 128);
+    let blue = new Rgbcolour(0, 0, 128);
+    let expected = new Rgbcolour(255, 0, 128);
 
-    let blended = red.blend(.5, blue, Rgbcolour.tint);
+    let blended = red.blend(1, blue, Rgbcolour.add);
     console.log(blended);
     expect(blended.equals(expected)).toBe(true);
   });
