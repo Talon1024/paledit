@@ -60,4 +60,15 @@ describe('PalTranslation', () => {
     let expected = "16:32=@39[255,140,0]";
     expect(trans.toString()).toEqual(expected);
   });
+  it('should parse a palette translation', () => {
+    let palTrans = "16:32=100:128";
+
+    let expected = new PalTranslation();
+    expected.source = new ColourSubRange(16, 32);
+    expected.dest = new ColourSubRange(100, 128);
+
+    let parsed = PalTranslation.parse(palTrans);
+
+    expect(parsed).toEqual(expected);
+  });
 });

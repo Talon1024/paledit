@@ -28,6 +28,7 @@ export class PalTranslation {
     let match = RE_PAL.exec(matchStr);
     if (matchStr[RE_PAL.lastIndex] != '=') return result;
 
+    result.source = new ColourSubRange();
     result.source.start = Number.parseInt(match[1], 10);
     result.source.end = Number.parseInt(match[2], 10);
 
