@@ -11,10 +11,16 @@ export class Rgbcolour implements Rgb {
 
   static readonly components = [ 'red', 'green', 'blue' ];
 
-  constructor(red:number = 0, green:number = 0, blue:number = 0) {
-    this.red = red & 0xFF;
-    this.green = green & 0xFF;
-    this.blue = blue & 0xFF;
+  constructor(redOrRgb:number | Rgb = 0, green:number = 0, blue:number = 0) {
+    if ((<Rgb>redOrRgb).red && (<Rgb>redOrRgb).green && (<Rgb>redOrRgb).blue) {
+      this.red = (<Rgb>redOrRgb).red;
+      this.green = (<Rgb>redOrRgb).green;
+      this.blue = (<Rgb>redOrRgb).blue;
+    } else {
+      this.red = (<number>redOrRgb) & 0xFF;
+      this.green = green & 0xFF;
+      this.blue = blue & 0xFF;
+    }
   }
 
   static fromHSV(hue:number, saturation:number, value:number):Rgbcolour {
