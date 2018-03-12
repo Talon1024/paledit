@@ -71,4 +71,18 @@ describe('PalTranslation', () => {
 
     expect(parsed).toEqual(expected);
   });
+  it('should parse a direct palette to RGB translation', () => {
+    let transtr = "16:32=[100,140,255]:[255,160,0]";
+
+    let expected = new PalTranslation();
+    expected.source = new ColourSubRange(16, 32);
+    expected.dest = new Rgbrange();
+    expected.dest.start = {red: 100, green: 140, blue: 255};
+    expected.dest.end = {red: 255, green: 160, blue: 0};
+    expected.dest.effect = "";
+
+    let parsed = PalTranslation.parse(transtr);
+
+    expect(parsed).toEqual(expected);
+  });
 });

@@ -61,17 +61,18 @@ export class PalTranslation {
       if (match != null) {
         result.dest.start = PalTranslation.matchToRgb(match, useFloat);
       } else {
-        console.error("Invalid RGB values!");
+        console.error("Invalid starting RGB values!");
         return;
       }
 
       if (endColour) {
         matchStr = matchStr.substring(match[0].length + 1);
+        RE_RGB.lastIndex = 0;
         match = RE_RGB.exec(matchStr);
         if (match != null) {
           result.dest.end = PalTranslation.matchToRgb(match, useFloat);
         } else {
-          console.error("Invalid RGB values!");
+          console.error("Invalid ending RGB values!");
           return;
         }
       }
