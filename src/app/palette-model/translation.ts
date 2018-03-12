@@ -18,6 +18,15 @@ export class PalTranslation {
   dest:ColourSubRange | Rgbrange;
 
   static parse(transtr:string):PalTranslation {
+    function matchToRgb(match:string[], useFloat:boolean):Rgb {
+      let conv = useFloat ? "parseFloat" : "parseInt";
+      return {
+        red: Number[conv](match[1], 10),
+        green: Number[conv](match[2], 10),
+        blue: Number[conv](match[3], 10)
+      };
+    }
+
     let result = new PalTranslation();
     let RE_PAL = /(\d+):(\d+)/g;
     let RE_RGB = /\[([\d.]+),([\d.]+),([\d.]+)\]/g;
@@ -57,7 +66,7 @@ export class PalTranslation {
       match = RE_RGB.exec(matchStr);
 
       if (match != null) {
-        result.dest.start = PalTranslation.matchToRgb(match, useFloat);
+        result.dest.start = matchToRgb(match, useFloat);
       } else {
         console.error("Invalid starting RGB values!");
         return;
@@ -68,7 +77,7 @@ export class PalTranslation {
         RE_RGB.lastIndex = 0;
         match = RE_RGB.exec(matchStr);
         if (match != null) {
-          result.dest.end = PalTranslation.matchToRgb(match, useFloat);
+          result.dest.end = matchToRgb(match, useFloat);
         } else {
           console.error("Invalid ending RGB values!");
           return;
@@ -77,15 +86,6 @@ export class PalTranslation {
     }
 
     return result;
-  }
-
-  static matchToRgb(match:string[], useFloat:boolean):Rgb {
-    let conv = useFloat ? "parseFloat" : "parseInt";
-    return {
-      red: Number[conv](match[1], 10),
-      green: Number[conv](match[2], 10),
-      blue: Number[conv](match[3], 10)
-    };
   }
 
   static isRgb(range: Rgbrange | ColourSubRange):range is Rgbrange {
