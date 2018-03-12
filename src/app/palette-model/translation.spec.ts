@@ -7,6 +7,7 @@ describe('PalTranslation', () => {
     expect(new PalTranslation()).toBeTruthy();
   });
   it('should stringify a palette translation correctly', () => {
+    // https://zdoom.org/wiki/Translation#Palette_range_to_palette_range
     let trans = new PalTranslation();
     trans.source = new ColourSubRange(16, 32);
     trans.dest = new ColourSubRange(100, 128);
@@ -15,6 +16,7 @@ describe('PalTranslation', () => {
     expect(trans.toString()).toEqual(expected);
   });
   it('should stringify a direct Palette to RGB translation correctly', () => {
+    // https://zdoom.org/wiki/Translation#Direct_color_translations
     let trans = new PalTranslation();
     trans.source = new ColourSubRange(16, 32);
     trans.dest = new Rgbrange();
@@ -25,6 +27,7 @@ describe('PalTranslation', () => {
     expect(trans.toString()).toEqual(expected);
   });
   it('should stringify a desaturated Palette to RGB translation correctly', () => {
+    // https://zdoom.org/wiki/Translation#Desaturated_color_translations
     let trans = new PalTranslation();
     trans.source = new ColourSubRange(16, 32);
     trans.dest = new Rgbrange();
@@ -36,6 +39,7 @@ describe('PalTranslation', () => {
     expect(trans.toString()).toEqual(expected);
   });
   it('should stringify a blended Palette to RGB translation correctly', () => {
+    // https://zdoom.org/wiki/Translation#Blended_translations
     let trans = new PalTranslation();
     trans.source = new ColourSubRange(16, 32);
     trans.dest = new Rgbrange();
@@ -43,6 +47,17 @@ describe('PalTranslation', () => {
     trans.dest.effect = "#";
 
     let expected = "16:32=#[255,140,0]";
+    expect(trans.toString()).toEqual(expected);
+  });
+  it('should stringify a tinted Palette to RGB translation correctly', () => {
+    // https://zdoom.org/wiki/Translation#Tinted_translations
+    let trans = new PalTranslation();
+    trans.source = new ColourSubRange(16, 32);
+    trans.dest = new Rgbrange();
+    trans.dest.start = new Rgbcolour(255, 140, 0);
+    trans.dest.effect = "@39";
+
+    let expected = "16:32=@39[255,140,0]";
     expect(trans.toString()).toEqual(expected);
   });
 });
