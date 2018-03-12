@@ -21,8 +21,6 @@ export class PalTranslation {
     let result = new PalTranslation();
     let RE_PAL = /(\d+):(\d+)/g;
     let RE_RGB = /\[(\d+),(\d+),(\d+)\]/g;
-    let RE_TINT = /@\d+/;
-    let parserPos = 0;
     let matchStr = transtr;
 
     let match = RE_PAL.exec(matchStr);
