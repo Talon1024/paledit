@@ -4,7 +4,7 @@ import { Rgb } from './rgb';
 export class Rgbrange {
   start:Rgb;
   end?:Rgb; // Optional ONLY for tint
-  effect?:string; // %, #, @
+  effect?:string = ""; // %, #, @<number>
 
   constructor(start:Rgb = null, end:Rgb = null, effect:string = "") {
     this.start = start;
@@ -20,7 +20,7 @@ export class PalTranslation {
   static parse(transtr:string):PalTranslation {
     let result = new PalTranslation();
     let RE_PAL = /(\d+):(\d+)/g;
-    let RE_RGB = /\[(\d+),(\d+),(\d+)\]/g;
+    let RE_RGB = /\[([\d.]+),([\d.]+),([\d.]+)\]/g;
     let matchStr = transtr;
 
     let match = RE_PAL.exec(matchStr);

@@ -85,4 +85,44 @@ describe('PalTranslation', () => {
 
     expect(parsed).toEqual(expected);
   });
+  it('should parse a desaturated palette to RGB translation', () => {
+    let transtr = "16:32=%[0.2,0.4,1.0]:[1.0,0.4,0.0]";
+
+    let expected = new PalTranslation();
+    expected.source = new ColourSubRange(16, 32);
+    expected.dest = new Rgbrange();
+    expected.dest.start = {red: 0.2, green: 0.4, blue: 1.0};
+    expected.dest.end = {red: 1.0, green: 0.4, blue: 0.0};
+    expected.dest.effect = "%";
+
+    let parsed = PalTranslation.parse(transtr);
+
+    expect(parsed).toEqual(expected);
+  });
+  it('should parse a blended palette to RGB translation', () => {
+    let transtr = "16:32=#[255,140,0]";
+
+    let expected = new PalTranslation();
+    expected.source = new ColourSubRange(16, 32);
+    expected.dest = new Rgbrange();
+    expected.dest.start = {red: 255, green: 140, blue: 0};
+    expected.dest.effect = "#";
+
+    let parsed = PalTranslation.parse(transtr);
+
+    expect(parsed).toEqual(expected);
+  });
+  it('should parse a tinted palette to RGB translation', () => {
+    let transtr = "16:32=@39[255,140,0]";
+
+    let expected = new PalTranslation();
+    expected.source = new ColourSubRange(16, 32);
+    expected.dest = new Rgbrange();
+    expected.dest.start = {red: 255, green: 140, blue: 0};
+    expected.dest.effect = "@39";
+
+    let parsed = PalTranslation.parse(transtr);
+
+    expect(parsed).toEqual(expected);
+  });
 });
