@@ -33,7 +33,7 @@ export class Gradient {
     this.stops.sort(function (a:GradientStop, b:GradientStop):number {
       return a.position - b.position;
     });
-    this.updateStopIdxs();
+    if (this.palRange) this.updateStopIdxs();
   }
 
   updateStopIdxs() {
@@ -44,10 +44,17 @@ export class Gradient {
   }
 
   colourAt(idx:number):Rgbcolour {
-    let colour = new Rgbcolour();
-    let length = this.palRange.getLength();
-    let prevStop:GradientStop;
-    let nextStop:GradientStop;
+    //let length = this.palRange.getLength();
+    let nextStopIdx = this.stopIdxs.find((e) => e >= idx);
+    let prevStopIdx = this.stopIdxs[this.stopIdxs.indexOf(nextStopIdx) - 1];
+    let nextStop:GradientStop = this.stops[nextStopIdx];
+    let prevStop:GradientStop = this.stops[prevStopIdx];
+
+    let stopIdxDiff = nextStopIdx - prevStopIdx;
+    let blendFactor = idx / stopIdxDiff;
+
+    let colour = new Rgbcolour(prevStop.colour);
+    colour = colour.blend(blendFactor, new Rgbcolour(nextStop.colour), Rgbcolour.tint);
 
     return colour;
   }
