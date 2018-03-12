@@ -4,6 +4,14 @@ import { ColourRange } from '../palette-model/colour-range';
 export class GradientStop {
   position:number; // 0.0 to 1.0
   colour:Rgb;
+
+  constructor(position:number, colour:Rgb) {
+    if (position > 1.0 || position < 0.0)
+      throw new TypeError('Position must be between 0.0 and 1.0 inclusive');
+
+    this.position = position;
+    this.colour = colour;
+  }
 }
 
 export class Gradient {
@@ -38,6 +46,8 @@ export class Gradient {
   colourAt(idx:number):Rgbcolour {
     let colour = new Rgbcolour();
     let length = this.palRange.getLength();
+    let prevStop:GradientStop;
+    let nextStop:GradientStop;
 
     return colour;
   }

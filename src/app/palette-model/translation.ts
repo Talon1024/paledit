@@ -41,29 +41,52 @@ export class PalTranslation {
       result.dest = new ColourSubRange();
       result.dest.start = Number.parseInt(match[1], 10);
       result.dest.end = Number.parseInt(match[2], 10);
-    } else if (RE_RGB.test(matchStr)) {
-      RE_RGB.lastIndex = 0;
-      match = RE_RGB.exec(matchStr);
+    } else {
+      let effect = matchStr.substring(0, matchStr.indexOf("["));
+      let endColour:boolean = false;
+      let useFloat:boolean = false;
+
       result.dest = new Rgbrange();
-      let effect = "";
-      if (RE_TINT.test(matchStr)) {
-        RE_TINT.lastIndex = 0;
-        let match = RE_TINT.exec(matchStr);
-        effect = match[0];
-        result.dest.effect = match[0];
+      if (!effect.startsWith("@") && !(effect === "#") && !(effect === "%") && !(effect === "")) {
+        console.warn(`Unknown effect: ${effect}`);
+      } else if (effect === "%" || effect === "") {
+        endColour = true;
+      }
+      if (effect === "%") useFloat = true;
+      result.dest.effect = effect;
+
+      matchStr = matchStr.substring(effect.length);
+      match = RE_RGB.exec(matchStr);
+
+      if (match != null) {
+        result.dest.start = PalTranslation.matchToRgb(match, useFloat);
       } else {
-        if (matchStr.startsWith("%") || matchStr.startsWith("#")) {
-          effect = matchStr[0];
-          result.dest.effect = matchStr[0];
+        console.error("Invalid RGB values!");
+        return;
+      }
+
+      if (endColour) {
+        matchStr = matchStr.substring(match[0].length + 1);
+        match = RE_RGB.exec(matchStr);
+        if (match != null) {
+          result.dest.end = PalTranslation.matchToRgb(match, useFloat);
+        } else {
+          console.error("Invalid RGB values!");
+          return;
         }
       }
-      matchStr = matchStr.substring(effect.length);
-    } else {
-      console.warn("Invalid destination for translation!");
-      return result;
     }
 
     return result;
+  }
+
+  static matchToRgb(match:string[], useFloat:boolean):Rgb {
+    let conv = useFloat ? "parseFloat" : "parseInt";
+    return {
+      red: Number[conv](match[1], 10),
+      green: Number[conv](match[2], 10),
+      blue: Number[conv](match[3], 10)
+    };
   }
 
   static isRgb(range: Rgbrange | ColourSubRange):range is Rgbrange {
