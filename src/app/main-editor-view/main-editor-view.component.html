@@ -3,10 +3,8 @@
     (dragover)="handleDragOver($event)"
     (drop)="dropPalette($event)">
   <label>
-    <div>Select a PLAYPAL, or drag and drop one here.</div>
-    <div>
-      <input type="file" (change)="selectPalette($event)">
-    </div>
+    <p>Select a PLAYPAL, or drag and drop one here.</p>
+    <p><input type="file" (change)="selectPalette($event)"></p>
   </label>
 </div>
 <div class="editor-main" (keydown)="keyDown($event)" (keyup)="keyUp($event)">

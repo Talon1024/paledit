@@ -5,6 +5,7 @@ import { Palcollection } from '../palette-model/palcollection';
 import { HttpClient } from '@angular/common/http';
 import { PaletteIoService } from '../palette-io.service';
 import { KeyboardService, KeyState } from '../keyboard.service';
+import { SettingsService } from '../settings.service';
 
 @Component({
   selector: 'app-main-editor-view',
@@ -26,7 +27,8 @@ export class MainEditorViewComponent implements OnInit {
 
   constructor(private httpClient:HttpClient,
       private paletteIo:PaletteIoService,
-      private keyboard:KeyboardService) {
+      private keyboard:KeyboardService,
+      private settings:SettingsService) {
     this.colPalIndex = 1;
     this.palColours = new Array<Palcolour>();
     this.fileReader = new FileReader();
@@ -216,7 +218,7 @@ export class MainEditorViewComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.keyboard.keyStateObservable.subscribe((k:KeyState) => {
+    this.keyboard.observeKeyboard().subscribe((k:KeyState) => {
       //console.log(k);
       this.keyState[k.key] = k.state;
     });

@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, Observer } from 'rxjs';
+import { TeardownLogic } from 'rxjs/Subscription';
 
 export class KeyState {
   event:KeyboardEvent;
@@ -16,19 +17,22 @@ export class KeyState {
 @Injectable()
 export class KeyboardService {
 
-  keyStateObservable:Observable<KeyState>;
+  constructor() {}
 
-  constructor() {
+  observeKeyboard():Observable<KeyState> {
     // Needed for listening for both keyup and keydown events
-    this.keyStateObservable = Observable.create((obs:Observer<KeyState>) => {
-      document.addEventListener("keydown", function (e:KeyboardEvent) {
-        let emitValue = new KeyState(e.key, true, e);
+    return Observable.create(function (obs:Observer<KeyState>):TeardownLogic {
+      var handleKeyEvent = function (e:KeyboardEvent) {
+        let emitValue = new KeyState(e.key, e.type === "keydown" ? true : false, e);
         obs.next(emitValue);
-      });
-      document.addEventListener("keyup", function (e:KeyboardEvent) {
-        let emitValue = new KeyState(e.key, false, e);
-        obs.next(emitValue);
-      });
+      }
+
+      document.addEventListener("keydown", handleKeyEvent);
+      document.addEventListener("keyup", handleKeyEvent);
+      return () => {
+        document.removeEventListener("keydown", handleKeyEvent);
+        document.removeEventListener("keyup", handleKeyEvent);
+      }
     });
   }
 
