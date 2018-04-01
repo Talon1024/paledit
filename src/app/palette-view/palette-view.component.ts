@@ -25,6 +25,7 @@ export class PaletteViewComponent implements OnInit {
     private keyboard:KeyboardService,
     private settings:SettingsService) {
       this.keyState = {};
+      this.lastSelectedIndex = -1;
     }
 
   selectPalColour(colourIndex:number) {
@@ -83,6 +84,7 @@ export class PaletteViewComponent implements OnInit {
       }
     }
 
+    // Selection logic, partly derived from above pseudocode
     if (this.lastSelectedIndex >= 0) {
       if (this.keyState["Shift"] && !this.keyState["Control"]) {
         selectRange(this.lastSelectedIndex, colourIndex);

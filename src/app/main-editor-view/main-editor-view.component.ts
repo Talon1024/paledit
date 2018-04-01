@@ -18,21 +18,14 @@ export class MainEditorViewComponent implements OnInit {
   private collection:Palcollection;
   private colPalIndex:number; // User input (actually index + 1)
   private palette:Palette;
-  private palColours:Palcolour[];
-  private fileReader:FileReader;
-  private lastSelectedIndex:number = -1;
 
   private readonly assetUrl = "/assets";
 
   constructor(private httpClient:HttpClient,
-      private paletteIo:PaletteIoService,
-      private keyboard:KeyboardService,
-      private settings:SettingsService,
-      private sanitizer:DomSanitizer) {
-    this.colPalIndex = 1;
-    this.palColours = new Array<Palcolour>();
-    this.fileReader = new FileReader();
-  }
+    private paletteIo:PaletteIoService,
+    private keyboard:KeyboardService,
+    private settings:SettingsService,
+    private sanitizer:DomSanitizer) {}
 
   private cancelEvent(e:Event) {
     e.stopPropagation();
@@ -62,24 +55,6 @@ export class MainEditorViewComponent implements OnInit {
       this.readPaletteFile(targ.files[0]);
     }
   }
-
-  /*
-  getPalSelectionIndices():number[] {
-    let indices:number[] = [];
-    for (let colour of this.palColours) {
-      if (colour.selected) indices.push(colour.index);
-    }
-    return indices;
-  }
-
-  getPalSelection():Palcolour[] {
-    let colours:Palcolour[] = [];
-    for (let colour of this.palColours) {
-      if (colour.selected) colours.push(colour);
-    }
-    return colours;
-  }
-  */
 
   readPaletteFile(file) {
     this.paletteIo.getPaletteFile(file)
