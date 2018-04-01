@@ -8,7 +8,7 @@
   </label>
 </div>
 <div class="editor-main" (keydown)="keyDown($event)" (keyup)="keyUp($event)">
-  <div class="palette">
+  <div class="palette" [style.grid-template-columns]="settings.palColumnStyle()">
     <div *ngFor="let colour of palColours" class="palcolour" [ngStyle]="colour.getStyles()" [class.selected]="colour.selected" (click)="selectPalColour(colour.index)">#{{colour.index}}<div></div></div>
   </div>
   <div class="widget">
@@ -53,7 +53,7 @@
       class="palIndexInput"
       [(ngModel)]="colPalIndex"
       (change)="setPalIndex(colPalIndex)"
-      min="1" max="{{collection.palettes.length}}">/{{collection.palettes.length}}</div>
+      min="1" [max]="collection.palettes.length">/{{collection.palettes.length}}</div>
     <div>
       <span class="button firstPal" (click)="firstPal()"></span>
       <span class="button prevPal" (click)="prevPal()"></span>

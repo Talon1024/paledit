@@ -9,15 +9,11 @@ import { bindNodeCallback } from 'rxjs/observable/bindNodeCallback';
 @Injectable()
 export class PaletteIoService {
 
-  private fileReader:FileReader;
-
-  constructor() {
-    this.fileReader = this.fileReader || new FileReader();
-  }
+  constructor() {}
 
   // Wrapper for rxjs bindNodeCallback
   private readPaletteFile(file:File, callback:(error:any, result:Palcollection) => void) {
-    let fileReader = this.fileReader;
+    let fileReader = new FileReader();
     fileReader.readAsArrayBuffer(file);
     fileReader.onload = () => {
       let data = new Uint8ClampedArray(<ArrayBuffer>fileReader.result);
@@ -39,10 +35,10 @@ export class PaletteIoService {
     return observableFile(file);
   }
 
-  savePalCollection(collection:Palcollection):Observable<string> {
+  savePalCollection(collection:Palcollection):string {
     let colData = collection.toData();
     let data64 = base64.fromByteArray(colData);
-    return of(data64);
+    return data64;
   }
 
   private handleError<T>(operation:string = 'operation', result?: T) {

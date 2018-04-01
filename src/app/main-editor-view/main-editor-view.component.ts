@@ -5,6 +5,8 @@ import { Palcollection } from '../palette-model/palcollection';
 import { HttpClient } from '@angular/common/http';
 import { PaletteIoService } from '../palette-io.service';
 import { KeyboardService, KeyState } from '../keyboard.service';
+import { SettingsService } from '../settings.service';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-main-editor-view',
@@ -26,7 +28,9 @@ export class MainEditorViewComponent implements OnInit {
 
   constructor(private httpClient:HttpClient,
       private paletteIo:PaletteIoService,
-      private keyboard:KeyboardService) {
+      private keyboard:KeyboardService,
+      private settings:SettingsService,
+      private sanitizer:DomSanitizer) {
     this.colPalIndex = 1;
     this.palColours = new Array<Palcolour>();
     this.fileReader = new FileReader();
@@ -151,25 +155,6 @@ export class MainEditorViewComponent implements OnInit {
     return colours;
   }
 
-  // Without PaletteIoService
-  readPaletteFile(file) {
-    this.fileReader.readAsArrayBuffer(file);
-    new Promise((res, rej) => {
-      this.fileReader.onload = () => res(this.fileReader.result);
-      this.fileReader.onerror = () => rej(this.fileReader.error);
-    }).then((data:ArrayBuffer) => {
-      let collection = Palcollection.fromData(new Uint8ClampedArray(data));
-      console.log(collection);
-      this.collection = collection;
-      this.setPalIndex(1);
-    }).catch((error:any) => {
-      console.error(error);
-    });
-  }
-
-  // With PaletteIoService
-  // I have no idea why, but I get "this is undefined" if I do it this way. Strangely enough, it doesn't happen if I set every property of PaletteIoService as static.
-  /*
   readPaletteFile(file) {
     this.paletteIo.getPaletteFile(file)
         .subscribe((collection:Palcollection) => {
@@ -180,7 +165,6 @@ export class MainEditorViewComponent implements OnInit {
       console.error(error);
     });
   }
-  */
 
   setPalIndex(palIndex:number) {
     this.colPalIndex = palIndex;
@@ -230,11 +214,8 @@ export class MainEditorViewComponent implements OnInit {
   }
 
   savePalette() {
-    this.paletteIo.savePalCollection(this.collection).subscribe((data:string) => {
-      location.replace(`data:application/octet-stream;base64,${data}`);
-    }, (error:any) => {
-      console.error(error);
-    });
+    let data = this.paletteIo.savePalCollection(this.collection);
+    location.replace(`data:application/octet-stream;base64,${data}`);
   }
 
   saveColourmap() {
