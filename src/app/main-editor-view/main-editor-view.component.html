@@ -7,10 +7,8 @@
     <p><input type="file" (change)="selectPalette($event)"></p>
   </label>
 </div>
-<div class="editor-main" (keydown)="keyDown($event)" (keyup)="keyUp($event)">
-  <div class="palette" [style.grid-template-columns]="settings.palColumnStyle()">
-    <div *ngFor="let colour of palColours" class="palcolour" [ngStyle]="colour.getStyles()" [class.selected]="colour.selected" (click)="selectPalColour(colour.index)">#{{colour.index}}<div></div></div>
-  </div>
+<div class="editor-main">
+  <app-palette-view [palette]="palette"></app-palette-view>
   <div class="widget">
     <h3>Colour Ranges</h3>
     <ol>

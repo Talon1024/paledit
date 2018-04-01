@@ -1,0 +1,35 @@
+.palette {
+  display: grid;
+  grid-gap: 2px;
+}
+
+.palcolour {
+  display: flex;
+  font-family: monospace;
+  justify-content: center;
+  align-items: center;
+  min-width: 30px;
+  min-height: 30px;
+  border: 2px solid rgba(0,0,0,0);
+  box-sizing: border-box;
+  user-select: none;
+  position: relative;
+}
+
+.palcolour:hover {
+  animation: .3s ease-in-out 0s infinite alternate forwards running colorHover;
+}
+
+.palcolour > div {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  animation: .3s ease-in-out 0s infinite alternate forwards running colorSelected;
+  visibility: hidden;
+}
+
+.palcolour.selected > div {
+  visibility: visible;
+}
