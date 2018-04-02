@@ -10,7 +10,6 @@
   align-items: center;
   min-width: 30px;
   min-height: 30px;
-  box-sizing: border-box;
   user-select: none;
   position: relative;
 }
@@ -35,7 +34,6 @@
 
 .palcolour > div.fx {
   position: absolute;
-  box-sizing: border-box;
   top: 0;
   left: 0;
   visibility: hidden;
