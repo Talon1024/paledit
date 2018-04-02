@@ -1,12 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Palette } from '../palette-model/palette';
-import { Palcolour } from '../palette-model/palcolour';
 import { Palcollection } from '../palette-model/palcollection';
 import { HttpClient } from '@angular/common/http';
 import { PaletteIoService } from '../palette-io.service';
 import { KeyboardService, KeyState } from '../keyboard.service';
 import { SettingsService } from '../settings.service';
-import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-main-editor-view',
@@ -24,8 +22,7 @@ export class MainEditorViewComponent implements OnInit {
   constructor(private httpClient:HttpClient,
     private paletteIo:PaletteIoService,
     private keyboard:KeyboardService,
-    private settings:SettingsService,
-    private sanitizer:DomSanitizer) {}
+    private settings:SettingsService) {}
 
   private cancelEvent(e:Event) {
     e.stopPropagation();

@@ -1,5 +1,4 @@
 import { Component, OnInit, Input, SimpleChange } from '@angular/core';
-import { Palcollection } from '../palette-model/palcollection';
 import { Palette } from '../palette-model/palette';
 import { Palcolour } from '../palette-model/palcolour';
 import { KeyboardService, KeyState } from '../keyboard.service';
