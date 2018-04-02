@@ -1,3 +1,3 @@
 <div class="palette" [style.grid-template-columns]="settings.palColumnStyle()" *ngIf="palColours">
-  <div *ngFor="let colour of palColours" class="palcolour" [ngStyle]="colour.getStyles()" [class.selected]="colour.selected" (click)="selectPalColour(colour.index)">#{{colour.index}}<div></div></div>
+  <div *ngFor="let colour of palColours" class="palcolour" [ngStyle]="colour.getStyles()" [class.selected]="colour.selected" (click)="selectPalColour(colour.index)">#{{colour.index}}<div class="fx fx-hover"></div><div class="fx fx-selected"></div></div>
 </div>

@@ -10,26 +10,49 @@
   align-items: center;
   min-width: 30px;
   min-height: 30px;
-  border: 2px solid rgba(0,0,0,0);
   box-sizing: border-box;
   user-select: none;
   position: relative;
 }
 
-.palcolour:hover {
+@keyframes colorHover {
+  from {
+    border-color: #000;
+  }
+  to {
+    border-color: #fff;
+  }
+}
+
+@keyframes colorSelected {
+  from {
+    background-color: rgba(0,0,0,.3);
+  }
+  to {
+    background-color: rgba(255,255,255,.3);
+  }
+}
+
+.palcolour > div.fx {
+  position: absolute;
+  box-sizing: border-box;
+  top: 0;
+  left: 0;
+  visibility: hidden;
+  width: 100%;
+  height: 100%;
+}
+
+.palcolour:hover > div.fx-hover {
+  visibility: visible;
+  border: 2px solid rgb(0,0,0);
   animation: .3s ease-in-out 0s infinite alternate forwards running colorHover;
 }
 
-.palcolour > div {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+.palcolour > div.fx-selected {
   animation: .3s ease-in-out 0s infinite alternate forwards running colorSelected;
-  visibility: hidden;
 }
 
-.palcolour.selected > div {
+.palcolour.selected > div.fx-selected {
   visibility: visible;
 }

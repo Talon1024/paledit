@@ -14,26 +14,6 @@
   display: flex;
 }
 
-@keyframes colorHover {
-  from {
-    border-color: #000;
-  }
-  to {
-    border-color: #fff;
-  }
-}
-
-@keyframes colorSelected {
-  from {
-    background-color: rgba(0,0,0,.3);
-  }
-  to {
-    background-color: rgba(255,255,255,.3);
-  }
-}
-
-
-
 .firstPal::before {
   content: "\AB";
 }
