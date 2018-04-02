@@ -1,0 +1,8 @@
+<div class="widget" *ngIf="gradient">
+  <div class="gradient" [style.background-image]="gradientStyle()"></div>
+  <button>+</button><button>-</button>
+  <select *ngIf="gradient.stops">
+    <option *ngFor="let stop of gradient.stops">{{stop.position}}</option>
+  </select>
+  <button>▲</button><button>▼</button>
+</div>

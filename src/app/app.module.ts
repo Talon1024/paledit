@@ -11,6 +11,7 @@ import { SettingsService } from './settings.service';
 import { AppComponent } from './app.component';
 import { MainEditorViewComponent } from './main-editor-view/main-editor-view.component';
 import { PaletteViewComponent } from './palette-view/palette-view.component';
+import { GradientEditorComponent } from './gradient-editor/gradient-editor.component';
 
 const assetUrl = "/assets/";
 
@@ -18,7 +19,8 @@ const assetUrl = "/assets/";
   declarations: [
     AppComponent,
     MainEditorViewComponent,
-    PaletteViewComponent
+    PaletteViewComponent,
+    GradientEditorComponent
   ],
   imports: [
     BrowserModule,

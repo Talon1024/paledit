@@ -12,16 +12,41 @@ export class GradientStop {
     this.position = position;
     this.colour = colour;
   }
+
+  posPercent():string {
+    return `${this.position * 100}%`;
+  }
+
+  toCssGradientStopString():string {
+    return `rgb(${this.colour.red}, ${this.colour.green}, ${this.colour.blue}) ${this.posPercent()}`;
+  }
 }
 
 export class Gradient {
   stops:GradientStop[];
   stopIdxs:number[];
-  palRange?:ColourRange;
-  reverse:boolean = false;
+  private _palRange?:ColourRange;
+  get palRange() { return this._palRange; }
+  set palRange(value:ColourRange) {
+    // Update stop indices when user assigns palette range
+    this._palRange = value;
+    if (value) this.updateStopIdxs();
+  }
+  reverse:boolean;
+
+  constructor(stops?:GradientStop[], reverse:boolean = false) {
+    if (stops) {
+      this.stops = stops;
+      this.stopIdxs = [];
+    } else {
+      this.stops = [];
+      this.stopIdxs = [];
+    }
+    this.reverse = reverse;
+  }
 
   stopIndex(stop:GradientStop):number {
-    let length = this.palRange.getLength();
+    let length = this._palRange.getLength();
     let stopPos = stop.position;
     if (this.reverse) stopPos = 1.0 - stopPos;
     let idx = stopPos * length;
@@ -33,7 +58,7 @@ export class Gradient {
     this.stops.sort(function (a:GradientStop, b:GradientStop):number {
       return a.position - b.position;
     });
-    if (this.palRange) this.updateStopIdxs();
+    if (this._palRange) this.updateStopIdxs();
   }
 
   updateStopIdxs() {
@@ -57,5 +82,18 @@ export class Gradient {
     colour = colour.blend(blendFactor, new Rgbcolour(nextStop.colour), Rgbcolour.tint);
 
     return colour;
+  }
+
+  toCssString(direction:string = "to right"):string {
+    if (this.stops.length >= 2) {
+      let stopList = [];
+      for (let stop of this.stops) {
+        stopList.push(`${stop.toCssGradientStopString()}`);
+      }
+      let stopListStr = stopList.join(", ");
+      return `linear-gradient(${direction}, ${stopListStr})`;
+    } else {
+      return "";
+    }
   }
 }
