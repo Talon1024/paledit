@@ -2,11 +2,14 @@ import { ColourSubRange } from './colour-sub-range';
 
 export class ColourRange {
   subRanges:ColourSubRange[];
+  constructor(subRanges:ColourSubRange[] = []) {
+    this.subRanges = subRanges;
+  }
 
   getIndices():number[] {
     let indices = [];
     for (let subRange of this.subRanges) {
-      for (let i = subRange.start; i < subRange.end; i++) {
+      for (let i = subRange.start; i <= subRange.end; i++) {
         indices.push(i);
       }
     }

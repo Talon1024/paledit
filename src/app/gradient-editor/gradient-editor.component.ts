@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Gradient, GradientStop } from '../gradient-model/gradient';
-import { DomSanitizer } from '@angular/platform-browser';
+import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-gradient-editor',
