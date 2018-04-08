@@ -40,7 +40,7 @@ describe('Gradient', () => {
     // Set up colour range/subrange
     // 15 colours to keep things simple
     let rangeStart = 16;
-    let rangeEnd = 31;
+    let rangeEnd = 32;
 
     let subRange = new ColourSubRange(rangeStart, rangeEnd);
     let colourRange = new ColourRange();
@@ -51,6 +51,6 @@ describe('Gradient', () => {
     // Now for the actual test
     let expected = new Rgbcolour(128, 128, 128);
 
-    expect(gradient.colourAt(rangeStart + 7)).toEqual(expected);
+    expect(gradient.colourAt(rangeStart + 8)).toEqual(expected);
   });
 });
