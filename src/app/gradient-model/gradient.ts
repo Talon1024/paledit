@@ -24,7 +24,7 @@ export class GradientStop {
 
 export class Gradient {
   stops:GradientStop[];
-  stopIdxs:number[];
+  stopIdxs:number[]; // Palette indices of each stop
   private _palRange?:ColourRange;
   get palRange() { return this._palRange; }
   set palRange(value:ColourRange) {
@@ -45,12 +45,15 @@ export class Gradient {
     this.reverse = reverse;
   }
 
-  stopIndex(stop:GradientStop):number {
+  private stopIndex(stop:GradientStop):number {
     let length = this._palRange.getLength();
+    let rangePalIdxs = this._palRange.getIndices();
     let stopPos = stop.position;
     if (this.reverse) stopPos = 1.0 - stopPos;
-    let idx = stopPos * length;
-    return idx;
+
+    let rangeIdx = Math.floor(stopPos * length);
+    let palIdx = rangePalIdxs[rangeIdx];
+    return palIdx;
   }
 
   addStop(stop:GradientStop) {
@@ -61,7 +64,7 @@ export class Gradient {
     if (this._palRange) this.updateStopIdxs();
   }
 
-  updateStopIdxs() {
+  private updateStopIdxs() {
     for (let i = 0; i < this.stops.length; i++) {
       let stop = this.stops[i];
       this.stopIdxs[i] = this.stopIndex(stop);
@@ -69,19 +72,26 @@ export class Gradient {
   }
 
   colourAt(idx:number):Rgbcolour {
-    //let length = this.palRange.getLength();
-    let nextStopIdx = this.stopIdxs.find((e) => e >= idx);
-    let prevStopIdx = this.stopIdxs[this.stopIdxs.indexOf(nextStopIdx) - 1];
-    let nextStop:GradientStop = this.stops[nextStopIdx];
-    let prevStop:GradientStop = this.stops[prevStopIdx];
+    if (!this._palRange) return;
+    if (!this._palRange.getIndices().find((e) => idx === e)) return;
 
-    let stopIdxDiff = nextStopIdx - prevStopIdx;
-    let blendFactor = idx / stopIdxDiff;
+    let stopsAtIdx = this.stops.filter((e, i) => this.stopIdxs[i] === idx);
+    if (stopsAtIdx.length === 0) {
+      let nextStopIdx = this.stopIdxs.findIndex((e) => e >= idx);
+      let prevStopIdx = nextStopIdx - 1;
+      let nextStop:GradientStop = this.stops[nextStopIdx];
+      let prevStop:GradientStop = this.stops[prevStopIdx];
 
-    let colour = new Rgbcolour(prevStop.colour);
-    colour = colour.blend(blendFactor, new Rgbcolour(nextStop.colour), Rgbcolour.tint);
+      let stopIdxDiff = nextStopIdx - prevStopIdx;
+      let blendFactor = idx / stopIdxDiff;
 
-    return colour;
+      let colour = new Rgbcolour(prevStop.colour);
+      colour = colour.blend(blendFactor, new Rgbcolour(nextStop.colour), Rgbcolour.tint);
+
+      return colour;
+    } else {
+
+    }
   }
 
   toCssString(direction:string = "to right"):string {
