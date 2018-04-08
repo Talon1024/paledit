@@ -1,11 +1,20 @@
 import { TestBed, async } from '@angular/core/testing';
 import { AppComponent } from './app.component';
+import { MainEditorViewComponent } from './main-editor-view/main-editor-view.component';
+import { PaletteViewComponent } from './palette-view/palette-view.component';
+import { GradientEditorComponent } from './gradient-editor/gradient-editor.component';
+import { FormsModule } from '@angular/forms';
+import { HttpClientModule, HttpClient } from '@angular/common/http';
+import { PaletteIoService } from './palette-io.service';
+import { KeyboardService } from './keyboard.service';
+import { SettingsService } from './settings.service';
+
 describe('AppComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [
-        AppComponent
-      ],
+      declarations: [ AppComponent, MainEditorViewComponent, PaletteViewComponent, GradientEditorComponent ],
+      imports: [ FormsModule, HttpClientModule ],
+      providers: [ HttpClient, PaletteIoService, KeyboardService, SettingsService ]
     }).compileComponents();
   }));
   it('should create the app', async(() => {
