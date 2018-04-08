@@ -2,8 +2,6 @@ import { Component, OnInit, Input, SimpleChange } from '@angular/core';
 import { Palette } from '../palette-model/palette';
 import { Palcolour } from '../palette-model/palcolour';
 import { KeyboardService, KeyState } from '../keyboard.service';
-import { HttpClient } from '@angular/common/http';
-import { SettingsService } from '../settings.service';
 
 @Component({
   selector: 'app-palette-view',
@@ -16,13 +14,11 @@ export class PaletteViewComponent implements OnInit {
 
   private keyState:{[key:string]:boolean};
   private lastSelectedIndex: number;
-  @Input() private palette:Palette;
+  @Input() palette:Palette;
   private palColours:Palcolour[];
 
   constructor(
-    private http:HttpClient,
-    private keyboard:KeyboardService,
-    private settings:SettingsService) {
+    private keyboard:KeyboardService) {
       this.keyState = {};
       this.lastSelectedIndex = -1;
     }
