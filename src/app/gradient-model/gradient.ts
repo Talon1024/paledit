@@ -74,7 +74,7 @@ export class Gradient {
   colourAt(idx:number):Rgbcolour {
     if (!this._palRange) return;
     let idxPalIdx = this._palRange.getIndices().findIndex((e) => idx === e);
-    if (!idxPalIdx) return;
+    if (idxPalIdx < 0) return;
 
     let stopsAtIdx = this.stops.filter((e, i) => this.stopIdxs[i] === idx);
     if (stopsAtIdx.length === 0) {

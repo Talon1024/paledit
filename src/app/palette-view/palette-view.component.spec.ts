@@ -1,6 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { PaletteViewComponent } from './palette-view.component';
+import { KeyboardService } from '../keyboard.service';
+import { SettingsService } from '../settings.service';
 
 describe('PaletteViewComponent', () => {
   let component: PaletteViewComponent;
@@ -8,7 +10,8 @@ describe('PaletteViewComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ PaletteViewComponent ]
+      declarations: [ PaletteViewComponent ],
+      providers: [ KeyboardService, SettingsService ]
     })
     .compileComponents();
   }));
