@@ -28,4 +28,18 @@ describe('ColourSubRange', () => {
 
     expect(range.contains(indexInRange)).toBe(false);
   });
+  it('should always have a start value less than the end value when start value is reassigned', () => {
+    let range = new ColourSubRange(16, 32);
+    range.start = 48;
+
+    expect(range.start).toEqual(32);
+    expect(range.end).toEqual(48);
+  });
+  it('should always have an end value greater than the start value when end value is reassigned', () => {
+    let range = new ColourSubRange(16, 32);
+    range.end = 8;
+
+    expect(range.start).toEqual(8);
+    expect(range.end).toEqual(16);
+  });
 });

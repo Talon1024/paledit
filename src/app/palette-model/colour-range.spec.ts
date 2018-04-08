@@ -61,4 +61,13 @@ describe('ColourRange', () => {
 
     expect(range.palToRangeIdx(palIdx)).toEqual(expected);
   });
+  it('should return -1 when asked to convert a palette index not within the range to a range index', () => {
+    let subRange = new ColourSubRange(16, 32);
+    let range = new ColourRange([subRange]);
+
+    let palIdx = 66;
+    let expected = -1;
+
+    expect(range.palToRangeIdx(palIdx)).toEqual(expected);
+  });
 });
