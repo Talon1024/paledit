@@ -30,7 +30,7 @@ describe('Gradient', () => {
 
     expect(gradient.stopIdxs).toEqual(expected);
   });
-  it("should get the correct colour at the midpoint of an 11-colour palette range", () => {
+  it("should get the correct colour at the midpoint of an 16-colour palette range", () => {
     // Default gradient
     let blackStop = new GradientStop(0.0, {red: 0, green: 0, blue: 0});
     let whiteStop = new GradientStop(1.0, {red: 255, green: 255, blue: 255});
@@ -52,5 +52,15 @@ describe('Gradient', () => {
     let expected = new Rgbcolour(128, 128, 128);
 
     expect(gradient.colourAt(rangeStart + 8)).toEqual(expected);
+  });
+  it("should convert to a CSS string", () => {
+    let blackStop = new GradientStop(0.0, {red: 0, green: 0, blue: 0});
+    let whiteStop = new GradientStop(1.0, {red: 255, green: 255, blue: 255});
+
+    let gradient = new Gradient([blackStop, whiteStop]);
+
+    let expected = "linear-gradient(to right, rgb(0, 0, 0) 0%, rgb(255, 255, 255) 100%)"
+
+    expect(gradient.toCssString()).toEqual(expected);
   });
 });
