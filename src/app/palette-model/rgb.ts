@@ -11,13 +11,19 @@ export class Rgbcolour implements Rgb {
 
   static readonly components = [ 'red', 'green', 'blue' ];
 
+  // Rgb type guard
+  static isRgb(rgb:number | Rgb): rgb is Rgb {
+      return (
+        rgb.hasOwnProperty("red") &&
+        rgb.hasOwnProperty("green") &&
+        rgb.hasOwnProperty("blue"));
+  }
+
   constructor(redOrRgb:number | Rgb = 0, green:number = 0, blue:number = 0) {
-    if ((<Rgb>redOrRgb).hasOwnProperty("red") &&
-        (<Rgb>redOrRgb).hasOwnProperty("green") &&
-        (<Rgb>redOrRgb).hasOwnProperty("blue")) {
-      this.red = (<Rgb>redOrRgb).red;
-      this.green = (<Rgb>redOrRgb).green;
-      this.blue = (<Rgb>redOrRgb).blue;
+    if (Rgbcolour.isRgb(redOrRgb)) {
+      this.red = redOrRgb.red;
+      this.green = redOrRgb.green;
+      this.blue = redOrRgb.blue;
     } else {
       this.red = (<number>redOrRgb) & 0xFF;
       this.green = green & 0xFF;
