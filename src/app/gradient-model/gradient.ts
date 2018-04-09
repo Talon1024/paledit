@@ -78,17 +78,21 @@ export class Gradient {
 
     let stopsAtIdx = this.stops.filter((e, i) => this.stopIdxs[i] === palIdx);
     if (stopsAtIdx.length === 0) {
-      let nextStopIdx = this.stopIdxs.findIndex((e) => e >= palIdx);
-      let prevStopIdx = nextStopIdx - 1;
-      let nextStop:GradientStop = this.stops[nextStopIdx];
-      let prevStop:GradientStop = this.stops[prevStopIdx];
+      let nextStopGidx = this.stopIdxs.findIndex((e) => e >= palIdx);
+      let prevStopGidx = nextStopGidx - 1;
+      let nextStop:GradientStop = this.stops[nextStopGidx];
+      let prevStop:GradientStop = this.stops[prevStopGidx];
+      let nextStopPidx = this.stopIdxs[nextStopGidx];
+      let prevStopPidx = this.stopIdxs[prevStopGidx];
 
-      let blendFactor = rangeIdx / this._palRange.getLength();
+      let blendFactor = (palIdx - prevStopPidx) / (nextStopPidx - prevStopPidx);
+      console.log(blendFactor, nextStop, prevStop);
 
-      let colour = new Rgbcolour(prevStop.colour);
-      colour = colour.blend(blendFactor, new Rgbcolour(nextStop.colour), Rgbcolour.tint);
+      let prevColour = new Rgbcolour(prevStop.colour);
+      let nextColour = new Rgbcolour(nextStop.colour);
+      let resultColour = prevColour.blend(blendFactor, nextColour, Rgbcolour.tint);
 
-      return colour;
+      return resultColour;
     } else {
 
     }
