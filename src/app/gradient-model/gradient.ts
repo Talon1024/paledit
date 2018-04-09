@@ -86,7 +86,6 @@ export class Gradient {
       let prevStopPidx = this.stopIdxs[prevStopGidx];
 
       let blendFactor = (palIdx - prevStopPidx) / (nextStopPidx - prevStopPidx);
-      console.log(blendFactor, nextStop, prevStop);
 
       let prevColour = new Rgbcolour(prevStop.colour);
       let nextColour = new Rgbcolour(nextStop.colour);

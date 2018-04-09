@@ -12,7 +12,9 @@ export class Rgbcolour implements Rgb {
   static readonly components = [ 'red', 'green', 'blue' ];
 
   constructor(redOrRgb:number | Rgb = 0, green:number = 0, blue:number = 0) {
-    if ((<Rgb>redOrRgb).red && (<Rgb>redOrRgb).green && (<Rgb>redOrRgb).blue) {
+    if ((<Rgb>redOrRgb).hasOwnProperty("red") &&
+        (<Rgb>redOrRgb).hasOwnProperty("green") &&
+        (<Rgb>redOrRgb).hasOwnProperty("blue")) {
       this.red = (<Rgb>redOrRgb).red;
       this.green = (<Rgb>redOrRgb).green;
       this.blue = (<Rgb>redOrRgb).blue;
