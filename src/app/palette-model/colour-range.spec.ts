@@ -70,4 +70,26 @@ describe('ColourRange', () => {
 
     expect(range.palToRangeIdx(palIdx)).toEqual(expected);
   });
+  it('should get the palette indices of a range with one reversed sub-range', () => {
+    let subRange = new ColourSubRange(32, 16);
+    let range = new ColourRange([subRange]);
+
+    let expected = [
+      32, 31, 30, 29, 28, 27, 26, 25, 24, 23, 22, 21, 20, 19, 18, 17, 16
+    ];
+
+    expect(range.getIndices()).toEqual(expected);
+  });
+  it('should get the palette indices of a range with two sub-ranges, one reversed', () => {
+    let subRange = new ColourSubRange(16, 32);
+    let subRange2 = new ColourSubRange(64, 48);
+    let range = new ColourRange([subRange, subRange2]);
+
+    let expected = [
+      16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, // First sub-range
+      64, 63, 62, 61, 60, 59, 58, 57, 56, 55, 54, 53, 52, 51, 50, 49, 48 // Second sub-range
+    ];
+
+    expect(range.getIndices()).toEqual(expected);
+  });
 });

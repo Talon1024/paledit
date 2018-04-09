@@ -10,11 +10,10 @@ export class ColourRange {
     let indices = [];
     for (let subRange of this.subRanges) {
       let reverse = subRange.start > subRange.end;
-      let [start, end] = subRange.sorted();
-      for (let i = start; i != end; i += reverse ? -1 : 1) {
+      for (let i = subRange.start; i != subRange.end; i += reverse ? -1 : 1) {
         indices.push(i);
       }
-      indices.push(reverse ? start : end);
+      indices.push(subRange.end);
     }
     return indices;
   }
