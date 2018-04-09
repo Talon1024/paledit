@@ -1,6 +1,8 @@
 import { Component, OnInit, Input, SimpleChange } from '@angular/core';
 import { Palette } from '../palette-model/palette';
 import { Palcolour } from '../palette-model/palcolour';
+import { ColourRange } from '../palette-model/colour-range';
+import { ColourSubRange } from '../palette-model/colour-sub-range';
 import { KeyboardService, KeyState } from '../keyboard.service';
 import { SettingsService } from '../settings.service';
 
@@ -17,6 +19,7 @@ export class PaletteViewComponent implements OnInit {
   private lastSelectedIndex: number;
   @Input() palette:Palette;
   private palColours:Palcolour[];
+  private range:ColourRange;
 
   constructor(
     private keyboard:KeyboardService,
@@ -100,6 +103,22 @@ export class PaletteViewComponent implements OnInit {
     this.lastSelectedIndex = colourIndex;
   }
 
+  selectionToRange() {
+    let subRanges:ColourSubRange[] = [];
+    let subRangeStart = 0, subRangeEnd = 0, inSubRange = false;
+    for (let colour of this.palColours) {
+      if (!inSubRange && colour.selected) {
+        subRangeStart = colour.index;
+        inSubRange = true;
+      } else if (inSubRange && !colour.selected) {
+        subRangeEnd = colour.index - 1;
+        inSubRange = false;
+        subRanges.push(new ColourSubRange(subRangeStart, subRangeEnd));
+      }
+    }
+    return new ColourRange(subRanges);
+  }
+
   onSetPalette() {
     if (!this.palColours) this.palColours = new Array(this.palette.getLength());
     for (let i = 0; i < this.palette.getLength(); i++) {
@@ -108,7 +127,7 @@ export class PaletteViewComponent implements OnInit {
   }
 
   ngOnInit():void {
-    this.keyboard.observeKeyboard().subscribe((press) => {
+    this.keyboard.observeKeyboard(["Shift", "Control"]).subscribe((press) => {
       this.keyState[press.key] = press.state;
     });
   }
