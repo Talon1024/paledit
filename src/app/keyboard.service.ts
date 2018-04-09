@@ -19,10 +19,11 @@ export class KeyboardService {
 
   constructor() {}
 
-  observeKeyboard():Observable<KeyState> {
+  observeKeyboard(filter?:string[]):Observable<KeyState> {
     // Needed for listening for both keyup and keydown events
     return Observable.create(function (obs:Observer<KeyState>):TeardownLogic {
-      var handleKeyEvent = function (e:KeyboardEvent) {
+      function handleKeyEvent (e:KeyboardEvent) {
+        if (filter && !filter.includes(e.key)) return;
         let emitValue = new KeyState(e.key, e.type === "keydown" ? true : false, e);
         obs.next(emitValue);
       }
