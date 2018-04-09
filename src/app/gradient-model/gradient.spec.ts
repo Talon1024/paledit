@@ -74,7 +74,7 @@ describe('Gradient', () => {
 
     // Now for the actual test
     let expected = new Rgbcolour(128, 128, 0);
-    let palIdx = Math.floor((rangeStart + rangeEnd) / 4);
+    let palIdx = Math.floor(0.25 * colourRange.getLength()) + rangeStart;
 
     expect(gradient.colourAt(palIdx)).toEqual(expected);
   });
