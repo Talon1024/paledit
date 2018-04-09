@@ -78,6 +78,7 @@ export class Gradient {
 
     let stopsAtIdx = this.stops.filter((e, i) => this.stopIdxs[i] === palIdx);
     if (stopsAtIdx.length === 0) {
+      // Find colour at this index
       let nextStopGidx = this.stopIdxs.findIndex((e) => e >= palIdx);
       let prevStopGidx = nextStopGidx - 1;
       let nextStop:GradientStop = this.stops[nextStopGidx];
@@ -93,7 +94,19 @@ export class Gradient {
 
       return resultColour;
     } else {
+      // Average colours of all stops at this index
+      let sumRed = 0, sumGreen = 0, sumBlue = 0, colourCount = 0;
+      for (let stop of stopsAtIdx) {
+        sumRed += stop.colour.red;
+        sumGreen += stop.colour.green;
+        sumBlue += stop.colour.blue;
+        colourCount += 1;
+      }
+      let avgRed = Math.round(sumRed / colourCount);
+      let avgGreen = Math.round(sumGreen / colourCount);
+      let avgBlue = Math.round(sumBlue / colourCount);
 
+      return new Rgbcolour(avgRed, avgGreen, avgBlue);
     }
   }
 
