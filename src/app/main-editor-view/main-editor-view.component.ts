@@ -56,7 +56,6 @@ export class MainEditorViewComponent implements OnInit {
   readPaletteFile(file) {
     this.paletteIo.getPaletteFile(file)
         .subscribe((collection:Palcollection) => {
-      console.log(collection);
       this.collection = collection;
       this.setPalIndex(1);
     }, (error:any) => {

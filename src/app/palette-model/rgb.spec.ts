@@ -10,7 +10,6 @@ describe('Rgbcolour', () => {
     let expected = new Rgbcolour(255, 0, 128);
 
     let blended = red.blend(1, blue, Rgbcolour.add);
-    console.log(blended);
     expect(blended.equals(expected)).toBe(true);
   });
   it('should create a 50% tint between orange and sky blue', () => {
