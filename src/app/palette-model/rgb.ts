@@ -59,7 +59,15 @@ export class Rgbcolour implements Rgb {
   }
 
   hsv():Hsv {
-    // WIP!!
+    const hueSections = [
+      [2, 1, 0],
+      [1, 2, 0],
+      [0, 2, 1],
+      [0, 1, 2],
+      [1, 0, 2],
+      [2, 0, 1]
+    ];
+
     let components:[{value:number; sortOrder:number}] = [{
       value: this.red,
       sortOrder: 0
@@ -79,7 +87,7 @@ export class Rgbcolour implements Rgb {
       }
     }
 
-    let sortOrders = components.map((e) => e.sortOrder);
+    let sortOrders = components.map((c) => c.sortOrder);
 
     // Bring all sort order values to the minimum
     {
@@ -88,25 +96,27 @@ export class Rgbcolour implements Rgb {
       components.forEach((c) => c.sortOrder -= minSortOrder);
     }
 
-    let hueSections:Array<number>[] = new Array(6);
-    hueSections[0] = [2, 1, 0];
-    hueSections[1] = [1, 2, 0];
-    hueSections[2] = [0, 2, 1];
-    hueSections[3] = [0, 1, 2];
-    hueSections[4] = [1, 0, 2];
-    hueSections[5] = [2, 0, 1];
+    sortOrders = components.map((c) => c.sortOrder);
 
     // Ensure at least one element of sortOrders is 1
-    sortOrders = components.map((e) => e.sortOrder);
+    //let sortOrderString = sortOrders.map((v) => v.toString(10)).join("");
     if (!sortOrders.includes(1)) {
       for (let a = 0; a < sortOrders.length; a++) {
-        if(sortOrders[a] === 2) sortOrders = hueSections[a * 2];
+        if(sortOrders[a] === 2) {
+          sortOrders = hueSections[a * 2];
+        }
       }
     }
 
     let hue = hueSections.indexOf(sortOrders) * 60;
+    let largest = components[sortOrders.indexOf(2)].value;
+    let secondLargest = components[sortOrders.indexOf(1)].value;
+    let hueAdd = 60 - Math.round((largest - secondLargest) / 4.26666666666666);
+
+    hue += hueAdd;
+
     let saturation = 1.0 - (Math.min.apply(this, components.map((c) => c.value)) / 255);
-    let value = Math.max.apply(this, components.map((c) => c.value));
+    let value = largest;
 
     return {
       hue: hue,

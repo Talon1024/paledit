@@ -80,4 +80,24 @@ describe('Rgbcolour', () => {
 
     expect(colour.hsv()).toEqual(expected);
   });
+  it('Get HSV for orange colour', () => {
+    let colour = new Rgbcolour(255, 128, 0);
+    let expected = {
+      hue: 30,
+      saturation: 1.0,
+      value: 255
+    };
+
+    expect(colour.hsv()).toEqual(expected);
+  });
+  it('Get HSV for sky blue colour', () => {
+    let colour = new Rgbcolour(100, 140, 255);
+    let expected = {
+      hue: 225,
+      saturation: 0.607843137254902,
+      value: 255
+    };
+
+    expect(colour.hsv()).toEqual(expected);
+  });
 });
