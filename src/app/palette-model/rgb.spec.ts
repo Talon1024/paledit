@@ -44,13 +44,13 @@ describe('Rgbcolour', () => {
     let blended = red.blend(.5, green, Rgbcolour.tint);
     expect(blended.equals(expected)).toBe(true);
   });
-  it('Convert HSV to RGB', () => {
+  it('should convert HSV to RGB', () => {
     let expected = new Rgbcolour(255, 0, 0);
     let actual = Rgbcolour.fromHSV(0, 1.0, 255);
 
     expect(actual).toEqual(expected);
   });
-  it('Get HSV for red colour', () => {
+  it('should get HSV for red colour', () => {
     let colour = new Rgbcolour(255, 0, 0);
     let expected = {
       hue: 0,
@@ -60,7 +60,7 @@ describe('Rgbcolour', () => {
 
     expect(colour.hsv()).toEqual(expected);
   });
-  it('Get HSV for green colour', () => {
+  it('should get HSV for green colour', () => {
     let colour = new Rgbcolour(0, 255, 0);
     let expected = {
       hue: 120,
@@ -70,7 +70,7 @@ describe('Rgbcolour', () => {
 
     expect(colour.hsv()).toEqual(expected);
   });
-  it('Get HSV for blue colour', () => {
+  it('should get HSV for blue colour', () => {
     let colour = new Rgbcolour(0, 0, 255);
     let expected = {
       hue: 240,
@@ -80,7 +80,7 @@ describe('Rgbcolour', () => {
 
     expect(colour.hsv()).toEqual(expected);
   });
-  it('Get HSV for orange colour', () => {
+  it('should get HSV for orange colour', () => {
     let colour = new Rgbcolour(255, 128, 0);
     let expected = {
       hue: 30,
@@ -90,7 +90,7 @@ describe('Rgbcolour', () => {
 
     expect(colour.hsv()).toEqual(expected);
   });
-  it('Get HSV for sky blue colour', () => {
+  it('should get HSV for sky blue colour', () => {
     let colour = new Rgbcolour(100, 140, 255);
     let expected = {
       hue: 225,

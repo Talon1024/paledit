@@ -87,7 +87,7 @@ export class Rgbcolour implements Rgb {
       }
     }
 
-    let sortOrders = components.map((c) => c.sortOrder);
+    let sortOrders:number[] = components.map((c) => c.sortOrder);
 
     // Bring all sort order values to the minimum
     {
@@ -96,16 +96,18 @@ export class Rgbcolour implements Rgb {
       components.forEach((c) => c.sortOrder -= minSortOrder);
     }
 
+    // Update sortOrders - it's not automatically updated
     sortOrders = components.map((c) => c.sortOrder);
 
-    // Ensure at least one element of sortOrders is 1
-    //let sortOrderString = sortOrders.map((v) => v.toString(10)).join("");
+    // Ensure at least one element of sortOrders is 1 so we can find it in hueSections
     if (!sortOrders.includes(1)) {
       for (let a = 0; a < sortOrders.length; a++) {
         if(sortOrders[a] === 2) {
           sortOrders = hueSections[a * 2];
         }
       }
+    } else {
+      console.log(sortOrders);
     }
 
     let hue = hueSections.indexOf(sortOrders) * 60;
