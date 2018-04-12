@@ -106,11 +106,17 @@ export class Rgbcolour implements Rgb {
           sortOrders = hueSections[a * 2];
         }
       }
-    } else {
-      console.log(sortOrders);
     }
 
-    let hue = hueSections.indexOf(sortOrders) * 60;
+    function isHueSection(section) {
+      return (
+        section[0] === this[0] &&
+        section[1] === this[1] &&
+        section[2] === this[2]
+      );
+    }
+
+    let hue = hueSections.findIndex(isHueSection, sortOrders) * 60;
     let largest = components[sortOrders.indexOf(2)].value;
     let secondLargest = components[sortOrders.indexOf(1)].value;
     let hueAdd = 60 - Math.round((largest - secondLargest) / 4.26666666666666);
