@@ -4,6 +4,12 @@ export interface Rgb {
   blue:number;
 }
 
+export interface Hsv {
+  hue:number;
+  saturation:number;
+  value:number;
+}
+
 export class Rgbcolour implements Rgb {
   red:number;
   green:number;
@@ -52,19 +58,65 @@ export class Rgbcolour implements Rgb {
     return new Rgbcolour(colour.red + m, colour.green + m, colour.blue + m);
   }
 
-  getHue():number {
+  hsv():Hsv {
     // WIP!!
-    let lowest = Math.min(this.red, this.green, this.blue);
-    let lowestComponent = [this.red, this.green, this.blue].findIndex(e => e === lowest);
+    let components:[{value:number; sortOrder:number}] = [{
+      value: this.red,
+      sortOrder: 0
+    },
+    {
+      value: this.green,
+      sortOrder: 0
+    },
+    {
+      value: this.blue,
+      sortOrder: 0
+    }];
 
-    let hueSections = new Array(6);
+    for (let a = 0; a < components.length; a++) {
+      for (let b = 0; b < components.length; b++) {
+        if (components[b].value > components[a].value) components[b].sortOrder += 1;
+      }
+    }
+
+    let sortOrders = components.map((e) => e.sortOrder);
+
+    // Bring all sort order values to the minimum
+    {
+      // I don't want to use minSortOrder after this.
+      let minSortOrder = Math.min.apply(this, sortOrders);
+      components.forEach((c) => c.sortOrder -= minSortOrder);
+    }
+
+    let hueSections:Array<number>[] = new Array(6);
     hueSections[0] = [2, 1, 0];
     hueSections[1] = [1, 2, 0];
     hueSections[2] = [0, 2, 1];
     hueSections[3] = [0, 1, 2];
     hueSections[4] = [1, 0, 2];
     hueSections[5] = [2, 0, 1];
-    return 0;
+
+    // Ensure at least one element of sortOrders is 1
+    sortOrders = components.map((e) => e.sortOrder);
+    if (!sortOrders.includes(1)) {
+      for (let a = 0; a < sortOrders.length; a++) {
+        if(sortOrders[a] === 2) sortOrders = hueSections[a * 2];
+      }
+    }
+
+    let hue = hueSections.indexOf(sortOrders) * 60;
+    let saturation = 1.0 - (Math.min.apply(components.map((c) => c.value)) / 255);
+    let value = Math.max.apply(components.map((c) => c.value));
+
+    return {
+      hue: hue,
+      saturation: saturation,
+      value: value
+    };
+  }
+
+  value():number {
+    return Math.max(this.red, this.green, this.blue);
   }
 
   toHex():string {

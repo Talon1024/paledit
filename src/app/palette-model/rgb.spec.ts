@@ -44,4 +44,40 @@ describe('Rgbcolour', () => {
     let blended = red.blend(.5, green, Rgbcolour.tint);
     expect(blended.equals(expected)).toBe(true);
   });
+  it('Convert HSV to RGB', () => {
+    let expected = new Rgbcolour(255, 0, 0);
+    let actual = Rgbcolour.fromHSV(0, 1.0, 255);
+
+    expect(actual).toEqual(expected);
+  });
+  it('Get hue of red colour', () => {
+    let colour = new Rgbcolour(255, 0, 0);
+    let expected = {
+      hue: 0,
+      saturation: 1.0,
+      value: 255
+    };
+
+    expect(colour.hsv()).toEqual(expected);
+  });
+  it('Get hue of green colour', () => {
+    let colour = new Rgbcolour(0, 255, 0);
+    let expected = {
+      hue: 120,
+      saturation: 1.0,
+      value: 255
+    };
+
+    expect(colour.hsv()).toEqual(expected);
+  });
+  it('Get hue of blue colour', () => {
+    let colour = new Rgbcolour(0, 0, 255);
+    let expected = {
+      hue: 240,
+      saturation: 1.0,
+      value: 255
+    };
+
+    expect(colour.hsv()).toEqual(expected);
+  });
 });
