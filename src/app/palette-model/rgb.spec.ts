@@ -50,7 +50,7 @@ describe('Rgbcolour', () => {
 
     expect(actual).toEqual(expected);
   });
-  it('Get hue of red colour', () => {
+  it('Get HSV for red colour', () => {
     let colour = new Rgbcolour(255, 0, 0);
     let expected = {
       hue: 0,
@@ -60,7 +60,7 @@ describe('Rgbcolour', () => {
 
     expect(colour.hsv()).toEqual(expected);
   });
-  it('Get hue of green colour', () => {
+  it('Get HSV for green colour', () => {
     let colour = new Rgbcolour(0, 255, 0);
     let expected = {
       hue: 120,
@@ -70,7 +70,7 @@ describe('Rgbcolour', () => {
 
     expect(colour.hsv()).toEqual(expected);
   });
-  it('Get hue of blue colour', () => {
+  it('Get HSV for blue colour', () => {
     let colour = new Rgbcolour(0, 0, 255);
     let expected = {
       hue: 240,

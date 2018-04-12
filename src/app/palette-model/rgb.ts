@@ -105,8 +105,8 @@ export class Rgbcolour implements Rgb {
     }
 
     let hue = hueSections.indexOf(sortOrders) * 60;
-    let saturation = 1.0 - (Math.min.apply(components.map((c) => c.value)) / 255);
-    let value = Math.max.apply(components.map((c) => c.value));
+    let saturation = 1.0 - (Math.min.apply(this, components.map((c) => c.value)) / 255);
+    let value = Math.max.apply(this, components.map((c) => c.value));
 
     return {
       hue: hue,
