@@ -94,9 +94,19 @@ describe('Rgbcolour', () => {
     let colour = new Rgbcolour(100, 140, 255);
     let expected = {
       hue: 225,
-      saturation: 0.607843137254902,
+      saturation: 0.609375,
       value: 255
     };
+
+    expect(colour.hsv()).toEqual(expected);
+  });
+  it('should return same HSV that was used to make the colour', () => {
+    let expected = {
+      hue: 110,
+      saturation: 0.75,
+      value: 192
+    };
+    let colour = Rgbcolour.fromHSV(expected.hue, expected.saturation, expected.value);
 
     expect(colour.hsv()).toEqual(expected);
   });

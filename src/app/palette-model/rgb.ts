@@ -59,72 +59,14 @@ export class Rgbcolour implements Rgb {
   }
 
   hsv():Hsv {
-    const hueSections = [
-      [2, 1, 0],
-      [1, 2, 0],
-      [0, 2, 1],
-      [0, 1, 2],
-      [1, 0, 2],
-      [2, 0, 1]
-    ];
+    // https://en.wikipedia.org/wiki/Hue#Defining_hue_in_terms_of_RGB
+    let hue = Math.atan2(Math.sqrt(3) * (this.green - this.blue), 2 * this.red - this.green - this.blue);
+    hue *= (180 / Math.PI); // Radians to degrees
+    if (hue < 0) hue = 360 + hue;
+    hue = Math.floor(hue);
 
-    let components:[{value:number; sortOrder:number}] = [{
-      value: this.red,
-      sortOrder: 0
-    },
-    {
-      value: this.green,
-      sortOrder: 0
-    },
-    {
-      value: this.blue,
-      sortOrder: 0
-    }];
-
-    for (let a = 0; a < components.length; a++) {
-      for (let b = 0; b < components.length; b++) {
-        if (components[b].value > components[a].value) components[b].sortOrder += 1;
-      }
-    }
-
-    let sortOrders:number[] = components.map((c) => c.sortOrder);
-
-    // Bring all sort order values to the minimum
-    {
-      // I don't want to use minSortOrder after this.
-      let minSortOrder = Math.min.apply(this, sortOrders);
-      components.forEach((c) => c.sortOrder -= minSortOrder);
-    }
-
-    // Update sortOrders - it's not automatically updated
-    sortOrders = components.map((c) => c.sortOrder);
-
-    // Ensure at least one element of sortOrders is 1 so we can find it in hueSections
-    if (!sortOrders.includes(1)) {
-      for (let a = 0; a < sortOrders.length; a++) {
-        if(sortOrders[a] === 2) {
-          sortOrders = hueSections[a * 2];
-        }
-      }
-    }
-
-    function isHueSection(section) {
-      return (
-        section[0] === this[0] &&
-        section[1] === this[1] &&
-        section[2] === this[2]
-      );
-    }
-
-    let hue = hueSections.findIndex(isHueSection, sortOrders) * 60;
-    let largest = components[sortOrders.indexOf(2)].value;
-    let secondLargest = components[sortOrders.indexOf(1)].value;
-    let hueAdd = 60 - Math.round((largest - secondLargest) / 4.26666666666666);
-
-    hue += hueAdd;
-
-    let saturation = 1.0 - (Math.min.apply(this, components.map((c) => c.value)) / 255);
-    let value = largest;
+    let saturation = 1.0 - Math.min(this.red, this.green, this.blue) / 256;
+    let value = Math.max(this.red, this.green, this.blue);
 
     return {
       hue: hue,
