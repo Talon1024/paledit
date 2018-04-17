@@ -59,19 +59,57 @@ export class Rgbcolour implements Rgb {
   }
 
   hsv():Hsv {
-    // https://en.wikipedia.org/wiki/Hue#Defining_hue_in_terms_of_RGB
-    let hue = Math.atan2(Math.sqrt(3) * (this.green - this.blue), 2 * this.red - this.green - this.blue);
-    hue *= (180 / Math.PI); // Radians to degrees
-    if (hue < 0) hue = 360 + hue;
-    hue = Math.floor(hue);
+    // Modified from:
+    // https://github.com/Qix-/color-convert/blob/master/conversions.js#L97
+    /*
+    Copyright (c) 2011-2016 Heather Arthur <fayearthur@gmail.com>
 
-    let saturation = 1.0 - Math.min(this.red, this.green, this.blue) / 256;
-    let value = Math.max(this.red, this.green, this.blue);
+    Permission is hereby granted, free of charge, to any person obtaining
+    a copy of this software and associated documentation files (the
+    "Software"), to deal in the Software without restriction, including
+    without limitation the rights to use, copy, modify, merge, publish,
+    distribute, sublicense, and/or sell copies of the Software, and to
+    permit persons to whom the Software is furnished to do so, subject to
+    the following conditions:
+
+    The above copyright notice and this permission notice shall be
+    included in all copies or substantial portions of the Software.
+    */
+    var r = this.red;
+    var g = this.green;
+    var b = this.blue;
+    var min = Math.min(r, g, b);
+    var max = Math.max(r, g, b);
+    var delta = max - min;
+    var h;
+    var s;
+
+    if (max === 0) {
+      s = 0;
+    } else {
+      s = delta / max;
+    }
+
+    if (max === min) {
+      h = 0;
+    } else if (r === max) {
+      h = (g - b) / delta;
+    } else if (g === max) {
+      h = 2 + (b - r) / delta;
+    } else if (b === max) {
+      h = 4 + (r - g) / delta;
+    }
+
+    h = Math.min(h * 60, 360);
+
+    if (h < 0) {
+      h += 360;
+    }
 
     return {
-      hue: hue,
-      saturation: saturation,
-      value: value
+      hue: h,
+      saturation: s,
+      value: max
     };
   }
 
