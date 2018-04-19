@@ -46,7 +46,10 @@
   <div class="widget">
     <h3>Selected colour</h3>
   </div>
-  <app-palette-navigator [maxPal]="collection.palettes.length" (palIndexChange)="setPalIndex($event)"></app-palette-navigator>
+  <app-palette-navigator
+    *ngIf="collection"
+    [maxPal]="collection.palettes.length"
+    (palIndexChange)="setPalIndex($event)"></app-palette-navigator>
 </div>
 <app-gradient-editor></app-gradient-editor>
 <button (click)="savePalette()">Save Palette</button><button (click)="saveColourmap()">Save Colourmap</button>
