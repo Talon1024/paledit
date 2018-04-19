@@ -46,19 +46,7 @@
   <div class="widget">
     <h3>Selected colour</h3>
   </div>
-  <div class="pallist" *ngIf="collection">
-    <div>Palette: <input type="number"
-      class="palIndexInput"
-      [(ngModel)]="colPalIndex"
-      (change)="setPalIndex(colPalIndex)"
-      min="1" [max]="collection.palettes.length">/{{collection.palettes.length}}</div>
-    <div>
-      <span class="button firstPal" (click)="firstPal()"></span>
-      <span class="button prevPal" (click)="prevPal()"></span>
-      <span class="button nextPal" (click)="nextPal()"></span>
-      <span class="button lastPal" (click)="lastPal()"></span>
-    </div>
-  </div>
+  <app-palette-navigator [maxPal]="collection.palettes.length" (palIndexChange)="setPalIndex($event)"></app-palette-navigator>
 </div>
 <app-gradient-editor></app-gradient-editor>
 <button (click)="savePalette()">Save Palette</button><button (click)="saveColourmap()">Save Colourmap</button>

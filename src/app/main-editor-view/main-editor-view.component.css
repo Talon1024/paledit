@@ -29,7 +29,3 @@
 .lastPal::before {
   content: "\BB";
 }
-
-.palIndexInput {
-  width: 2rem;
-}

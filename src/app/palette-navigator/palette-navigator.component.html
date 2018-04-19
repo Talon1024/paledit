@@ -1,0 +1,13 @@
+<div class="pallist" *ngIf="maxPal">
+  <div>Palette: <input type="number"
+    class="palIndexInput"
+    [(ngModel)]="colPalIndex"
+    (change)="setPalIndex(colPalIndex)"
+    min="1" [max]="maxPal">/{{maxPal}}</div>
+  <div>
+    <span class="button firstPal" (click)="firstPal()"></span>
+    <span class="button prevPal" (click)="prevPal()"></span>
+    <span class="button nextPal" (click)="nextPal()"></span>
+    <span class="button lastPal" (click)="lastPal()"></span>
+  </div>
+</div>

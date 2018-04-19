@@ -14,7 +14,6 @@ import { SettingsService } from '../settings.service';
 export class MainEditorViewComponent implements OnInit {
 
   private collection:Palcollection;
-  private colPalIndex:number; // User input (actually index + 1)
   private palette:Palette;
 
   private readonly assetUrl = "/assets";
@@ -57,36 +56,14 @@ export class MainEditorViewComponent implements OnInit {
     this.paletteIo.getPaletteFile(file)
         .subscribe((collection:Palcollection) => {
       this.collection = collection;
-      this.setPalIndex(1);
+      this.setPalIndex(0);
     }, (error:any) => {
       console.error(error);
     });
   }
 
   setPalIndex(palIndex:number) {
-    this.colPalIndex = palIndex;
-    let realIndex = palIndex - 1;
-    this.palette = this.collection.palettes[realIndex];
-  }
-
-  nextPal() {
-    if (this.colPalIndex < this.collection.palettes.length) this.colPalIndex += 1;
-    this.setPalIndex(this.colPalIndex);
-  }
-
-  prevPal() {
-    if (this.colPalIndex > 1) this.colPalIndex -= 1;
-    this.setPalIndex(this.colPalIndex);
-  }
-
-  firstPal() {
-    this.colPalIndex = 1;
-    this.setPalIndex(this.colPalIndex);
-  }
-
-  lastPal() {
-    this.colPalIndex = this.collection.palettes.length;
-    this.setPalIndex(this.colPalIndex);
+    this.palette = this.collection.palettes[palIndex];
   }
 
   ngOnInit() {
@@ -95,7 +72,7 @@ export class MainEditorViewComponent implements OnInit {
     }).subscribe((resp:ArrayBuffer) => {
       let palette = Palette.fromData(new Uint8ClampedArray(resp));
       this.collection = Palcollection.withInitialPal(palette);
-      this.setPalIndex(1);
+      this.setPalIndex(0);
     });
   }
 
