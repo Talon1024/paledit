@@ -113,10 +113,6 @@ export class Rgbcolour implements Rgb {
     };
   }
 
-  value():number {
-    return Math.max(this.red, this.green, this.blue);
-  }
-
   toHex():string {
     let rgb = new Rgbcolour();
     for (let part of Rgbcolour.components) {
