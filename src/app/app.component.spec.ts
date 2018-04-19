@@ -6,15 +6,29 @@ import { GradientEditorComponent } from './gradient-editor/gradient-editor.compo
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { PaletteIoService } from './palette-io.service';
+import { PaletteOperationService } from './palette-operation.service';
 import { KeyboardService } from './keyboard.service';
 import { SettingsService } from './settings.service';
+import { PaletteNavigatorComponent } from './palette-navigator/palette-navigator.component';
 
 describe('AppComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ AppComponent, MainEditorViewComponent, PaletteViewComponent, GradientEditorComponent ],
+      declarations: [
+        AppComponent,
+        MainEditorViewComponent,
+        PaletteViewComponent,
+        GradientEditorComponent,
+        PaletteNavigatorComponent
+      ],
       imports: [ FormsModule, HttpClientModule ],
-      providers: [ HttpClient, PaletteIoService, KeyboardService, SettingsService ]
+      providers: [
+        HttpClient,
+        PaletteIoService,
+        KeyboardService,
+        SettingsService,
+        PaletteOperationService
+     ]
     }).compileComponents();
   }));
   it('should create the app', async(() => {
