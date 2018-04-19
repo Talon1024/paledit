@@ -1,3 +1,19 @@
 .palIndexInput {
   width: 3rem;
 }
+
+.firstPal::before {
+  content: "\AB";
+}
+
+.prevPal::before {
+  content: "\2039";
+}
+
+.nextPal::before {
+  content: "\203A";
+}
+
+.lastPal::before {
+  content: "\BB";
+}
