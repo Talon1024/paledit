@@ -39,7 +39,7 @@ export class PaletteNavigatorComponent implements OnInit {
   }
 
   setPalIndex(palIndex:number) {
-    this.palIndexChange.emit(this.colPalIndex - 1);
+    this.palIndexChange.emit(palIndex - 1);
   }
 
 }
