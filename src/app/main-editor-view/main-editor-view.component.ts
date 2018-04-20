@@ -23,35 +23,6 @@ export class MainEditorViewComponent implements OnInit {
     private keyboard:KeyboardService,
     private settings:SettingsService) {}
 
-  private cancelEvent(e:Event) {
-    e.stopPropagation();
-    e.preventDefault();
-  }
-
-  handleDragEnter(e:DragEvent) {
-    this.cancelEvent(e);
-  }
-
-  handleDragOver(e:DragEvent) {
-    this.cancelEvent(e);
-  }
-
-  dropPalette(event:DragEvent) {
-    this.cancelEvent(event);
-
-    if (event.dataTransfer) {
-      let files = event.dataTransfer.files;
-      this.readPaletteFile(files[0]);
-    }
-  }
-
-  selectPalette(event:Event) {
-    let targ = <HTMLInputElement>(event.target);
-    if (targ.files && targ.files.length > 0) {
-      this.readPaletteFile(targ.files[0]);
-    }
-  }
-
   readPaletteFile(file) {
     this.paletteIo.getPaletteFile(file)
         .subscribe((collection:Palcollection) => {

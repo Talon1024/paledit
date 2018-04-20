@@ -10,6 +10,7 @@ import { PaletteOperationService } from './palette-operation.service';
 import { KeyboardService } from './keyboard.service';
 import { SettingsService } from './settings.service';
 import { PaletteNavigatorComponent } from './palette-navigator/palette-navigator.component';
+import { PaletteLoaderComponent } from './palette-loader/palette-loader.component';
 
 describe('AppComponent', () => {
   beforeEach(async(() => {
@@ -19,7 +20,8 @@ describe('AppComponent', () => {
         MainEditorViewComponent,
         PaletteViewComponent,
         GradientEditorComponent,
-        PaletteNavigatorComponent
+        PaletteNavigatorComponent,
+        PaletteLoaderComponent
       ],
       imports: [ FormsModule, HttpClientModule ],
       providers: [

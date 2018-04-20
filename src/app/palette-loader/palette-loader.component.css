@@ -1,0 +1,11 @@
+.dragon-drop {
+  max-width: 500px;
+  padding: 30px 0;
+  border: 2px solid #eeeeee;
+  text-align: center;
+  transition: background-color 0.3s ease-in-out 0s;
+}
+
+.dragon-drop.dragover {
+  background-color: #FFFFAA;
+}

@@ -5,6 +5,7 @@ import { PaletteViewComponent } from '../palette-view/palette-view.component';
 import { PaletteNavigatorComponent } from '../palette-navigator/palette-navigator.component';
 import { FormsModule } from '@angular/forms';
 import { GradientEditorComponent } from '../gradient-editor/gradient-editor.component';
+import { PaletteLoaderComponent } from '../palette-loader/palette-loader.component';
 
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 
@@ -23,7 +24,8 @@ describe('MainEditorViewComponent', () => {
         MainEditorViewComponent,
         PaletteViewComponent,
         GradientEditorComponent,
-        PaletteNavigatorComponent
+        PaletteNavigatorComponent,
+        PaletteLoaderComponent
       ],
       imports: [ FormsModule, HttpClientModule ],
       providers: [

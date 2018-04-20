@@ -15,6 +15,7 @@ import { MainEditorViewComponent } from './main-editor-view/main-editor-view.com
 import { PaletteViewComponent } from './palette-view/palette-view.component';
 import { GradientEditorComponent } from './gradient-editor/gradient-editor.component';
 import { PaletteNavigatorComponent } from './palette-navigator/palette-navigator.component';
+import { PaletteLoaderComponent } from './palette-loader/palette-loader.component';
 
 const assetUrl = "/assets/";
 
@@ -24,7 +25,8 @@ const assetUrl = "/assets/";
     MainEditorViewComponent,
     PaletteViewComponent,
     GradientEditorComponent,
-    PaletteNavigatorComponent
+    PaletteNavigatorComponent,
+    PaletteLoaderComponent
   ],
   imports: [
     BrowserModule,

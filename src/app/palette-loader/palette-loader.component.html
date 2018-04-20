@@ -1,0 +1,9 @@
+<div class="dragon-drop"
+    (dragenter)="handleDragEnter($event)"
+    (dragover)="handleDragOver($event)"
+    (drop)="dropPalette($event)">
+  <label>
+    <p>Select a PLAYPAL, or drag and drop one here.</p>
+    <p><input type="file" (change)="selectPalette($event)"></p>
+  </label>
+</div>
