@@ -3,6 +3,7 @@ import { Palette } from './palette-model/palette';
 import { Palcolour } from './palette-model/palcolour';
 import { ColourRange } from './palette-model/colour-range';
 import { ColourSubRange } from './palette-model/colour-sub-range';
+import { Gradient } from './gradient-model/gradient';
 
 @Injectable()
 export class PaletteOperationService {
@@ -89,7 +90,7 @@ export class PaletteOperationService {
     this.lastSelectedIndex = colourIndex;
   }
 
-  selectionToRange() {
+  selectionToRange():ColourRange {
     let subRanges:ColourSubRange[] = [];
     let subRangeStart = 0, subRangeEnd = 0, inSubRange = false;
     for (let colour of this.palColours) {
@@ -111,6 +112,35 @@ export class PaletteOperationService {
     for (let i = 0; i < this.palette.getLength(); i++) {
       this.palColours[i] = this.palette.colourAt(i);
     }
+  }
+
+  updatePalette() {
+    for (let colour of this.palColours) {
+      this.palette.setColour(colour.index, colour);
+    }
+  }
+
+  reverse() {
+    this.selectionRange = this.selectionToRange();
+  }
+
+  private reverseSubRange(subRange:ColourSubRange) {
+    let [start, end] = subRange.sorted();
+    for (let x = start, y = end, m = Math.floor(start + end / 2); x < m; x++, y--) {
+      this.swap(x, y);
+    }
+  }
+
+  swap(firstIdx:number, secondIdx:number) {
+    let tempColour = this.palColours[firstIdx];
+    this.palColours[firstIdx] = this.palColours[secondIdx];
+    this.palColours[firstIdx].index = firstIdx;
+    this.palColours[secondIdx] = tempColour;
+    this.palColours[secondIdx].index = secondIdx;
+  }
+
+  applyGradient(gradient:Gradient) {
+
   }
 
 }
