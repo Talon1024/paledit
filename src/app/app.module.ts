@@ -5,7 +5,6 @@ import { FormsModule } from '@angular/forms';
 import { ColorPickerModule } from 'ngx-color-picker';
 
 import { KeyboardService } from './keyboard.service';
-import { PaletteService } from './palette.service';
 import { PaletteIoService } from './palette-io.service';
 import { PaletteOperationService } from './palette-operation.service';
 import { SettingsService } from './settings.service';
@@ -37,7 +36,6 @@ const assetUrl = "/assets/";
   providers: [
     KeyboardService,
     PaletteIoService,
-    PaletteService,
     SettingsService,
     PaletteOperationService
   ],
