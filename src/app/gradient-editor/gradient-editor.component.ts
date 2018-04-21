@@ -29,4 +29,9 @@ export class GradientEditorComponent implements OnInit {
     return this.sanitizer.bypassSecurityTrustStyle(this.gradient.toCssString());
   }
 
+  previewColourStyle(palIdx:number):SafeStyle {
+    let colour = this.gradient.colourAt(palIdx);
+    return this.sanitizer.bypassSecurityTrustStyle(colour.toHex());
+  }
+
 }

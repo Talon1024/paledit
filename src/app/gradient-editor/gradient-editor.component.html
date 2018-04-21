@@ -1,7 +1,9 @@
 <div class="widget" *ngIf="gradient">
-  <div class="gradient" [style.background-image]="gradientStyle()"></div>
+  <div class="gradient" [style.background-image]="gradientStyle()">
+    <div *ngFor="let stop of gradient.stops" class="gradient-stop" [style.position]=""></div>
+  </div>
   <div class="gradient-preview" *ngIf="gradient.palRange">
-    <div *ngFor="let colour of gradient.palRange; index as i" [style.background-color]=""></div>
+    <div *ngFor="let pidx of gradient.palRange.getIndices()" [style.background-color]="previewColourStyle(pidx)"></div>
   </div>
   <button>+</button><button>-</button>
   <select *ngIf="gradient.stops">
