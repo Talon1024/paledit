@@ -130,8 +130,7 @@ export class PaletteOperationService {
   }
 
   reverse() {
-    let selRange = this.selectionRange = this.selectionToRange();
-    let indices = selRange.getIndices().sort((a, b) => a - b);
+    let indices = this.selectionRange.getIndices().sort((a, b) => a - b);
     for (let x = 0, y = indices.length - 1, m = Math.floor(indices.length / 2); x < m; x++, y--) {
       this.swap(indices[x], indices[y]);
     }
