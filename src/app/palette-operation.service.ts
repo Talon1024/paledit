@@ -155,7 +155,13 @@ export class PaletteOperationService {
   }
 
   applyGradient(gradient:Gradient) {
-
+    gradient.palRange = this.selectionRange;
+    for (let x of this.selectionRange.getIndices()) {
+      let palColour = new Palcolour(gradient.colourAt(x));
+      palColour.index = x;
+      palColour.palette = this.palette;
+      this.palColours[x] = palColour;
+    }
   }
 
 }
