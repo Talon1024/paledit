@@ -15,7 +15,7 @@ export class PaletteOperationService {
 
   constructor() { }
 
-  selectPalColour(colourIndex:number, keyState:{[key:string]:boolean}) {
+  selectPalColour(colourIndex:number, keyState:{[key:string]:boolean}):ColourRange | null {
     /*
     If nothing is selected:
     select the colour
@@ -88,11 +88,13 @@ export class PaletteOperationService {
     }
 
     this.lastSelectedIndex = colourIndex;
+    return this.selectionToRange();
   }
 
-  selectionToRange():ColourRange {
+  selectionToRange():ColourRange | null {
     let subRanges:ColourSubRange[] = [];
     let subRangeStart = 0, subRangeEnd = 0, inSubRange = false;
+
     for (let colour of this.palColours) {
       if (!inSubRange && colour.selected) {
         subRangeStart = colour.index;
@@ -103,7 +105,14 @@ export class PaletteOperationService {
         subRanges.push(new ColourSubRange(subRangeStart, subRangeEnd));
       }
     }
-    return new ColourRange(subRanges);
+
+    if (subRanges.length > 0) {
+      this.selectionRange = new ColourRange(subRanges);
+    } else {
+      this.selectionRange = null;
+    }
+
+    return this.selectionRange;
   }
 
   setPalette(pal:Palette) {
@@ -121,17 +130,24 @@ export class PaletteOperationService {
   }
 
   reverse() {
-    this.selectionRange = this.selectionToRange();
+    let selRange = this.selectionRange = this.selectionToRange();
+    let indices = selRange.getIndices().sort((a, b) => a - b);
+    for (let x = 0, y = indices.length - 1, m = Math.floor(indices.length / 2); x < m; x++, y--) {
+      this.swap(indices[x], indices[y]);
+    }
+    this.updatePalette();
   }
 
+/*
   private reverseSubRange(subRange:ColourSubRange) {
     let [start, end] = subRange.sorted();
     for (let x = start, y = end, m = Math.floor(start + end / 2); x < m; x++, y--) {
       this.swap(x, y);
     }
   }
+*/
 
-  swap(firstIdx:number, secondIdx:number) {
+  private swap(firstIdx:number, secondIdx:number) {
     let tempColour = this.palColours[firstIdx];
     this.palColours[firstIdx] = this.palColours[secondIdx];
     this.palColours[firstIdx].index = firstIdx;
