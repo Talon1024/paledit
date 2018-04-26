@@ -7,4 +7,6 @@
 }
 .gradient-preview > * {
   flex-grow: 1;
+  height: 30px;
+  margin: 2px;
 }
