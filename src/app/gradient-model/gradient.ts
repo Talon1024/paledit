@@ -65,23 +65,26 @@ export class Gradient {
 
   colourAt(palIdx:number, palRange:ColourRange):Rgbcolour {
     if (!palRange) return;
+    let rangeLen = palRange.getLength();
     let stopIdxs:number[] = this.getStopIdxs(palRange);
 
     // Is the index within the range?
     let rangeIdx = palRange.palToRangeIdx(palIdx);
     if (rangeIdx < 0) return;
 
-    let stopsAtIdx = this.stops.filter((e, i) => stopIdxs[i] === palIdx);
+    stopIdxs = stopIdxs.map((i) => palRange.palToRangeIdx(i));
+
+    let stopsAtIdx = this.stops.filter((e, i) => stopIdxs[i] === rangeIdx);
     if (stopsAtIdx.length === 0) {
       // Find colour at this index
-      let nextStopGidx = stopIdxs.findIndex((e) => e >= palIdx);
+      let nextStopGidx = stopIdxs.findIndex((e) => e >= rangeIdx);
       let prevStopGidx = nextStopGidx - 1;
       let nextStop:GradientStop = this.stops[nextStopGidx];
       let prevStop:GradientStop = this.stops[prevStopGidx];
-      let nextStopPidx = stopIdxs[nextStopGidx];
-      let prevStopPidx = stopIdxs[prevStopGidx];
+      let nextStopRidx = stopIdxs[nextStopGidx];
+      let prevStopRidx = stopIdxs[prevStopGidx];
 
-      let blendFactor = (palIdx - prevStopPidx) / (nextStopPidx - prevStopPidx);
+      let blendFactor = rangeIdx / (nextStopRidx - prevStopRidx);
 
       let prevColour = new Rgbcolour(prevStop.colour);
       let nextColour = new Rgbcolour(nextStop.colour);
