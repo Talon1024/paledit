@@ -24,11 +24,10 @@ describe('Gradient', () => {
     let subRange = new ColourSubRange(rangeStart, rangeEnd);
     let colourRange = new ColourRange([subRange]);
 
-    gradient.palRange = colourRange;
-
+    let actual = gradient.getStopIdxs(colourRange);
     let expected = [16, 32];
 
-    expect(gradient.stopIdxs).toEqual(expected);
+    expect(actual).toEqual(expected);
   });
   it("should get the correct colour at the midpoint of a 16-colour palette range", () => {
     // Default gradient
@@ -46,12 +45,10 @@ describe('Gradient', () => {
     let colourRange = new ColourRange();
     colourRange.subRanges = [subRange];
 
-    gradient.palRange = colourRange;
-
     // Now for the actual test
     let expected = new Rgbcolour(128, 128, 128);
 
-    expect(gradient.colourAt(rangeStart + 8)).toEqual(expected);
+    expect(gradient.colourAt(rangeStart + 8, colourRange)).toEqual(expected);
   });
   it("should get the correct colour at the midpoint between red and green", () => {
     // Default gradient
@@ -70,13 +67,11 @@ describe('Gradient', () => {
     let colourRange = new ColourRange();
     colourRange.subRanges = [subRange];
 
-    gradient.palRange = colourRange;
-
     // Now for the actual test
     let expected = new Rgbcolour(128, 128, 0);
     let palIdx = Math.floor(0.25 * colourRange.getLength()) + rangeStart;
 
-    expect(gradient.colourAt(palIdx)).toEqual(expected);
+    expect(gradient.colourAt(palIdx, colourRange)).toEqual(expected);
   });
   it("should get the correct colour at the beginning gradient stop", () => {
     // Default gradient
@@ -93,12 +88,10 @@ describe('Gradient', () => {
     let colourRange = new ColourRange();
     colourRange.subRanges = [subRange];
 
-    gradient.palRange = colourRange;
-
     // Now for the actual test
     let expected = new Rgbcolour(0, 0, 0);
 
-    expect(gradient.colourAt(rangeStart)).toEqual(expected);
+    expect(gradient.colourAt(rangeStart, colourRange)).toEqual(expected);
   });
   it("should get the correct colour at the end gradient stop", () => {
     // Default gradient
@@ -115,12 +108,10 @@ describe('Gradient', () => {
     let colourRange = new ColourRange();
     colourRange.subRanges = [subRange];
 
-    gradient.palRange = colourRange;
-
     // Now for the actual test
     let expected = new Rgbcolour(255, 255, 255);
 
-    expect(gradient.colourAt(rangeEnd)).toEqual(expected);
+    expect(gradient.colourAt(rangeEnd, colourRange)).toEqual(expected);
   });
   it("should get the correct colour at a gradient stop", () => {
     // Default gradient
@@ -138,12 +129,10 @@ describe('Gradient', () => {
     let colourRange = new ColourRange();
     colourRange.subRanges = [subRange];
 
-    gradient.palRange = colourRange;
-
     // Now for the actual test
     let expected = new Rgbcolour(0, 255, 0);
 
-    expect(gradient.colourAt(Math.floor((rangeStart + rangeEnd) / 2))).toEqual(expected);
+    expect(gradient.colourAt(Math.floor((rangeStart + rangeEnd) / 2), colourRange)).toEqual(expected);
   });
   it("should convert to a CSS string", () => {
     let blackStop = new GradientStop(0.0, {red: 0, green: 0, blue: 0});

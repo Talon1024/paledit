@@ -24,30 +24,28 @@ export class GradientStop {
 
 export class Gradient {
   stops:GradientStop[];
-  stopIdxs:number[]; // Palette indices of each stop
-  private _palRange?:ColourRange;
-  get palRange() { return this._palRange; }
-  set palRange(value:ColourRange) {
-    // Update stop indices when user assigns palette range
-    this._palRange = value;
-    if (value) this.updateStopIdxs();
-  }
   reverse:boolean;
 
   constructor(stops?:GradientStop[], reverse:boolean = false) {
     if (stops) {
       this.stops = stops;
-      this.stopIdxs = [];
     } else {
       this.stops = [];
-      this.stopIdxs = [];
     }
     this.reverse = reverse;
   }
 
-  private stopIndex(stop:GradientStop):number {
-    let length = this._palRange.getLength();
-    let rangePalIdxs = this._palRange.getIndices();
+
+  addStop(stop:GradientStop) {
+    this.stops.push(stop);
+    this.stops.sort(function (a:GradientStop, b:GradientStop):number {
+      return a.position - b.position;
+    });
+  }
+
+  private stopIndex(stop:GradientStop, range:ColourRange):number {
+    let length = range.getLength();
+    let rangePalIdxs = range.getIndices();
     let stopPos = stop.position;
     if (this.reverse) stopPos = 1.0 - stopPos;
 
@@ -56,35 +54,31 @@ export class Gradient {
     return palIdx;
   }
 
-  addStop(stop:GradientStop) {
-    this.stops.push(stop);
-    this.stops.sort(function (a:GradientStop, b:GradientStop):number {
-      return a.position - b.position;
-    });
-    if (this._palRange) this.updateStopIdxs();
-  }
-
-  private updateStopIdxs() {
+  getStopIdxs(range:ColourRange):number[] {
+    let stopIdxs:number[] = new Array(this.stops.length);
     for (let i = 0; i < this.stops.length; i++) {
       let stop = this.stops[i];
-      this.stopIdxs[i] = this.stopIndex(stop);
+      stopIdxs[i] = this.stopIndex(stop, range);
     }
+    return stopIdxs;
   }
 
-  colourAt(palIdx:number):Rgbcolour {
-    if (!this._palRange) return;
-    let rangeIdx = this._palRange.palToRangeIdx(palIdx);
+  colourAt(palIdx:number, palRange:ColourRange):Rgbcolour {
+    let stopIdxs:number[] = this.getStopIdxs(palRange);
+
+    // Is the index within the range?
+    let rangeIdx = palRange.palToRangeIdx(palIdx);
     if (rangeIdx < 0) return;
 
-    let stopsAtIdx = this.stops.filter((e, i) => this.stopIdxs[i] === palIdx);
+    let stopsAtIdx = this.stops.filter((e, i) => stopIdxs[i] === palIdx);
     if (stopsAtIdx.length === 0) {
       // Find colour at this index
-      let nextStopGidx = this.stopIdxs.findIndex((e) => e >= palIdx);
+      let nextStopGidx = stopIdxs.findIndex((e) => e >= palIdx);
       let prevStopGidx = nextStopGidx - 1;
       let nextStop:GradientStop = this.stops[nextStopGidx];
       let prevStop:GradientStop = this.stops[prevStopGidx];
-      let nextStopPidx = this.stopIdxs[nextStopGidx];
-      let prevStopPidx = this.stopIdxs[prevStopGidx];
+      let nextStopPidx = stopIdxs[nextStopGidx];
+      let prevStopPidx = stopIdxs[prevStopGidx];
 
       let blendFactor = (palIdx - prevStopPidx) / (nextStopPidx - prevStopPidx);
 
