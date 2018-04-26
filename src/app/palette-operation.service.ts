@@ -106,6 +106,13 @@ export class PaletteOperationService {
       }
     }
 
+    if (inSubRange && this.palColours[this.palColours.length - 1].selected) {
+      // The last colour of the palette is selected
+      inSubRange = false;
+      subRangeEnd = this.palColours.length - 1;
+      subRanges.push(new ColourSubRange(subRangeStart, subRangeEnd));
+    }
+
     if (subRanges.length > 0) {
       this.selectionRange = new ColourRange(subRanges);
     } else {
