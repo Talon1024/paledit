@@ -43,7 +43,7 @@ export class Gradient {
     });
   }
 
-  private stopIndex(stop:GradientStop, range:ColourRange):number {
+  private stopPalIndex(stop:GradientStop, range:ColourRange):number {
     let length = range.getLength();
     let rangePalIdxs = range.getIndices();
     let stopPos = stop.position;
@@ -54,11 +54,29 @@ export class Gradient {
     return palIdx;
   }
 
-  getStopIdxs(range:ColourRange):number[] {
+  private stopRangeIndex(stop:GradientStop, range:ColourRange):number {
+    let length = range.getLength();
+    let stopPos = stop.position;
+    if (this.reverse) stopPos = 1.0 - stopPos;
+
+    let rangeIdx = Math.floor(stopPos * length);
+    return rangeIdx;
+  }
+
+  getStopPalIdxs(range:ColourRange):number[] {
     let stopIdxs:number[] = new Array(this.stops.length);
     for (let i = 0; i < this.stops.length; i++) {
       let stop = this.stops[i];
-      stopIdxs[i] = this.stopIndex(stop, range);
+      stopIdxs[i] = this.stopPalIndex(stop, range);
+    }
+    return stopIdxs;
+  }
+
+  getStopRangeIdxs(range:ColourRange):number[] {
+    let stopIdxs:number[] = new Array(this.stops.length);
+    for (let i = 0; i < this.stops.length; i++) {
+      let stop = this.stops[i];
+      stopIdxs[i] = this.stopRangeIndex(stop, range);
     }
     return stopIdxs;
   }
@@ -66,13 +84,11 @@ export class Gradient {
   colourAt(palIdx:number, palRange:ColourRange):Rgbcolour {
     if (!palRange) return;
     let rangeLen = palRange.getLength();
-    let stopIdxs:number[] = this.getStopIdxs(palRange);
+    let stopIdxs:number[] = this.getStopRangeIdxs(palRange);
 
     // Is the index within the range?
     let rangeIdx = palRange.palToRangeIdx(palIdx);
     if (rangeIdx < 0) return;
-
-    stopIdxs = stopIdxs.map((i) => palRange.palToRangeIdx(i));
 
     let stopsAtIdx = this.stops.filter((e, i) => stopIdxs[i] === rangeIdx);
     if (stopsAtIdx.length === 0) {

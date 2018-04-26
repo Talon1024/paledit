@@ -92,4 +92,61 @@ describe('ColourRange', () => {
 
     expect(range.getIndices()).toEqual(expected);
   });
+  it('should get the correct length if the range has one or more sub-ranges with 1 colour', () => {
+    let subRanges = [
+      new ColourSubRange(19, 19),
+      new ColourSubRange(21, 21),
+      new ColourSubRange(26, 26),
+      new ColourSubRange(31, 31),
+      new ColourSubRange(50, 50),
+      new ColourSubRange(53, 53),
+      new ColourSubRange(55, 55),
+      new ColourSubRange(58, 58),
+      new ColourSubRange(62, 62)
+    ];
+
+    let range = new ColourRange(subRanges);
+
+    let expected = 9;
+
+    expect(range.getLength()).toEqual(expected);
+  });
+  it('should get the correct indices if the range has one or more sub-ranges with 1 colour', () => {
+    let subRanges = [
+      new ColourSubRange(19, 19),
+      new ColourSubRange(21, 21),
+      new ColourSubRange(26, 26),
+      new ColourSubRange(31, 31),
+      new ColourSubRange(50, 50),
+      new ColourSubRange(53, 53),
+      new ColourSubRange(55, 55),
+      new ColourSubRange(58, 58),
+      new ColourSubRange(62, 62)
+    ];
+
+    let range = new ColourRange(subRanges);
+
+    let expected = [19, 21, 26, 31, 50, 53, 55, 58, 62];
+
+    expect(range.getIndices()).toEqual(expected);
+  });
+  it('should get the correct range index if the range has one or more sub-ranges with 1 colour', () => {
+    let subRanges = [
+      new ColourSubRange(19, 19),
+      new ColourSubRange(21, 21),
+      new ColourSubRange(26, 26),
+      new ColourSubRange(31, 31),
+      new ColourSubRange(50, 50),
+      new ColourSubRange(53, 53),
+      new ColourSubRange(55, 55),
+      new ColourSubRange(58, 58),
+      new ColourSubRange(62, 62)
+    ];
+
+    let range = new ColourRange(subRanges);
+    let palIdx = 26;
+    let expected = 2;
+
+    expect(range.palToRangeIdx(palIdx)).toEqual(expected);
+  });
 });

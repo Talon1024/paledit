@@ -8,7 +8,8 @@ export class ColourSubRange {
   }
 
   getLength():number {
-    return Math.abs(this.end - this.start);
+    if (this.end !== this.start) return Math.abs(this.end - this.start);
+    return 1;
   }
 
   sorted():number[] {

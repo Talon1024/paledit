@@ -24,7 +24,7 @@ describe('Gradient', () => {
     let subRange = new ColourSubRange(rangeStart, rangeEnd);
     let colourRange = new ColourRange([subRange]);
 
-    let actual = gradient.getStopIdxs(colourRange);
+    let actual = gradient.getStopPalIdxs(colourRange);
     let expected = [16, 32];
 
     expect(actual).toEqual(expected);
