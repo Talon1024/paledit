@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, SimpleChange } from '@angular/core';
+import { Component, OnInit, Input, SimpleChange, Output, EventEmitter } from '@angular/core';
 import { Palette } from '../palette-model/palette';
 import { Palcolour } from '../palette-model/palcolour';
 import { ColourRange } from '../palette-model/colour-range';
@@ -18,6 +18,9 @@ export class PaletteViewComponent implements OnInit {
 
   private keyState:{[key:string]:boolean};
   @Input() palette:Palette;
+  private palColours:Palcolour[];
+  private selectionRange:ColourRange;
+  @Output() onSelect = new EventEmitter<ColourRange>();
 
   constructor(
     private keyboard:KeyboardService,
@@ -27,15 +30,13 @@ export class PaletteViewComponent implements OnInit {
     }
 
   selectPalColour(colourIndex:number) {
-    this.palOp.selectPalColour(colourIndex, this.keyState);
-  }
-
-  selectionToRange() {
-    this.palOp.selectionToRange();
+    this.selectionRange = this.palOp.selectPalColour(colourIndex, this.keyState);
+    this.onSelect.emit(this.selectionRange);
   }
 
   onSetPalette() {
     this.palOp.setPalette(this.palette);
+    this.palColours = this.palOp.palColours;
   }
 
   ngOnInit():void {

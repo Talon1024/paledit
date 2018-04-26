@@ -1,7 +1,7 @@
-<div class="palette" [style.grid-template-columns]="settings.palColumnStyle()" *ngIf="palOp.palColours">
-  <div *ngFor="let colour of palOp.palColours"
+<div class="palette" [style.grid-template-columns]="settings.palColumnStyle()" *ngIf="palColours">
+  <div *ngFor="let colour of palColours"
     class="palcolour" [ngStyle]="colour.getStyles()"
     [class.selected]="colour.selected"
     (click)="selectPalColour(colour.index)">#{{colour.index}}</div>
 </div>
-<button [disabled]="!palOp.selectionRange" (click)="palOp.reverse()">Reverse Selection</button>
+<button [disabled]="!selectionRange" (click)="palOp.reverse()">Reverse Selection</button>

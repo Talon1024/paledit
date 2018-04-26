@@ -1,7 +1,9 @@
 <app-palette-loader
   (selectPalFile)="readPaletteFile($event)"></app-palette-loader>
 <div class="editor-main">
-  <app-palette-view [palette]="palette"></app-palette-view>
+  <app-palette-view
+    [palette]="palette"
+    (onSelect)="setSelectionRange($event)"></app-palette-view>
   <div class="widget">
     <h3>Colour Ranges</h3>
     <ol>
@@ -44,5 +46,5 @@
     [maxPal]="collection.palettes.length"
     (palIndexChange)="setPalIndex($event)"></app-palette-navigator>
 </div>
-<app-gradient-editor></app-gradient-editor>
+<app-gradient-editor [range]="selectionRange"></app-gradient-editor>
 <button (click)="savePalette()">Save Palette</button><button (click)="saveColourmap()">Save Colourmap</button>

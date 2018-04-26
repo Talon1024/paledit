@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
+import { ColourRange } from '../palette-model/colour-range';
 import { Gradient, GradientStop } from '../gradient-model/gradient';
 import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
 
@@ -10,6 +11,7 @@ import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
 export class GradientEditorComponent implements OnInit {
 
   private gradient:Gradient;
+  @Input() range:ColourRange;
 
   constructor(private sanitizer:DomSanitizer) {}
 
@@ -30,7 +32,7 @@ export class GradientEditorComponent implements OnInit {
   }
 
   previewColourStyle(palIdx:number):SafeStyle {
-    let colour = this.gradient.colourAt(palIdx);
+    let colour = this.gradient.colourAt(palIdx, this.range);
     return this.sanitizer.bypassSecurityTrustStyle(colour.toHex());
   }
 

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Palette } from '../palette-model/palette';
+import { ColourRange } from '../palette-model/colour-range';
 import { Palcollection } from '../palette-model/palcollection';
 import { HttpClient } from '@angular/common/http';
 import { PaletteIoService } from '../palette-io.service';
@@ -15,6 +16,7 @@ export class MainEditorViewComponent implements OnInit {
 
   private collection:Palcollection;
   private palette:Palette;
+  private selectionRange:ColourRange;
 
   private readonly assetUrl = "/assets";
 
@@ -35,6 +37,10 @@ export class MainEditorViewComponent implements OnInit {
 
   setPalIndex(palIndex:number) {
     this.palette = this.collection.palettes[palIndex];
+  }
+
+  setSelectionRange(range:ColourRange) {
+    this.selectionRange = range;
   }
 
   ngOnInit() {

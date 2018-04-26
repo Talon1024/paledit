@@ -91,7 +91,7 @@ export class PaletteOperationService {
     return this.selectionToRange();
   }
 
-  selectionToRange():ColourRange | null {
+  selectionToRange():ColourRange {
     let subRanges:ColourSubRange[] = [];
     let subRangeStart = 0, subRangeEnd = 0, inSubRange = false;
 

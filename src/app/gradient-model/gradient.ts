@@ -64,6 +64,7 @@ export class Gradient {
   }
 
   colourAt(palIdx:number, palRange:ColourRange):Rgbcolour {
+    if (!palRange) return;
     let stopIdxs:number[] = this.getStopIdxs(palRange);
 
     // Is the index within the range?
