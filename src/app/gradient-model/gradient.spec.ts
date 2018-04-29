@@ -20,12 +20,12 @@ describe('Gradient', () => {
     let gradient = new Gradient([blackStop, whiteStop]);
 
     let rangeStart = 16;
-    let rangeEnd = 32;
+    let rangeEnd = 31;
     let subRange = new ColourSubRange(rangeStart, rangeEnd);
     let colourRange = new ColourRange([subRange]);
 
-    let actual = gradient.getStopPalIdxs(colourRange);
-    let expected = [16, 32];
+    let actual = gradient.getStopRangeIdxs(colourRange);
+    let expected = [0, 16];
 
     expect(actual).toEqual(expected);
   });
@@ -39,7 +39,7 @@ describe('Gradient', () => {
     // Set up colour range/subrange
     // 16 colours to keep things simple
     let rangeStart = 16;
-    let rangeEnd = 32;
+    let rangeEnd = 31;
 
     let subRange = new ColourSubRange(rangeStart, rangeEnd);
     let colourRange = new ColourRange();

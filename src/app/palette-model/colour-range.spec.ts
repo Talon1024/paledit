@@ -6,7 +6,7 @@ describe('ColourRange', () => {
     expect(new ColourRange()).toBeTruthy();
   });
   it('should get the correct length of a range with one sub-range', () => {
-    let subRange = new ColourSubRange(16, 32);
+    let subRange = new ColourSubRange(16, 31);
     let range = new ColourRange([subRange]);
 
     let expected = 16;
@@ -14,8 +14,8 @@ describe('ColourRange', () => {
     expect(range.getLength()).toEqual(expected);
   });
   it('should get the correct length of a range with more than one sub-range', () => {
-    let subRange = new ColourSubRange(16, 32);
-    let subRange2 = new ColourSubRange(48, 64);
+    let subRange = new ColourSubRange(16, 31);
+    let subRange2 = new ColourSubRange(48, 63);
     let range = new ColourRange([subRange, subRange2]);
 
     let expected = 32;
@@ -52,8 +52,8 @@ describe('ColourRange', () => {
     expect(range.palToRangeIdx(palIdx)).toEqual(expected);
   });
   it('should convert a palette index to a range index where the range has more than one sub-range', () => {
-    let subRange = new ColourSubRange(16, 32);
-    let subRange2 = new ColourSubRange(48, 64);
+    let subRange = new ColourSubRange(16, 31);
+    let subRange2 = new ColourSubRange(48, 63);
     let range = new ColourRange([subRange, subRange2]);
 
     let palIdx = 60;
@@ -148,5 +148,14 @@ describe('ColourRange', () => {
     let expected = 2;
 
     expect(range.palToRangeIdx(palIdx)).toEqual(expected);
+  });
+  it('getLength() should be the same as the length of the palette indices', () => {
+    let subRange = new ColourSubRange(16, 32);
+    let range = new ColourRange([subRange]);
+
+    let expected = range.getLength();
+    let palIdxs = range.getIndices();
+
+    expect(palIdxs.length).toEqual(expected);
   });
 });

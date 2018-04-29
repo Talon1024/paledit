@@ -5,13 +5,13 @@ describe('ColourSubRange', () => {
     expect(new ColourSubRange()).toBeTruthy();
   });
   it('should get the correct length', () => {
-    let range = new ColourSubRange(10, 16);
+    let range = new ColourSubRange(10, 15);
     let expected = 6;
 
     expect(range.getLength()).toEqual(expected);
   });
   it('should get the correct length where start > end', () => {
-    let range = new ColourSubRange(16, 10);
+    let range = new ColourSubRange(15, 10);
     let expected = 6;
 
     expect(range.getLength()).toEqual(expected);
