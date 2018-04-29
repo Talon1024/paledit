@@ -55,7 +55,7 @@ export class Gradient {
   }
 
   private stopRangeIndex(stop:GradientStop, range:ColourRange):number {
-    let length = range.getLength();
+    let length = range.getLength() - 1;
     let stopPos = stop.position;
     if (this.reverse) stopPos = 1.0 - stopPos;
 

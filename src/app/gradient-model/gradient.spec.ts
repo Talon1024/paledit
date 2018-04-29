@@ -20,7 +20,7 @@ describe('Gradient', () => {
     let gradient = new Gradient([blackStop, whiteStop]);
 
     let rangeStart = 16;
-    let rangeEnd = 31;
+    let rangeEnd = 32;
     let subRange = new ColourSubRange(rangeStart, rangeEnd);
     let colourRange = new ColourRange([subRange]);
 
@@ -39,7 +39,7 @@ describe('Gradient', () => {
     // Set up colour range/subrange
     // 16 colours to keep things simple
     let rangeStart = 16;
-    let rangeEnd = 31;
+    let rangeEnd = 32;
 
     let subRange = new ColourSubRange(rangeStart, rangeEnd);
     let colourRange = new ColourRange();
