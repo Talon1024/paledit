@@ -16,18 +16,27 @@ export class KeyState {
 
 @Injectable()
 export class KeyboardService {
+  appFocused:boolean;
 
-  constructor() {}
+  constructor() {
+    this.appFocused = true;
+  }
 
   observeKeyboard(filter?:string[]):Observable<KeyState> {
     // Needed for listening for both keyup and keydown events
     return Observable.create(function (obs:Observer<KeyState>):TeardownLogic {
-      function handleKeyEvent (e:KeyboardEvent) {
+      var handleKeyEvent = (e:KeyboardEvent) => {
+        if (!this.appFocused) return;
         if (filter && !filter.includes(e.key)) return;
         let emitValue = new KeyState(e.key, e.type === "keydown" ? true : false, e);
         obs.next(emitValue);
       }
 
+      var focusChange = (e:Event) => {
+        this.appFocused = document.hidden;
+      }
+
+      document.addEventListener("visibilitychange", focusChange);
       document.addEventListener("keydown", handleKeyEvent);
       document.addEventListener("keyup", handleKeyEvent);
       return () => {
