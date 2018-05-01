@@ -43,6 +43,10 @@ export class PaletteViewComponent implements OnInit {
     this.keyboard.observeKeyboard(["Shift", "Control"]).subscribe((press) => {
       this.keyState[press.key] = press.state;
     });
+    document.addEventListener("visibilitychange", () => { // Fired when user switches tabs
+      // Clear keyState
+      this.keyState = {};
+    });
   }
 
   ngOnChanges(changes:SimpleChange):void {
