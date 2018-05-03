@@ -122,6 +122,16 @@ export class PaletteOperationService {
     return this.selectionRange;
   }
 
+  rangeToSelection(range:ColourRange) {
+    this.selectionRange = range;
+    for (let subRange of range.subRanges) {
+      let [start,end] = subRange.sorted();
+      for (let i = start; i <= end; i++) {
+        this.palColours[i].selected = true;
+      }
+    }
+  }
+
   setPalette(pal:Palette) {
     this.palette = pal;
     if (!this.palColours) this.palColours = new Array(this.palette.getLength());

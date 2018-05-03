@@ -20,6 +20,7 @@ export class PaletteViewComponent implements OnInit {
   @Input() palette:Palette;
   private palColours:Palcolour[];
   private selectionRange:ColourRange;
+  private lockSelection:boolean = false;
   @Output() onSelect = new EventEmitter<ColourRange>();
 
   constructor(
@@ -37,6 +38,7 @@ export class PaletteViewComponent implements OnInit {
   onSetPalette() {
     this.palOp.setPalette(this.palette);
     this.palColours = this.palOp.palColours;
+    if (this.selectionRange && this.lockSelection) this.palOp.rangeToSelection(this.selectionRange);
   }
 
   ngOnInit():void {
