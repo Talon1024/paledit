@@ -1,7 +1,12 @@
 .gradient {
   height: 30px;
   border: 1px solid black;
+  position: relative;
 }
+.gradient-stop {
+  border: 1px solid black;
+}
+
 .gradient-preview {
   display: flex;
 }
