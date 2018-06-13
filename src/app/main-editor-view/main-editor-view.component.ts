@@ -4,8 +4,10 @@ import { ColourRange } from '../palette-model/colour-range';
 import { Palcollection } from '../palette-model/palcollection';
 import { HttpClient } from '@angular/common/http';
 import { PaletteIoService } from '../palette-io.service';
+import { PaletteOperationService } from '../palette-operation.service';
 import { KeyboardService, KeyState } from '../keyboard.service';
 import { SettingsService } from '../settings.service';
+import { GradientOperation } from '../gradient-model/gradient-operation';
 
 @Component({
   selector: 'app-main-editor-view',
@@ -21,6 +23,7 @@ export class MainEditorViewComponent implements OnInit {
   private readonly assetUrl = '/assets';
 
   constructor(private httpClient: HttpClient,
+    private palOp: PaletteOperationService,
     private paletteIo: PaletteIoService,
     private keyboard: KeyboardService,
     private settings: SettingsService) {}
@@ -60,6 +63,12 @@ export class MainEditorViewComponent implements OnInit {
 
   saveColourmap() {
     console.log('Saving colourmap...');
+  }
+
+  executeGradientOperation(op: GradientOperation) {
+    if (op.type === 'apply') {
+      this.palOp.applyGradient(op.gradient);
+    }
   }
 
 }

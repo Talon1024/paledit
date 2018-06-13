@@ -59,7 +59,10 @@ export class GradientEditorComponent implements OnInit {
   }
 
   applyGradient() {
-    this.gradientOperation.emit('apply');
+    this.gradientOperation.emit({
+      type: 'apply',
+      gradient: this.gradient
+    });
   }
 
 }
