@@ -22,4 +22,7 @@
       Stop Colour: <input [(colorPicker)]="curColour" (colorPickerChange)="setCurStopColor(curColour)" [style.background]="curColour"/>
     </div>
   </div>
+  <div class="operations">
+    <button (click)="applyGradient()">Apply</button>
+  </div>
 </div>
