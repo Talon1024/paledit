@@ -1,16 +1,25 @@
 <div class="widget" *ngIf="gradient">
-  <div class="gradient" [style.background-image]="gradientStyle()">
-    <div *ngFor="let stop of gradient.stops; let i = index"
-      class="gradient-stop"
-      [style.left]="stopPositionStyle(stop)"
-      (click)="setCurStopIdx(i)"></div>
+  <div class="gradient-root">
+    <div class="gradient" [style.background-image]="gradientStyle()">
+      <div *ngFor="let stop of gradient.stops; let i = index"
+        class="gradient-stop"
+        [style.left]="stopPositionStyle(stop)"
+        (click)="setCurStopIdx(i)"></div>
+    </div>
+    <div class="gradient-preview" *ngIf="range">
+      <div *ngFor="let pidx of range.getIndices()" [style.background-color]="previewColourStyle(pidx)"></div>
+    </div>
   </div>
-  <div class="gradient-preview" *ngIf="range">
-    <div *ngFor="let pidx of range.getIndices()" [style.background-color]="previewColourStyle(pidx)"></div>
+  <div class="sbs">
+    <div class="">
+      <button>+</button><button>-</button>
+      <select #stopList *ngIf="gradient.stops" (change)="setCurStopIdx(stopList.selectedIndex)">
+        <option *ngFor="let stop of gradient.stops" [selected]="stop === curStop">{{stop}}</option>
+      </select>
+      <button>▲</button><button>▼</button>
+    </div>
+    <div class="">
+      Stop Colour: <input [(colorPicker)]="curColour" (colorPickerChange)="setCurStopColor(curColour)" [style.background]="curColour"/>
+    </div>
   </div>
-  <button>+</button><button>-</button>
-  <select #stopList *ngIf="gradient.stops" (change)="setCurStopIdx(stopList.selectedIndex)">
-    <option *ngFor="let stop of gradient.stops" [selected]="stop === curStop">{{stop}}</option>
-  </select>
-  <button>▲</button><button>▼</button>
 </div>

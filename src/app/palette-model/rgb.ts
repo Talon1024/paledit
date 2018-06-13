@@ -17,6 +17,18 @@ export class Rgbcolour implements Rgb {
   green: number;
   blue: number;
 
+  constructor(redOrRgb: number | Rgb = 0, green: number = 0, blue: number = 0) {
+    if (Rgbcolour.isRgb(redOrRgb)) {
+      this.red = redOrRgb.red;
+      this.green = redOrRgb.green;
+      this.blue = redOrRgb.blue;
+    } else {
+      this.red = (<number>redOrRgb) % 256;
+      this.green = green % 256;
+      this.blue = blue % 256;
+    }
+  }
+
   // Rgb type guard
   static isRgb(rgb: number | Rgb): rgb is Rgb {
       return (
@@ -49,18 +61,6 @@ export class Rgbcolour implements Rgb {
     return newColour;
   }
 
-  constructor(redOrRgb: number | Rgb = 0, green: number = 0, blue: number = 0) {
-    if (Rgbcolour.isRgb(redOrRgb)) {
-      this.red = redOrRgb.red;
-      this.green = redOrRgb.green;
-      this.blue = redOrRgb.blue;
-    } else {
-      this.red = (<number>redOrRgb) % 256;
-      this.green = green % 256;
-      this.blue = blue % 256;
-    }
-  }
-
   static fromHSV(hue: number, saturation: number, value: number): Rgbcolour {
     if (hue >= 360 || hue < 0) { return new Rgbcolour(0, 0, 0); }
 
@@ -80,6 +80,17 @@ export class Rgbcolour implements Rgb {
     const m = value - chroma;
     const colour = hueSections[Math.floor(colourSection)];
     return new Rgbcolour(colour.red + m, colour.green + m, colour.blue + m);
+  }
+
+  static fromHex(hex: string): Rgbcolour {
+    const newColour = new Rgbcolour();
+    if (hex.startsWith('#')) {
+      hex = hex.substr(1);
+    }
+    newColour.red = Number.parseInt(hex.substr(0, 2), 16) % 256;
+    newColour.green = Number.parseInt(hex.substr(2, 2), 16) % 256;
+    newColour.blue = Number.parseInt(hex.substr(4, 2), 16) % 256;
+    return newColour;
   }
 
   hsv(): Hsv {
