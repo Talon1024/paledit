@@ -9,6 +9,7 @@ import { Palcollection } from '../palette-model/palcollection';
 export class PaletteNavigatorComponent implements OnInit {
 
   @Output() palIndexChange = new EventEmitter<number>();
+  @Output() palModify = new EventEmitter<string>();
   private colPalIndex: number; // User input (actually index + 1)
   @Input() maxPal: number;
 
@@ -36,6 +37,14 @@ export class PaletteNavigatorComponent implements OnInit {
   lastPal() {
     this.colPalIndex = this.maxPal;
     this.setPalIndex(this.colPalIndex);
+  }
+
+  addPal() {
+    this.palModify.emit('+');
+  }
+
+  removePal() {
+    this.palModify.emit('-');
   }
 
   setPalIndex(palIndex: number) {
