@@ -2,8 +2,14 @@
   height: 30px;
   border: 1px solid black;
   position: relative;
+  overflow: hidden;
 }
 .gradient-stop {
+  position: absolute;
+  top: 0;
+  cursor: pointer;
+  width: 3px;
+  height: 100%;
   border: 1px solid black;
 }
 

@@ -20,6 +20,10 @@ export class GradientStop {
   toCssGradientStopString(): string {
     return `rgb(${this.colour.red}, ${this.colour.green}, ${this.colour.blue}) ${this.posPercent()}`;
   }
+
+  toString(): string {
+    return `(${this.colour.red}, ${this.colour.green}, ${this.colour.blue}) at ${this.posPercent()}`;
+  }
 }
 
 export class Gradient {

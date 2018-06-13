@@ -11,12 +11,14 @@ import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
 export class GradientEditorComponent implements OnInit {
 
   private gradient: Gradient;
+  private curStop: GradientStop;
   @Input() range: ColourRange;
 
   constructor(private sanitizer: DomSanitizer) {}
 
   ngOnInit() {
     this.gradient = this.defaultGradient();
+    this.curStop = this.gradient.stops[0];
   }
 
   defaultGradient(): Gradient {
@@ -38,6 +40,11 @@ export class GradientEditorComponent implements OnInit {
 
   stopPositionStyle(stop: GradientStop): SafeStyle {
     return this.sanitizer.bypassSecurityTrustStyle(stop.posPercent());
+  }
+
+  setCurStopIdx(idx: number) {
+    // console.log(`Setting stop index to ${idx}`);
+    this.curStop = this.gradient.stops[idx];
   }
 
 }

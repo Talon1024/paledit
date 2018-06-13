@@ -1,13 +1,16 @@
 <div class="widget" *ngIf="gradient">
   <div class="gradient" [style.background-image]="gradientStyle()">
-    <div *ngFor="let stop of gradient.stops" class="gradient-stop" [style.position]=""></div>
+    <div *ngFor="let stop of gradient.stops; let i = index"
+      class="gradient-stop"
+      [style.left]="stopPositionStyle(stop)"
+      (click)="setCurStopIdx(i)"></div>
   </div>
   <div class="gradient-preview" *ngIf="range">
     <div *ngFor="let pidx of range.getIndices()" [style.background-color]="previewColourStyle(pidx)"></div>
   </div>
   <button>+</button><button>-</button>
-  <select *ngIf="gradient.stops">
-    <option *ngFor="let stop of gradient.stops">{{stop.position}}</option>
+  <select #stopList *ngIf="gradient.stops" (change)="setCurStopIdx(stopList.selectedIndex)">
+    <option *ngFor="let stop of gradient.stops" [selected]="stop === curStop">{{stop}}</option>
   </select>
   <button>▲</button><button>▼</button>
 </div>
