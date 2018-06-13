@@ -3,7 +3,7 @@
 <div class="editor-main">
   <app-palette-view
     [palette]="palette"
-    (onSelect)="setSelectionRange($event)"></app-palette-view>
+    (selected)="setSelectionRange($event)"></app-palette-view>
   <div class="widget">
     <h3>Colour Ranges</h3>
     <ol>

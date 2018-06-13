@@ -9,13 +9,13 @@ import { Gradient } from './gradient-model/gradient';
 export class PaletteOperationService {
 
   private lastSelectedIndex: number;
-  palette:Palette;
-  palColours:Palcolour[];
-  selectionRange:ColourRange;
+  palette: Palette;
+  palColours: Palcolour[];
+  selectionRange: ColourRange;
 
   constructor() { }
 
-  selectPalColour(colourIndex:number, keyState:{[key:string]:boolean}):ColourRange | null {
+  selectPalColour(colourIndex: number, keyState: {[key: string]: boolean}): ColourRange | null {
     /*
     If nothing is selected:
     select the colour
@@ -37,12 +37,12 @@ export class PaletteOperationService {
     */
 
     // closures to help selection
-    var deselectAll = () => {
-      for (let colour of this.palColours) colour.selected = false;
-    }
+    const deselectAll = () => {
+      for (const colour of this.palColours) { colour.selected = false; }
+    };
 
-    var selectRange = (rStart:number, rEnd:number) => {
-      if (rStart === rEnd) return;
+    const selectRange = (rStart: number, rEnd: number) => {
+      if (rStart === rEnd) { return; }
 
       let rCur = rStart;
       let increment = rEnd - rCur;
@@ -54,14 +54,14 @@ export class PaletteOperationService {
       rCur += increment;
 
       // Are all these colours selected or not?
-      let allSelected:boolean = this.palColours[rCur].selected;
+      let allSelected: boolean = this.palColours[rCur].selected;
       while (rCur !== rEnd) {
         rCur += increment;
-        if (!(this.palColours[rCur].selected)) allSelected = false;
+        if (!(this.palColours[rCur].selected)) { allSelected = false; }
       }
 
       // Select (or deselect) all the colours
-      let select = !allSelected;
+      const select = !allSelected;
       rCur = rStart;
 
       this.palColours[rCur].selected = select;
@@ -69,17 +69,17 @@ export class PaletteOperationService {
         rCur += increment;
         this.palColours[rCur].selected = select;
       }
-    }
+    };
 
     // Selection logic, partly derived from above pseudocode
     if (this.lastSelectedIndex >= 0) {
-      if (keyState["Shift"] && !keyState["Control"]) {
+      if (keyState['Shift'] && !keyState['Control']) {
         selectRange(this.lastSelectedIndex, colourIndex);
-      } else if (keyState["Control"] && !keyState["Shift"]) {
+      } else if (keyState['Control'] && !keyState['Shift']) {
         this.palColours[colourIndex].selected = !this.palColours[colourIndex].selected;
-      } else if (keyState["Control"] && keyState["Shift"]) {
+      } else if (keyState['Control'] && keyState['Shift']) {
         // Unknown
-      } else if (!keyState["Control"] && !keyState["Shift"]) {
+      } else if (!keyState['Control'] && !keyState['Shift']) {
         deselectAll();
         this.palColours[colourIndex].selected = true;
       }
@@ -91,11 +91,11 @@ export class PaletteOperationService {
     return this.selectionToRange();
   }
 
-  selectionToRange():ColourRange {
-    let subRanges:ColourSubRange[] = [];
+  selectionToRange(): ColourRange {
+    const subRanges: ColourSubRange[] = [];
     let subRangeStart = 0, subRangeEnd = 0, inSubRange = false;
 
-    for (let colour of this.palColours) {
+    for (const colour of this.palColours) {
       if (!inSubRange && colour.selected) {
         subRangeStart = colour.index;
         inSubRange = true;
@@ -122,32 +122,34 @@ export class PaletteOperationService {
     return this.selectionRange;
   }
 
-  rangeToSelection(range:ColourRange) {
+  rangeToSelection(range: ColourRange) {
     this.selectionRange = range;
-    for (let subRange of range.subRanges) {
-      let [start,end] = subRange.sorted();
+    for (const subRange of range.subRanges) {
+      const [start, end] = subRange.sorted();
       for (let i = start; i <= end; i++) {
         this.palColours[i].selected = true;
       }
     }
   }
 
-  setPalette(pal:Palette) {
+  setPalette(pal: Palette) {
     this.palette = pal;
-    if (!this.palColours) this.palColours = new Array(this.palette.getLength());
+    if (!this.palColours) {
+      this.palColours = new Array(this.palette.getLength());
+    }
     for (let i = 0; i < this.palette.getLength(); i++) {
       this.palColours[i] = this.palette.colourAt(i);
     }
   }
 
   updatePalette() {
-    for (let colour of this.palColours) {
+    for (const colour of this.palColours) {
       this.palette.setColour(colour.index, colour);
     }
   }
 
   reverse() {
-    let indices = this.selectionRange.getIndices().sort((a, b) => a - b);
+    const indices = this.selectionRange.getIndices().sort((a, b) => a - b);
     for (let x = 0, y = indices.length - 1, m = Math.floor(indices.length / 2); x < m; x++, y--) {
       this.swap(indices[x], indices[y]);
     }
@@ -163,17 +165,17 @@ export class PaletteOperationService {
   }
 */
 
-  private swap(firstIdx:number, secondIdx:number) {
-    let tempColour = this.palColours[firstIdx];
+  private swap(firstIdx: number, secondIdx: number) {
+    const tempColour = this.palColours[firstIdx];
     this.palColours[firstIdx] = this.palColours[secondIdx];
     this.palColours[firstIdx].index = firstIdx;
     this.palColours[secondIdx] = tempColour;
     this.palColours[secondIdx].index = secondIdx;
   }
 
-  applyGradient(gradient:Gradient) {
-    for (let x of this.selectionRange.getIndices()) {
-      let palColour = new Palcolour(gradient.colourAt(x, this.selectionRange));
+  applyGradient(gradient: Gradient) {
+    for (const x of this.selectionRange.getIndices()) {
+      const palColour = new Palcolour(gradient.colourAt(x, this.selectionRange));
       palColour.index = x;
       palColour.palette = this.palette;
       this.palColours[x] = palColour;

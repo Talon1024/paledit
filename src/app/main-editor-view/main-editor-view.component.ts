@@ -14,52 +14,52 @@ import { SettingsService } from '../settings.service';
 })
 export class MainEditorViewComponent implements OnInit {
 
-  private collection:Palcollection;
-  private palette:Palette;
-  private selectionRange:ColourRange;
+  private collection: Palcollection;
+  private palette: Palette;
+  private selectionRange: ColourRange;
 
-  private readonly assetUrl = "/assets";
+  private readonly assetUrl = '/assets';
 
-  constructor(private httpClient:HttpClient,
-    private paletteIo:PaletteIoService,
-    private keyboard:KeyboardService,
-    private settings:SettingsService) {}
+  constructor(private httpClient: HttpClient,
+    private paletteIo: PaletteIoService,
+    private keyboard: KeyboardService,
+    private settings: SettingsService) {}
 
   readPaletteFile(file) {
     this.paletteIo.getPaletteFile(file)
-        .subscribe((collection:Palcollection) => {
+        .subscribe((collection: Palcollection) => {
       this.collection = collection;
       this.setPalIndex(0);
-    }, (error:any) => {
+    }, (error: any) => {
       console.error(error);
     });
   }
 
-  setPalIndex(palIndex:number) {
+  setPalIndex(palIndex: number) {
     this.palette = this.collection.palettes[palIndex];
   }
 
-  setSelectionRange(range:ColourRange) {
+  setSelectionRange(range: ColourRange) {
     this.selectionRange = range;
   }
 
   ngOnInit() {
     this.httpClient.get(`${this.assetUrl}/bwpal.pal`, {
       responseType: 'arraybuffer'
-    }).subscribe((resp:ArrayBuffer) => {
-      let palette = Palette.fromData(new Uint8ClampedArray(resp));
+    }).subscribe((resp: ArrayBuffer) => {
+      const palette = Palette.fromData(new Uint8ClampedArray(resp));
       this.collection = Palcollection.withInitialPal(palette);
       this.setPalIndex(0);
     });
   }
 
   savePalette() {
-    let data = this.paletteIo.savePalCollection(this.collection);
+    const data = this.paletteIo.savePalCollection(this.collection);
     location.replace(`data:application/octet-stream;base64,${data}`);
   }
 
   saveColourmap() {
-    console.log("Saving colourmap...");
+    console.log('Saving colourmap...');
   }
 
 }

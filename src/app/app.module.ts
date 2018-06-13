@@ -16,7 +16,7 @@ import { GradientEditorComponent } from './gradient-editor/gradient-editor.compo
 import { PaletteNavigatorComponent } from './palette-navigator/palette-navigator.component';
 import { PaletteLoaderComponent } from './palette-loader/palette-loader.component';
 
-const assetUrl = "/assets/";
+const assetUrl = '/assets/';
 
 @NgModule({
   declarations: [

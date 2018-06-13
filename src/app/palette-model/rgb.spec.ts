@@ -6,53 +6,53 @@ describe('Rgbcolour', () => {
   });
   it('should create an instance from red, green, and blue values', () => {
 
-    let colour = new Rgbcolour(100, 140, 255);
+    const colour = new Rgbcolour(100, 140, 255);
 
     expect(colour.red).toEqual(100);
     expect(colour.green).toEqual(140);
     expect(colour.blue).toEqual(255);
   });
   it('should create an instance from an Rgb object', () => {
-    let rgb = {red: 100, green: 140, blue: 255};
-    let colour = new Rgbcolour(rgb);
+    const rgb = {red: 100, green: 140, blue: 255};
+    const colour = new Rgbcolour(rgb);
 
     expect(colour.red).toEqual(100);
     expect(colour.green).toEqual(140);
     expect(colour.blue).toEqual(255);
   });
   it('should add 100% red and 50% blue together to create pink', () => {
-    let red = new Rgbcolour(255);
-    let blue = new Rgbcolour(0, 0, 128);
-    let expected = new Rgbcolour(255, 0, 128);
+    const red = new Rgbcolour(255);
+    const blue = new Rgbcolour(0, 0, 128);
+    const expected = new Rgbcolour(255, 0, 128);
 
-    let blended = red.blend(1, blue, Rgbcolour.add);
+    const blended = red.blend(1, blue, Rgbcolour.add);
     expect(blended.equals(expected)).toBe(true);
   });
   it('should create a 50% tint between orange and sky blue', () => {
-    let skyblue = new Rgbcolour(100, 140, 255);
-    let orange = new Rgbcolour(255, 160, 0);
-    let expected = new Rgbcolour(178, 150, 128);
+    const skyblue = new Rgbcolour(100, 140, 255);
+    const orange = new Rgbcolour(255, 160, 0);
+    const expected = new Rgbcolour(178, 150, 128);
 
-    let blended = skyblue.blend(.5, orange, Rgbcolour.tint);
+    const blended = skyblue.blend(.5, orange, Rgbcolour.tint);
     expect(blended.equals(expected)).toBe(true);
   });
   it('should create a 50% tint between red and green', () => {
-    let red = new Rgbcolour(255, 0, 0);
-    let green = new Rgbcolour(0, 255, 0);
-    let expected = new Rgbcolour(128, 128, 0);
+    const red = new Rgbcolour(255, 0, 0);
+    const green = new Rgbcolour(0, 255, 0);
+    const expected = new Rgbcolour(128, 128, 0);
 
-    let blended = red.blend(.5, green, Rgbcolour.tint);
+    const blended = red.blend(.5, green, Rgbcolour.tint);
     expect(blended.equals(expected)).toBe(true);
   });
   it('should convert HSV to RGB', () => {
-    let expected = new Rgbcolour(255, 0, 0);
-    let actual = Rgbcolour.fromHSV(0, 1.0, 255);
+    const expected = new Rgbcolour(255, 0, 0);
+    const actual = Rgbcolour.fromHSV(0, 1.0, 255);
 
     expect(actual).toEqual(expected);
   });
   it('should get HSV for red colour', () => {
-    let colour = new Rgbcolour(255, 0, 0);
-    let expected = {
+    const colour = new Rgbcolour(255, 0, 0);
+    const expected = {
       hue: 0,
       saturation: 1.0,
       value: 255
@@ -61,8 +61,8 @@ describe('Rgbcolour', () => {
     expect(colour.hsv()).toEqual(expected);
   });
   it('should get HSV for green colour', () => {
-    let colour = new Rgbcolour(0, 255, 0);
-    let expected = {
+    const colour = new Rgbcolour(0, 255, 0);
+    const expected = {
       hue: 120,
       saturation: 1.0,
       value: 255
@@ -71,8 +71,8 @@ describe('Rgbcolour', () => {
     expect(colour.hsv()).toEqual(expected);
   });
   it('should get HSV for blue colour', () => {
-    let colour = new Rgbcolour(0, 0, 255);
-    let expected = {
+    const colour = new Rgbcolour(0, 0, 255);
+    const expected = {
       hue: 240,
       saturation: 1.0,
       value: 255
@@ -81,8 +81,8 @@ describe('Rgbcolour', () => {
     expect(colour.hsv()).toEqual(expected);
   });
   it('should get HSV for orange colour', () => {
-    let colour = new Rgbcolour(255, 128, 0);
-    let expected = {
+    const colour = new Rgbcolour(255, 128, 0);
+    const expected = {
       hue: 30,
       saturation: 1.0,
       value: 255
@@ -91,8 +91,8 @@ describe('Rgbcolour', () => {
     expect(colour.hsv()).toEqual(expected);
   });
   it('should get HSV for sky blue colour', () => {
-    let colour = new Rgbcolour(100, 140, 255);
-    let expected = {
+    const colour = new Rgbcolour(100, 140, 255);
+    const expected = {
       hue: 225,
       saturation: 0.609375,
       value: 255
@@ -101,12 +101,12 @@ describe('Rgbcolour', () => {
     expect(colour.hsv()).toEqual(expected);
   });
   it('should return same HSV that was used to make the colour', () => {
-    let expected = {
+    const expected = {
       hue: 110,
       saturation: 0.75,
       value: 192
     };
-    let colour = Rgbcolour.fromHSV(expected.hue, expected.saturation, expected.value);
+    const colour = Rgbcolour.fromHSV(expected.hue, expected.saturation, expected.value);
 
     expect(colour.hsv()).toEqual(expected);
   });

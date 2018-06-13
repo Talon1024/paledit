@@ -2,11 +2,11 @@ import { ColourSubRange } from './colour-sub-range';
 import { Rgb } from './rgb';
 
 export class Rgbrange {
-  start:Rgb;
-  end?:Rgb; // Optional ONLY for tint
-  effect?:string = ""; // %, #, @<number>
+  start: Rgb;
+  end?: Rgb; // Optional ONLY for tint
+  effect = ''; // %, #, @<number>
 
-  constructor(start:Rgb = null, end:Rgb = null, effect:string = "") {
+  constructor(start: Rgb = null, end: Rgb = null, effect: string = '') {
     this.start = start;
     this.end = end;
     this.effect = effect;
@@ -14,26 +14,27 @@ export class Rgbrange {
 }
 
 export class PalTranslation {
-  source:ColourSubRange;
-  dest:ColourSubRange | Rgbrange;
+  source: ColourSubRange;
+  dest: ColourSubRange | Rgbrange;
 
-  static parse(transtr:string):PalTranslation {
-    function matchToRgb(match:string[], useFloat:boolean):Rgb {
-      let conv = useFloat ? "parseFloat" : "parseInt";
+  static parse(transtr: string): PalTranslation {
+    function matchToRgb(rmatch: string[], useFloat: boolean): Rgb {
+      const conv = useFloat ? 'parseFloat' : 'parseInt';
+      const nconv = (Number[conv] as (n: string, b: number) => number);
       return {
-        red: Number[conv](match[1], 10),
-        green: Number[conv](match[2], 10),
-        blue: Number[conv](match[3], 10)
+        red: nconv(rmatch[1], 10),
+        green: nconv(rmatch[2], 10),
+        blue: nconv(rmatch[3], 10)
       };
     }
 
-    let result = new PalTranslation();
-    let RE_PAL = /(\d+):(\d+)/g;
-    let RE_RGB = /\[([\d.]+),([\d.]+),([\d.]+)\]/g;
+    const result = new PalTranslation();
+    const RE_PAL = /(\d+): (\d+)/g;
+    const RE_RGB = /\[([\d.]+),([\d.]+),([\d.]+)\]/g;
     let matchStr = transtr;
 
     let match = RE_PAL.exec(matchStr);
-    if (matchStr[RE_PAL.lastIndex] != '=') return result;
+    if (matchStr[RE_PAL.lastIndex] !== '=') { return result; }
 
     result.source = new ColourSubRange();
     result.source.start = Number.parseInt(match[1], 10);
@@ -49,17 +50,17 @@ export class PalTranslation {
       result.dest.start = Number.parseInt(match[1], 10);
       result.dest.end = Number.parseInt(match[2], 10);
     } else {
-      let effect = matchStr.substring(0, matchStr.indexOf("["));
-      let endColour:boolean = false;
-      let useFloat:boolean = false;
+      const effect = matchStr.substring(0, matchStr.indexOf('['));
+      let endColour = false;
+      let useFloat = false;
 
       result.dest = new Rgbrange();
-      if (!effect.startsWith("@") && !(effect === "#") && !(effect === "%") && !(effect === "")) {
+      if (!effect.startsWith('@') && !(effect === '#') && !(effect === '%') && !(effect === '')) {
         console.warn(`Unknown effect: ${effect}`);
-      } else if (effect === "%" || effect === "") {
+      } else if (effect === '%' || effect === '') {
         endColour = true;
       }
-      if (effect === "%") useFloat = true;
+      if (effect === '%') { useFloat = true; }
       result.dest.effect = effect;
 
       matchStr = matchStr.substring(effect.length);
@@ -68,7 +69,7 @@ export class PalTranslation {
       if (match != null) {
         result.dest.start = matchToRgb(match, useFloat);
       } else {
-        console.error("Invalid starting RGB values!");
+        console.error('Invalid starting RGB values!');
         return;
       }
 
@@ -79,7 +80,7 @@ export class PalTranslation {
         if (match != null) {
           result.dest.end = matchToRgb(match, useFloat);
         } else {
-          console.error("Invalid ending RGB values!");
+          console.error('Invalid ending RGB values!');
           return;
         }
       }
@@ -88,21 +89,21 @@ export class PalTranslation {
     return result;
   }
 
-  static isRgb(range: Rgbrange | ColourSubRange):range is Rgbrange {
-    return (<Rgbrange>range).start.red != undefined;
+  static isRgb(range: Rgbrange | ColourSubRange): range is Rgbrange {
+    return (<Rgbrange>range).start.red !== undefined && (<Rgbrange>range).start.red !== null;
   }
 
-  toString():string {
-    var srcPart = `${this.source.start}:${this.source.end}`;
-    var dstPart;
+  toString(): string {
+    const srcPart = `${this.source.start}: ${this.source.end}`;
+    let dstPart;
     if (PalTranslation.isRgb(this.dest)) {
-      let effect = this.dest.effect || "";
+      const effect = this.dest.effect || '';
       dstPart = `${effect}[${this.dest.start.red},${this.dest.start.green},${this.dest.start.blue}]`;
       if (!effect.startsWith('@') && !effect.startsWith('#')) { // tint (@amount)
-        dstPart += `:[${this.dest.end.red},${this.dest.end.green},${this.dest.end.blue}]`;
+        dstPart += `: [${this.dest.end.red},${this.dest.end.green},${this.dest.end.blue}]`;
       }
     } else {
-      dstPart = `${this.dest.start}:${this.dest.end}`;
+      dstPart = `${this.dest.start}: ${this.dest.end}`;
     }
     return `${srcPart}=${dstPart}`;
   }

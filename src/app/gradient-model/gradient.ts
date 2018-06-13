@@ -2,31 +2,31 @@ import { Rgb, Rgbcolour } from '../palette-model/rgb';
 import { ColourRange } from '../palette-model/colour-range';
 
 export class GradientStop {
-  position:number; // 0.0 to 1.0
-  colour:Rgb;
+  position: number; // 0.0 to 1.0
+  colour: Rgb;
 
-  constructor(position:number, colour:Rgb) {
-    if (position > 1.0 || position < 0.0)
+  constructor(position: number, colour: Rgb) {
+    if (position > 1.0 || position < 0.0) {
       throw new TypeError('Position must be between 0.0 and 1.0 inclusive');
-
+    }
     this.position = position;
     this.colour = colour;
   }
 
-  posPercent():string {
+  posPercent(): string {
     return `${this.position * 100}%`;
   }
 
-  toCssGradientStopString():string {
+  toCssGradientStopString(): string {
     return `rgb(${this.colour.red}, ${this.colour.green}, ${this.colour.blue}) ${this.posPercent()}`;
   }
 }
 
 export class Gradient {
-  stops:GradientStop[];
-  reverse:boolean;
+  stops: GradientStop[];
+  reverse: boolean;
 
-  constructor(stops?:GradientStop[], reverse:boolean = false) {
+  constructor(stops?: GradientStop[], reverse: boolean = false) {
     if (stops) {
       this.stops = stops;
     } else {
@@ -36,104 +36,104 @@ export class Gradient {
   }
 
 
-  addStop(stop:GradientStop) {
+  addStop(stop: GradientStop) {
     this.stops.push(stop);
-    this.stops.sort(function (a:GradientStop, b:GradientStop):number {
+    this.stops.sort(function (a: GradientStop, b: GradientStop): number {
       return a.position - b.position;
     });
   }
 
-  private stopPalIndex(stop:GradientStop, range:ColourRange):number {
-    let length = range.getLength();
-    let rangePalIdxs = range.getIndices();
+  private stopPalIndex(stop: GradientStop, range: ColourRange): number {
+    const length = range.getLength();
+    const rangePalIdxs = range.getIndices();
     let stopPos = stop.position;
-    if (this.reverse) stopPos = 1.0 - stopPos;
+    if (this.reverse) { stopPos = 1.0 - stopPos; }
 
-    let rangeIdx = Math.floor(stopPos * length);
-    let palIdx = rangePalIdxs[rangeIdx];
+    const rangeIdx = Math.floor(stopPos * length);
+    const palIdx = rangePalIdxs[rangeIdx];
     return palIdx;
   }
 
-  private stopRangeIndex(stop:GradientStop, range:ColourRange):number {
-    let length = range.getLength() - 1;
+  private stopRangeIndex(stop: GradientStop, range: ColourRange): number {
+    const length = range.getLength() - 1;
     let stopPos = stop.position;
-    if (this.reverse) stopPos = 1.0 - stopPos;
+    if (this.reverse) { stopPos = 1.0 - stopPos; }
 
-    let rangeIdx = Math.floor(stopPos * length);
+    const rangeIdx = Math.floor(stopPos * length);
     return rangeIdx;
   }
 
-  getStopPalIdxs(range:ColourRange):number[] {
-    let stopIdxs:number[] = new Array(this.stops.length);
+  getStopPalIdxs(range: ColourRange): number[] {
+    const stopIdxs: number[] = new Array(this.stops.length);
     for (let i = 0; i < this.stops.length; i++) {
-      let stop = this.stops[i];
+      const stop = this.stops[i];
       stopIdxs[i] = this.stopPalIndex(stop, range);
     }
     return stopIdxs;
   }
 
-  getStopRangeIdxs(range:ColourRange):number[] {
-    let stopIdxs:number[] = new Array(this.stops.length);
+  getStopRangeIdxs(range: ColourRange): number[] {
+    const stopIdxs: number[] = new Array(this.stops.length);
     for (let i = 0; i < this.stops.length; i++) {
-      let stop = this.stops[i];
+      const stop = this.stops[i];
       stopIdxs[i] = this.stopRangeIndex(stop, range);
     }
     return stopIdxs;
   }
 
-  colourAt(palIdx:number, palRange:ColourRange):Rgbcolour {
-    if (!palRange) return;
-    let rangeLen = palRange.getLength();
-    let stopIdxs:number[] = this.getStopRangeIdxs(palRange);
+  colourAt(palIdx: number, palRange: ColourRange): Rgbcolour {
+    if (!palRange) { return; }
+    const rangeLen = palRange.getLength();
+    const stopIdxs: number[] = this.getStopRangeIdxs(palRange);
 
     // Is the index within the range?
-    let rangeIdx = palRange.palToRangeIdx(palIdx);
-    if (rangeIdx < 0) return;
+    const rangeIdx = palRange.palToRangeIdx(palIdx);
+    if (rangeIdx < 0) { return; }
 
-    let stopsAtIdx = this.stops.filter((e, i) => stopIdxs[i] === rangeIdx);
+    const stopsAtIdx = this.stops.filter((e, i) => stopIdxs[i] === rangeIdx);
     if (stopsAtIdx.length === 0) {
       // Find colour at this index
-      let nextStopGidx = stopIdxs.findIndex((e) => e >= rangeIdx);
-      let prevStopGidx = nextStopGidx - 1;
-      let nextStop:GradientStop = this.stops[nextStopGidx];
-      let prevStop:GradientStop = this.stops[prevStopGidx];
-      let nextStopRidx = stopIdxs[nextStopGidx];
-      let prevStopRidx = stopIdxs[prevStopGidx];
+      const nextStopGidx = stopIdxs.findIndex((e) => e >= rangeIdx);
+      const prevStopGidx = nextStopGidx - 1;
+      const nextStop: GradientStop = this.stops[nextStopGidx];
+      const prevStop: GradientStop = this.stops[prevStopGidx];
+      const nextStopRidx = stopIdxs[nextStopGidx];
+      const prevStopRidx = stopIdxs[prevStopGidx];
 
-      let blendFactor = rangeIdx / (nextStopRidx - prevStopRidx);
+      const blendFactor = rangeIdx / (nextStopRidx - prevStopRidx);
 
-      let prevColour = new Rgbcolour(prevStop.colour);
-      let nextColour = new Rgbcolour(nextStop.colour);
-      let resultColour = prevColour.blend(blendFactor, nextColour, Rgbcolour.tint);
+      const prevColour = new Rgbcolour(prevStop.colour);
+      const nextColour = new Rgbcolour(nextStop.colour);
+      const resultColour = prevColour.blend(blendFactor, nextColour, Rgbcolour.tint);
 
       return resultColour;
     } else {
       // Average colours of all stops at this index
       let sumRed = 0, sumGreen = 0, sumBlue = 0, colourCount = 0;
-      for (let stop of stopsAtIdx) {
+      for (const stop of stopsAtIdx) {
         sumRed += stop.colour.red;
         sumGreen += stop.colour.green;
         sumBlue += stop.colour.blue;
         colourCount += 1;
       }
-      let avgRed = Math.round(sumRed / colourCount);
-      let avgGreen = Math.round(sumGreen / colourCount);
-      let avgBlue = Math.round(sumBlue / colourCount);
+      const avgRed = Math.round(sumRed / colourCount);
+      const avgGreen = Math.round(sumGreen / colourCount);
+      const avgBlue = Math.round(sumBlue / colourCount);
 
       return new Rgbcolour(avgRed, avgGreen, avgBlue);
     }
   }
 
-  toCssString(direction:string = "to right"):string {
+  toCssString(direction: string = 'to right'): string {
     if (this.stops.length >= 2) {
-      let stopList = [];
-      for (let stop of this.stops) {
+      const stopList = [];
+      for (const stop of this.stops) {
         stopList.push(`${stop.toCssGradientStopString()}`);
       }
-      let stopListStr = stopList.join(", ");
+      const stopListStr = stopList.join(', ');
       return `linear-gradient(${direction}, ${stopListStr})`;
     } else {
-      return "";
+      return '';
     }
   }
 }

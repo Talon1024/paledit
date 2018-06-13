@@ -1,25 +1,25 @@
 export class ColourSubRange {
-  start:number;
-  end:number;
+  start: number;
+  end: number;
 
-  constructor(start:number = 0, end:number = 0) {
-    this.start = start & 0xFF;
-    this.end = end & 0xFF;
+  constructor(start: number = 0, end: number = 0) {
+    this.start = start % 256;
+    this.end = end % 256;
   }
 
-  getLength():number {
+  getLength(): number {
     return Math.abs(this.end - this.start) + 1;
   }
 
-  sorted():number[] {
-    let start = Math.min(this.start, this.end);
-    let end = Math.max(this.start, this.end);
+  sorted(): number[] {
+    const start = Math.min(this.start, this.end);
+    const end = Math.max(this.start, this.end);
 
     return [start, end];
   }
 
-  contains(palIdx:number):boolean {
-    let [start, end] = this.sorted();
+  contains(palIdx: number): boolean {
+    const [start, end] = this.sorted();
     return palIdx >= start && palIdx <= end;
   }
 }

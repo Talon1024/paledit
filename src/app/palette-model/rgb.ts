@@ -1,51 +1,75 @@
 export interface Rgb {
-  red:number;
-  green:number;
-  blue:number;
+  red: number;
+  green: number;
+  blue: number;
 }
 
 export interface Hsv {
-  hue:number;
-  saturation:number;
-  value:number;
+  hue: number;
+  saturation: number;
+  value: number;
 }
 
 export class Rgbcolour implements Rgb {
-  red:number;
-  green:number;
-  blue:number;
-
   static readonly components = [ 'red', 'green', 'blue' ];
 
+  red: number;
+  green: number;
+  blue: number;
+
   // Rgb type guard
-  static isRgb(rgb:number | Rgb): rgb is Rgb {
+  static isRgb(rgb: number | Rgb): rgb is Rgb {
       return (
-        rgb.hasOwnProperty("red") &&
-        rgb.hasOwnProperty("green") &&
-        rgb.hasOwnProperty("blue"));
+        rgb.hasOwnProperty('red') &&
+        rgb.hasOwnProperty('green') &&
+        rgb.hasOwnProperty('blue'));
   }
 
-  constructor(redOrRgb:number | Rgb = 0, green:number = 0, blue:number = 0) {
+  static round(colour: Rgbcolour): Rgbcolour {
+    for (const part of Rgbcolour.components) {
+      colour[part] = Math.round(colour[part]);
+    }
+    return colour;
+  }
+
+  static tint(percentage: number, colour: Rgbcolour, otherColour: Rgbcolour): Rgbcolour {
+    const thisPct = 1 - percentage;
+    const newColour = new Rgbcolour();
+    for (const part of Rgbcolour.components) {
+      newColour[part] = colour[part] * thisPct + otherColour[part] * percentage;
+    }
+    return newColour;
+  }
+
+  static add(percentage: number, colour: Rgbcolour, otherColour: Rgbcolour): Rgbcolour {
+    const newColour = new Rgbcolour();
+    for (const part of Rgbcolour.components) {
+      newColour[part] = colour[part] + otherColour[part] * percentage;
+    }
+    return newColour;
+  }
+
+  constructor(redOrRgb: number | Rgb = 0, green: number = 0, blue: number = 0) {
     if (Rgbcolour.isRgb(redOrRgb)) {
       this.red = redOrRgb.red;
       this.green = redOrRgb.green;
       this.blue = redOrRgb.blue;
     } else {
-      this.red = (<number>redOrRgb) & 0xFF;
-      this.green = green & 0xFF;
-      this.blue = blue & 0xFF;
+      this.red = (<number>redOrRgb) % 256;
+      this.green = green % 256;
+      this.blue = blue % 256;
     }
   }
 
-  static fromHSV(hue:number, saturation:number, value:number):Rgbcolour {
-    if (hue >= 360 || hue < 0) return new Rgbcolour(0,0,0);
+  static fromHSV(hue: number, saturation: number, value: number): Rgbcolour {
+    if (hue >= 360 || hue < 0) { return new Rgbcolour(0, 0, 0); }
 
-    // https://en.wikipedia.org/wiki/HSL_and_HSV#From_HSV
-    let chroma = value * saturation;
-    let colourSection = hue / 60.0;
-    let x = chroma * (1 - Math.abs(colourSection % 2 - 1));
+    // https: //en.wikipedia.org/wiki/HSL_and_HSV#From_HSV
+    const chroma = value * saturation;
+    const colourSection = hue / 60.0;
+    const x = chroma * (1 - Math.abs(colourSection % 2 - 1));
 
-    let hueSections = new Array<Rgb>(6);
+    const hueSections = new Array<Rgb>(6);
     hueSections[0] = {red: chroma, green: x, blue: 0};
     hueSections[1] = {red: x, green: chroma, blue: 0};
     hueSections[2] = {red: 0, green: chroma, blue: x};
@@ -53,20 +77,20 @@ export class Rgbcolour implements Rgb {
     hueSections[4] = {red: x, green: 0, blue: chroma};
     hueSections[5] = {red: chroma, green: 0, blue: x};
 
-    let m = value - chroma;
-    let colour = hueSections[Math.floor(colourSection)];
+    const m = value - chroma;
+    const colour = hueSections[Math.floor(colourSection)];
     return new Rgbcolour(colour.red + m, colour.green + m, colour.blue + m);
   }
 
-  hsv():Hsv {
+  hsv(): Hsv {
     // Modified from:
-    // https://github.com/Qix-/color-convert/blob/master/conversions.js#L97
+    // https: //github.com/Qix-/color-convert/blob/master/conversions.js#L97
     /*
     Copyright (c) 2011-2016 Heather Arthur <fayearthur@gmail.com>
 
     Permission is hereby granted, free of charge, to any person obtaining
     a copy of this software and associated documentation files (the
-    "Software"), to deal in the Software without restriction, including
+    'Software'), to deal in the Software without restriction, including
     without limitation the rights to use, copy, modify, merge, publish,
     distribute, sublicense, and/or sell copies of the Software, and to
     permit persons to whom the Software is furnished to do so, subject to
@@ -75,14 +99,14 @@ export class Rgbcolour implements Rgb {
     The above copyright notice and this permission notice shall be
     included in all copies or substantial portions of the Software.
     */
-    var r = this.red;
-    var g = this.green;
-    var b = this.blue;
-    var min = Math.min(r, g, b);
-    var max = Math.max(r, g, b);
-    var delta = max - min;
-    var h;
-    var s;
+    const r = this.red;
+    const g = this.green;
+    const b = this.blue;
+    const min = Math.min(r, g, b);
+    const max = Math.max(r, g, b);
+    const delta = max - min;
+    let h;
+    let s;
 
     if (max === 0) {
       s = 0;
@@ -113,17 +137,17 @@ export class Rgbcolour implements Rgb {
     };
   }
 
-  toHex():string {
-    let rgb = new Rgbcolour();
-    for (let part of Rgbcolour.components) {
+  toHex(): string {
+    const rgb = new Rgbcolour();
+    for (const part of Rgbcolour.components) {
       rgb[part] = this[part].toString(16);
-      if (rgb[part].length < 2) rgb[part] = `0${rgb[part]}`;
+      if (rgb[part].length < 2) { rgb[part] = `0${rgb[part]}`; }
     }
-    let { red, green, blue } = rgb;
+    const { red, green, blue } = rgb;
     return `#${red}${green}${blue}`;
   }
 
-  opposite(minDiff:number = 0):Rgbcolour {
+  opposite(minDiff: number = 0): Rgbcolour {
     let red = 0xFF - this.red;
     let green = 0xFF - this.green;
     let blue = 0xFF - this.blue;
@@ -139,44 +163,20 @@ export class Rgbcolour implements Rgb {
     return new Rgbcolour(red, green, blue);
   }
 
-  getStyles():Object {
+  getStyles(): Object {
     return {
       'background-color': this.toHex(),
       'color': this.opposite(64).toHex()
     };
   }
 
-  static round(colour:Rgbcolour):Rgbcolour {
-    for (let part of Rgbcolour.components) {
-      colour[part] = Math.round(colour[part]);
-    }
-    return colour;
-  }
-
-  blend(percentage:number, colour:Rgbcolour, func:(p:number, c:Rgbcolour, d:Rgbcolour) => Rgbcolour):Rgbcolour {
+  blend(percentage: number, colour: Rgbcolour, func: (p: number, c: Rgbcolour, d: Rgbcolour) => Rgbcolour): Rgbcolour {
     return Rgbcolour.round(func(percentage, this, colour));
   }
 
-  static tint(percentage:number, colour:Rgbcolour, otherColour:Rgbcolour):Rgbcolour {
-    const thisPct = 1 - percentage;
-    let newColour = new Rgbcolour();
-    for (let part of Rgbcolour.components) {
-      newColour[part] = colour[part] * thisPct + otherColour[part] * percentage;
-    }
-    return newColour;
-  }
-
-  static add(percentage:number, colour:Rgbcolour, otherColour:Rgbcolour):Rgbcolour {
-    let newColour = new Rgbcolour();
-    for (let part of Rgbcolour.components) {
-      newColour[part] = colour[part] + otherColour[part] * percentage;
-    }
-    return newColour;
-  }
-
-  equals(other:Rgbcolour):boolean {
+  equals(other: Rgbcolour): boolean {
     return other.red === this.red &&
       other.green === this.green &&
-      other.blue === this.blue
+      other.blue === this.blue;
   }
 }

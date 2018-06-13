@@ -10,29 +10,29 @@ import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
 })
 export class GradientEditorComponent implements OnInit {
 
-  private gradient:Gradient;
-  @Input() range:ColourRange;
+  private gradient: Gradient;
+  @Input() range: ColourRange;
 
-  constructor(private sanitizer:DomSanitizer) {}
+  constructor(private sanitizer: DomSanitizer) {}
 
   ngOnInit() {
     this.gradient = this.defaultGradient();
   }
 
-  defaultGradient():Gradient {
-    let blackStop = new GradientStop(0, {red: 0, green: 0, blue: 0});
-    let whiteStop = new GradientStop(1, {red: 255, green: 255, blue: 255});
+  defaultGradient(): Gradient {
+    const blackStop = new GradientStop(0, {red: 0, green: 0, blue: 0});
+    const whiteStop = new GradientStop(1, {red: 255, green: 255, blue: 255});
 
-    let gradient = new Gradient([blackStop, whiteStop]);
+    const gradient = new Gradient([blackStop, whiteStop]);
     return gradient;
   }
 
-  gradientStyle():SafeStyle {
+  gradientStyle(): SafeStyle {
     return this.sanitizer.bypassSecurityTrustStyle(this.gradient.toCssString());
   }
 
-  previewColourStyle(palIdx:number):SafeStyle {
-    let colour = this.gradient.colourAt(palIdx, this.range);
+  previewColourStyle(palIdx: number): SafeStyle {
+    const colour = this.gradient.colourAt(palIdx, this.range);
     return this.sanitizer.bypassSecurityTrustStyle(colour.toHex());
   }
 

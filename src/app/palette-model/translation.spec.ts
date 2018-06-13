@@ -8,120 +8,120 @@ describe('PalTranslation', () => {
   });
   it('should stringify a palette translation correctly', () => {
     // https://zdoom.org/wiki/Translation#Palette_range_to_palette_range
-    let trans = new PalTranslation();
+    const trans = new PalTranslation();
     trans.source = new ColourSubRange(16, 32);
     trans.dest = new ColourSubRange(100, 128);
 
-    let expected = "16:32=100:128";
+    const expected = '16:32=100:128';
     expect(trans.toString()).toEqual(expected);
   });
   it('should stringify a direct Palette to RGB translation correctly', () => {
     // https://zdoom.org/wiki/Translation#Direct_color_translations
-    let trans = new PalTranslation();
+    const trans = new PalTranslation();
     trans.source = new ColourSubRange(16, 32);
     trans.dest = new Rgbrange();
     trans.dest.start = new Rgbcolour(100, 140, 255);
     trans.dest.end = new Rgbcolour(255, 140, 0);
 
-    let expected = "16:32=[100,140,255]:[255,140,0]";
+    const expected = '16:32=[100,140,255]:[255,140,0]';
     expect(trans.toString()).toEqual(expected);
   });
   it('should stringify a desaturated Palette to RGB translation correctly', () => {
     // https://zdoom.org/wiki/Translation#Desaturated_color_translations
-    let trans = new PalTranslation();
+    const trans = new PalTranslation();
     trans.source = new ColourSubRange(16, 32);
     trans.dest = new Rgbrange();
-    trans.dest.effect = "%";
+    trans.dest.effect = '%';
     trans.dest.start = {red: 0.2, green: 0.4, blue: 1.0};
     trans.dest.end = {red: 1.0, green: 0.4, blue: 0.0};
 
-    let expected = "16:32=%[0.2,0.4,1]:[1,0.4,0]";
+    const expected = '16:32=%[0.2,0.4,1]:[1,0.4,0]';
     expect(trans.toString()).toEqual(expected);
   });
   it('should stringify a blended Palette to RGB translation correctly', () => {
     // https://zdoom.org/wiki/Translation#Blended_translations
-    let trans = new PalTranslation();
+    const trans = new PalTranslation();
     trans.source = new ColourSubRange(16, 32);
     trans.dest = new Rgbrange();
     trans.dest.start = new Rgbcolour(255, 140, 0);
-    trans.dest.effect = "#";
+    trans.dest.effect = '#';
 
-    let expected = "16:32=#[255,140,0]";
+    const expected = '16:32=#[255,140,0]';
     expect(trans.toString()).toEqual(expected);
   });
   it('should stringify a tinted Palette to RGB translation correctly', () => {
     // https://zdoom.org/wiki/Translation#Tinted_translations
-    let trans = new PalTranslation();
+    const trans = new PalTranslation();
     trans.source = new ColourSubRange(16, 32);
     trans.dest = new Rgbrange();
     trans.dest.start = new Rgbcolour(255, 140, 0);
-    trans.dest.effect = "@39";
+    trans.dest.effect = '@39';
 
-    let expected = "16:32=@39[255,140,0]";
+    const expected = '16:32=@39[255,140,0]';
     expect(trans.toString()).toEqual(expected);
   });
   it('should parse a palette translation', () => {
-    let palTrans = "16:32=100:128";
+    const palTrans = '16:32=100:128';
 
-    let expected = new PalTranslation();
+    const expected = new PalTranslation();
     expected.source = new ColourSubRange(16, 32);
     expected.dest = new ColourSubRange(100, 128);
 
-    let parsed = PalTranslation.parse(palTrans);
+    const parsed = PalTranslation.parse(palTrans);
 
     expect(parsed).toEqual(expected);
   });
   it('should parse a direct palette to RGB translation', () => {
-    let transtr = "16:32=[100,140,255]:[255,160,0]";
+    const transtr = '16:32=[100,140,255]:[255,160,0]';
 
-    let expected = new PalTranslation();
+    const expected = new PalTranslation();
     expected.source = new ColourSubRange(16, 32);
     expected.dest = new Rgbrange();
     expected.dest.start = {red: 100, green: 140, blue: 255};
     expected.dest.end = {red: 255, green: 160, blue: 0};
-    expected.dest.effect = "";
+    expected.dest.effect = '';
 
-    let parsed = PalTranslation.parse(transtr);
+    const parsed = PalTranslation.parse(transtr);
 
     expect(parsed).toEqual(expected);
   });
   it('should parse a desaturated palette to RGB translation', () => {
-    let transtr = "16:32=%[0.2,0.4,1.0]:[1.0,0.4,0.0]";
+    const transtr = '16:32=%[0.2,0.4,1.0]:[1.0,0.4,0.0]';
 
-    let expected = new PalTranslation();
+    const expected = new PalTranslation();
     expected.source = new ColourSubRange(16, 32);
     expected.dest = new Rgbrange();
     expected.dest.start = {red: 0.2, green: 0.4, blue: 1.0};
     expected.dest.end = {red: 1.0, green: 0.4, blue: 0.0};
-    expected.dest.effect = "%";
+    expected.dest.effect = '%';
 
-    let parsed = PalTranslation.parse(transtr);
+    const parsed = PalTranslation.parse(transtr);
 
     expect(parsed).toEqual(expected);
   });
   it('should parse a blended palette to RGB translation', () => {
-    let transtr = "16:32=#[255,140,0]";
+    const transtr = '16:32=#[255,140,0]';
 
-    let expected = new PalTranslation();
+    const expected = new PalTranslation();
     expected.source = new ColourSubRange(16, 32);
     expected.dest = new Rgbrange();
     expected.dest.start = {red: 255, green: 140, blue: 0};
-    expected.dest.effect = "#";
+    expected.dest.effect = '#';
 
-    let parsed = PalTranslation.parse(transtr);
+    const parsed = PalTranslation.parse(transtr);
 
     expect(parsed).toEqual(expected);
   });
   it('should parse a tinted palette to RGB translation', () => {
-    let transtr = "16:32=@39[255,140,0]";
+    const transtr = '16:32=@39[255,140,0]';
 
-    let expected = new PalTranslation();
+    const expected = new PalTranslation();
     expected.source = new ColourSubRange(16, 32);
     expected.dest = new Rgbrange();
     expected.dest.start = {red: 255, green: 140, blue: 0};
-    expected.dest.effect = "@39";
+    expected.dest.effect = '@39';
 
-    let parsed = PalTranslation.parse(transtr);
+    const parsed = PalTranslation.parse(transtr);
 
     expect(parsed).toEqual(expected);
   });
