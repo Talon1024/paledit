@@ -36,4 +36,8 @@ export class GradientEditorComponent implements OnInit {
     return this.sanitizer.bypassSecurityTrustStyle(colour.toHex());
   }
 
+  stopPositionStyle(stop:GradientStop):SafeStyle {
+    return this.sanitizer.bypassSecurityTrustStyle(stop.posPercent());
+  }
+
 }
