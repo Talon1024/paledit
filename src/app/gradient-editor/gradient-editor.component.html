@@ -4,7 +4,8 @@
       <div *ngFor="let stop of gradient.stops; let i = index"
         class="gradient-stop"
         [style.left]="stopPositionStyle(stop)"
-        (click)="setCurStopIdx(i)"></div>
+        (mousedown)="handleStopClickDown($event, i)"
+        (mouseup)="handleStopClickUp($event, i)"></div>
     </div>
     <div class="gradient-preview" *ngIf="range">
       <div *ngFor="let pidx of range.getIndices()" [style.background-color]="previewColourStyle(pidx)"></div>

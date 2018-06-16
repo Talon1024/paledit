@@ -16,6 +16,7 @@ export class GradientEditorComponent implements OnInit {
   private gradient: Gradient;
   private curStop: GradientStop;
   private curColour: string;
+  private stopClickTimer: number;
   @Input() range: ColourRange;
   @Input() targetPalette?: Palette;
   @Output() gradientOperation = new EventEmitter<GradientOperation>();
@@ -46,6 +47,23 @@ export class GradientEditorComponent implements OnInit {
 
   stopPositionStyle(stop: GradientStop): SafeStyle {
     return this.sanitizer.bypassSecurityTrustStyle(stop.posPercent());
+  }
+
+  handleStopClickDown(e: MouseEvent, idx: number) {
+    // Click and drag
+    this.setCurStopIdx(idx);
+    this.stopClickTimer = window.setTimeout(() => {
+      console.log('drag begin');
+      e.target.addEventListener('mousemove', () => {});
+      window.clearTimeout(this.stopClickTimer);
+    }, 500);
+  }
+
+  handleStopClickUp(e: MouseEvent, idx: number) {
+    if (this.stopClickTimer) {
+      console.log('drag canceled');
+      window.clearTimeout(this.stopClickTimer);
+    }
   }
 
   setCurStopIdx(idx: number) {
