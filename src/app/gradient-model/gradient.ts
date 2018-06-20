@@ -104,7 +104,7 @@ export class Gradient {
       const nextStopRidx = stopIdxs[nextStopGidx];
       const prevStopRidx = stopIdxs[prevStopGidx];
 
-      const blendFactor = rangeIdx / (nextStopRidx - prevStopRidx);
+      const blendFactor = (rangeIdx - prevStopRidx) / (nextStopRidx - prevStopRidx);
 
       const prevColour = new Rgbcolour(prevStop.colour);
       const nextColour = new Rgbcolour(nextStop.colour);
