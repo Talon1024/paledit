@@ -59,6 +59,9 @@ export class GradientEditorComponent implements OnInit {
     this.curStopPos = newPos;
 
     this.gradient.stops[this.curStopIdx].position = newPos;
+    this.gradient.stops.sort((a, b) => {
+      return a.position - b.position;
+    });
   }
 
   addStop() {
