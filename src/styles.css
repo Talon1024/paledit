@@ -23,3 +23,8 @@
 .button:active {
   background-color: #ccc;
 }
+
+.widget {
+  border: 1px solid #000;
+  border-radius: 7px;
+}

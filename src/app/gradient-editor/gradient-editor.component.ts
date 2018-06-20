@@ -14,9 +14,9 @@ import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
 export class GradientEditorComponent implements OnInit {
 
   private gradient: Gradient;
-  private curStop: GradientStop;
+  private curStopIdx = 0;
   private curColour: string;
-  private stopClickTimer: number;
+  private curStopPos: number;
   @Input() range: ColourRange;
   @Input() targetPalette?: Palette;
   @Output() gradientOperation = new EventEmitter<GradientOperation>();
@@ -52,28 +52,25 @@ export class GradientEditorComponent implements OnInit {
   handleStopClickDown(e: MouseEvent, idx: number) {
     // Click and drag
     this.setCurStopIdx(idx);
-    this.stopClickTimer = window.setTimeout(() => {
-      console.log('drag begin');
-      e.target.addEventListener('mousemove', () => {});
-      window.clearTimeout(this.stopClickTimer);
-    }, 500);
   }
 
-  handleStopClickUp(e: MouseEvent, idx: number) {
-    if (this.stopClickTimer) {
-      console.log('drag canceled');
-      window.clearTimeout(this.stopClickTimer);
-    }
+  handleStopPosChange(e: Event) {
+    const targ = e.target as HTMLInputElement;
+
+    const newPos = parseFloat(targ.value);
+    this.curStopPos = newPos;
+
+    this.gradient.stops[this.curStopIdx].position = newPos;
   }
 
   setCurStopIdx(idx: number) {
-    // console.log(`Setting stop index to ${idx}`);
-    this.curStop = this.gradient.stops[idx];
-    this.curColour = new Rgbcolour(this.curStop.colour).toHex();
+    this.curStopIdx = idx;
+    this.curStopPos = this.gradient.stops[idx].position;
+    this.curColour = new Rgbcolour(this.gradient.stops[idx].colour).toHex();
   }
 
   setCurStopColor(colour: string) {
-    this.curStop.colour = Rgbcolour.fromHex(this.curColour);
+    this.gradient.stops[this.curStopIdx].colour = Rgbcolour.fromHex(this.curColour);
   }
 
   applyGradient() {

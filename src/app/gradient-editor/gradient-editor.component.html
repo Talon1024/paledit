@@ -3,9 +3,9 @@
     <div class="gradient" [style.background-image]="gradientStyle()">
       <div *ngFor="let stop of gradient.stops; let i = index"
         class="gradient-stop"
+        [class.selected]="stop === curStop"
         [style.left]="stopPositionStyle(stop)"
-        (mousedown)="handleStopClickDown($event, i)"
-        (mouseup)="handleStopClickUp($event, i)"></div>
+        (mousedown)="handleStopClickDown($event, i)"></div>
     </div>
     <div class="gradient-preview" *ngIf="range">
       <div *ngFor="let pidx of range.getIndices()" [style.background-color]="previewColourStyle(pidx)"></div>
@@ -17,6 +17,7 @@
       <select #stopList *ngIf="gradient.stops" (change)="setCurStopIdx(stopList.selectedIndex)">
         <option *ngFor="let stop of gradient.stops" [selected]="stop === curStop">{{stop}}</option>
       </select>
+      <input type="number" step=".01" [value]="curStopPos" (change)="handleStopPosChange($event)" min="0" max="1">
       <button>▲</button><button>▼</button>
     </div>
     <div class="">
