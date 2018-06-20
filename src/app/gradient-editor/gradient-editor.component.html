@@ -1,4 +1,7 @@
 <div class="widget" *ngIf="gradient">
+  <h3>
+    Gradient Editor
+  </h3>
   <div class="gradient-root">
     <div class="gradient" [style.background-image]="gradientStyle()">
       <div *ngFor="let stop of gradient.stops; let i = index"

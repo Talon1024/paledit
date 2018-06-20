@@ -28,3 +28,8 @@
   border: 1px solid #000;
   border-radius: 7px;
 }
+
+.widget > h3:first-child {
+  text-align: center;
+  border-bottom: 1px solid black;
+}

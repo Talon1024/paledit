@@ -177,6 +177,7 @@ export class PaletteOperationService {
     for (const x of this.selectionRange.getIndices()) {
       const palColour = new Palcolour(gradient.colourAt(x, this.selectionRange));
       palColour.index = x;
+      palColour.selected = true; // Applied to selection range
       palColour.palette = this.palette;
       this.palColours[x] = palColour;
     }
