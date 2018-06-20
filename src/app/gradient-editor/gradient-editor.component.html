@@ -13,7 +13,7 @@
   </div>
   <div class="sbs">
     <div class="">
-      <button>+</button><button>-</button>
+      <button (click)="addStop()">+</button><button (click)="removeStop()">-</button>
       <select #stopList *ngIf="gradient.stops" (change)="setCurStopIdx(stopList.selectedIndex)">
         <option *ngFor="let stop of gradient.stops" [selected]="stop === curStop">{{stop}}</option>
       </select>

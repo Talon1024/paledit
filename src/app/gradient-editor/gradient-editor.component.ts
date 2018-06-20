@@ -63,6 +63,39 @@ export class GradientEditorComponent implements OnInit {
     this.gradient.stops[this.curStopIdx].position = newPos;
   }
 
+  addStop() {
+    const stopCount = this.gradient.stops.length;
+    let otherStop = this.curStopIdx + 1;
+    let insertIdx = this.curStopIdx;
+    if (otherStop >= stopCount) {
+      otherStop = this.curStopIdx - 1;
+      insertIdx = this.curStopIdx - 1;
+    }
+
+    const newPos = (this.gradient.stops[this.curStopIdx].position + this.gradient.stops[otherStop].position) / 2;
+    const newColour = (
+      new Rgbcolour(this.gradient.stops[this.curStopIdx].colour)
+      .blend(0.5, new Rgbcolour(this.gradient.stops[otherStop].colour), Rgbcolour.tint)
+    );
+    const newStop = new GradientStop(newPos, newColour);
+    this.gradient.stops.splice(insertIdx, 0, newStop);
+    this.gradient.stops.sort((a, b) => {
+      return a.position - b.position;
+    });
+  }
+
+  removeStop() {
+    const stopCount = this.gradient.stops.length;
+    if (stopCount <= 2) { return; }
+
+    this.gradient.stops.splice(this.curStopIdx, 1);
+    this.gradient.stops.sort((a, b) => {
+      return a.position - b.position;
+    });
+
+    this.setCurStopIdx(this.curStopIdx);
+  }
+
   setCurStopIdx(idx: number) {
     this.curStopIdx = idx;
     this.curStopPos = this.gradient.stops[idx].position;
