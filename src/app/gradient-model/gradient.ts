@@ -117,7 +117,7 @@ export class Gradient {
       const prevStopRidx = stopIdxs[prevStopGidx];
 
       let blendFactor = (rangeIdx - prevStopRidx) / (nextStopRidx - prevStopRidx);
-      if (blendFactor === Infinity || blendFactor === -Infinity) {
+      if (!Number.isFinite(blendFactor)) {
         blendFactor = 0.0;
       }
 
