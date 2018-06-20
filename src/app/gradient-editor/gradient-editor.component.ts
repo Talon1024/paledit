@@ -54,10 +54,8 @@ export class GradientEditorComponent implements OnInit {
     this.setCurStopIdx(idx);
   }
 
-  handleStopPosChange(e: Event) {
-    const targ = e.target as HTMLInputElement;
-
-    const newPos = parseFloat(targ.value);
+  handleStopPosChange(data: string) {
+    const newPos = parseFloat(data);
     this.curStopPos = newPos;
 
     this.gradient.stops[this.curStopIdx].position = newPos;
