@@ -13,7 +13,6 @@ import { PalcollectionOperationService } from '../palcollection-operation.servic
 })
 export class MainEditorViewComponent implements OnInit {
 
-  private collection: Palcollection;
   private palette: Palette;
   private selectionRange: ColourRange;
 
