@@ -79,10 +79,7 @@ export class GradientEditorComponent implements OnInit {
       .blend(0.5, new Rgbcolour(this.gradient.stops[otherStop].colour), Rgbcolour.tint)
     );
     const newStop = new GradientStop(newPos, newColour);
-    this.gradient.stops.splice(insertIdx, 0, newStop);
-    this.gradient.stops.sort((a, b) => {
-      return a.position - b.position;
-    });
+    this.gradient.addStop(newStop);
   }
 
   removeStop() {
@@ -95,6 +92,22 @@ export class GradientEditorComponent implements OnInit {
     });
 
     this.setCurStopIdx(this.curStopIdx);
+  }
+
+  nextStop() {
+    let stopIdx = this.curStopIdx + 1;
+    if (stopIdx >= this.gradient.stops.length) {
+      stopIdx = this.gradient.stops.length - 1;
+    }
+    this.setCurStopIdx(stopIdx);
+  }
+
+  prevStop() {
+    let stopIdx = this.curStopIdx - 1;
+    if (stopIdx < 0) {
+      stopIdx = 0;
+    }
+    this.setCurStopIdx(stopIdx);
   }
 
   setCurStopIdx(idx: number) {

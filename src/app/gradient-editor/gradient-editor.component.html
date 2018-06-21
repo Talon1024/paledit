@@ -21,7 +21,7 @@
         <option *ngFor="let stop of gradient.stops; let i = index" [selected]="i === curStopIdx">{{stop}}</option>
       </select>
       <input #stopPos type="number" step=".01" [value]="curStopPos" (change)="handleStopPosChange(stopPos.value)" min="0" max="1">
-      <button>▲</button><button>▼</button>
+      <button (click)="prevStop()">▲</button><button (click)="nextStop()">▼</button>
     </div>
     <div class="">
       Stop Colour: <input [(colorPicker)]="curColour" (colorPickerChange)="setCurStopColor(curColour)" [style.background]="curColour"/>
