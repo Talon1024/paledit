@@ -1,7 +1,6 @@
-import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { ColourRange } from '../palette-model/colour-range';
 import { Rgbcolour } from '../palette-model/rgb';
-import { Palette } from '../palette-model/palette';
 import { Gradient, GradientStop } from '../gradient-model/gradient';
 import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
 import { PaletteOperationService } from '../palette-operation.service';
@@ -18,7 +17,6 @@ export class GradientEditorComponent implements OnInit {
   private curColour: string;
   private curStopPos: number;
   @Input() range: ColourRange;
-  @Input() targetPalette?: Palette;
 
   constructor(private sanitizer: DomSanitizer,
     private palOp: PaletteOperationService) {}
