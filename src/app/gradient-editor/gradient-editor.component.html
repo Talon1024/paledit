@@ -16,7 +16,8 @@
   </div>
   <div class="sbs">
     <div class="">
-      <button class="button" (click)="addStop()">+</button><button class="button" (click)="removeStop()">-</button>
+      <button class="button" (click)="addStop()">+</button>
+      <button class="button" (click)="removeStop()">-</button>
       <select #stopList *ngIf="gradient.stops" (change)="setCurStopIdx(stopList.selectedIndex)">
         <option *ngFor="let stop of gradient.stops; let i = index" [selected]="i === curStopIdx">{{stop}}</option>
       </select>
