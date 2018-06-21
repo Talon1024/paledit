@@ -13,12 +13,12 @@
       <li>Range list</li>
     </ol>
     <div>
-      <button>+</button>
-      <button>-</button>
+      <button class="button">+</button>
+      <button class="button">-</button>
     </div>
     <div>
-      <button>Import</button>
-      <button>Export</button>
+      <button class="button">Import</button>
+      <button class="button">Export</button>
     </div>
   </div>
   <div class="widget">
@@ -30,12 +30,12 @@
       <li>Translation</li>
     </ol>
     <div>
-      <button>+</button>
-      <button>-</button>
+      <button class="button">+</button>
+      <button class="button">-</button>
     </div>
     <div>
-      <button>Import</button>
-      <button>Export</button>
+      <button class="button">Import</button>
+      <button class="button">Export</button>
     </div>
   </div>
   <div class="widget">
@@ -47,4 +47,4 @@
     (palIndexChange)="setPalIndex($event)"></app-palette-navigator>
 </div>
 <app-gradient-editor [range]="selectionRange"></app-gradient-editor>
-<button (click)="savePalette()">Save Palette</button><button (click)="saveColourmap()">Save Colourmap</button>
+<button class="button" (click)="savePalette()">Save Palette</button><button class="button" (click)="saveColourmap()">Save Colourmap</button>

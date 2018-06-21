@@ -33,3 +33,7 @@
   text-align: center;
   border-bottom: 1px solid black;
 }
+
+.narrowInput {
+  width: 4rem;
+}

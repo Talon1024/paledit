@@ -16,18 +16,18 @@
   </div>
   <div class="sbs">
     <div class="">
-      <button (click)="addStop()">+</button><button (click)="removeStop()">-</button>
+      <button class="button" (click)="addStop()">+</button><button class="button" (click)="removeStop()">-</button>
       <select #stopList *ngIf="gradient.stops" (change)="setCurStopIdx(stopList.selectedIndex)">
         <option *ngFor="let stop of gradient.stops; let i = index" [selected]="i === curStopIdx">{{stop}}</option>
       </select>
-      <input #stopPos type="number" step=".01" [value]="curStopPos" (change)="handleStopPosChange(stopPos.value)" min="0" max="1">
-      <button (click)="prevStop()">▲</button><button (click)="nextStop()">▼</button>
+      <input #stopPos class="narrowInput" type="number" step=".01" [value]="curStopPos" (change)="handleStopPosChange(stopPos.value)" min="0" max="1">
+      <button class="button" (click)="prevStop()">‹</button><button class="button" (click)="nextStop()">›</button>
     </div>
-    <div class="">
+    <label>
       Stop Colour: <input [(colorPicker)]="curColour" (colorPickerChange)="setCurStopColor(curColour)" [style.background]="curColour"/>
-    </div>
+    </label>
   </div>
   <div class="operations">
-    <button (click)="applyGradient()">Apply</button>
+    <button class="button" (click)="applyGradient()">Apply</button>
   </div>
 </div>

@@ -1,7 +1,3 @@
-.palIndexInput {
-  width: 3rem;
-}
-
 .firstPal::before {
   content: "\AB";
 }

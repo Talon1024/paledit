@@ -1,6 +1,6 @@
 <div class="pallist" *ngIf="maxPal">
   <div>Palette: <input type="number"
-    class="palIndexInput"
+    class="narrowInput"
     [(ngModel)]="colPalIndex"
     (change)="setPalIndex(colPalIndex)"
     min="1" [max]="maxPal">/{{maxPal}}</div>
