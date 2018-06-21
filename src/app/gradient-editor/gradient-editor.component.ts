@@ -84,13 +84,18 @@ export class GradientEditorComponent implements OnInit {
   removeStop() {
     const stopCount = this.gradient.stops.length;
     if (stopCount <= 2) { return; }
+    let stopIdx = this.curStopIdx;
 
-    this.gradient.stops.splice(this.curStopIdx, 1);
+    this.gradient.stops.splice(stopIdx, 1);
     this.gradient.stops.sort((a, b) => {
       return a.position - b.position;
     });
 
-    this.setCurStopIdx(this.curStopIdx);
+    if (stopIdx === stopCount - 1) {
+      stopIdx -= 1;
+    }
+
+    this.setCurStopIdx(stopIdx);
   }
 
   nextStop() {
