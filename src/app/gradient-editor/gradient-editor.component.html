@@ -6,7 +6,7 @@
     <div class="gradient" [style.background-image]="gradientStyle()">
       <div *ngFor="let stop of gradient.stops; let i = index"
         class="gradient-stop"
-        [class.selected]="stop === curStop"
+        [class.selected]="i === curStopIdx"
         [style.left]="stopPositionStyle(stop)"
         (mousedown)="handleStopClickDown($event, i)"></div>
     </div>
