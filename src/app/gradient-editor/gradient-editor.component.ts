@@ -3,8 +3,8 @@ import { ColourRange } from '../palette-model/colour-range';
 import { Rgbcolour } from '../palette-model/rgb';
 import { Palette } from '../palette-model/palette';
 import { Gradient, GradientStop } from '../gradient-model/gradient';
-import { GradientOperation } from '../gradient-model/gradient-operation';
 import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
+import { PaletteOperationService } from '../palette-operation.service';
 
 @Component({
   selector: 'app-gradient-editor',
@@ -19,9 +19,9 @@ export class GradientEditorComponent implements OnInit {
   private curStopPos: number;
   @Input() range: ColourRange;
   @Input() targetPalette?: Palette;
-  @Output() gradientOperation = new EventEmitter<GradientOperation>();
 
-  constructor(private sanitizer: DomSanitizer) {}
+  constructor(private sanitizer: DomSanitizer,
+    private palOp: PaletteOperationService) {}
 
   ngOnInit() {
     this.gradient = this.defaultGradient();
@@ -121,10 +121,7 @@ export class GradientEditorComponent implements OnInit {
   }
 
   applyGradient() {
-    this.gradientOperation.emit({
-      type: 'apply',
-      gradient: this.gradient
-    });
+    this.palOp.applyGradient(this.gradient);
   }
 
 }

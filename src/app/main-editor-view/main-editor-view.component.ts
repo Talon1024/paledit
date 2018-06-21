@@ -7,7 +7,6 @@ import { PaletteIoService } from '../palette-io.service';
 import { PaletteOperationService } from '../palette-operation.service';
 import { KeyboardService, KeyState } from '../keyboard.service';
 import { SettingsService } from '../settings.service';
-import { GradientOperation } from '../gradient-model/gradient-operation';
 
 @Component({
   selector: 'app-main-editor-view',
@@ -63,12 +62,6 @@ export class MainEditorViewComponent implements OnInit {
 
   saveColourmap() {
     console.log('Saving colourmap...');
-  }
-
-  executeGradientOperation(op: GradientOperation) {
-    if (op.type === 'apply') {
-      this.palOp.applyGradient(op.gradient);
-    }
   }
 
 }

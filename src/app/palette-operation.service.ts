@@ -181,6 +181,7 @@ export class PaletteOperationService {
       palColour.palette = this.palette;
       this.palColours[x] = palColour;
     }
+    this.updatePalette();
   }
 
 }

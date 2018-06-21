@@ -46,5 +46,5 @@
     [maxPal]="collection.palettes.length"
     (palIndexChange)="setPalIndex($event)"></app-palette-navigator>
 </div>
-<app-gradient-editor [range]="selectionRange" (gradientOperation)="executeGradientOperation($event)"></app-gradient-editor>
+<app-gradient-editor [range]="selectionRange"></app-gradient-editor>
 <button (click)="savePalette()">Save Palette</button><button (click)="saveColourmap()">Save Colourmap</button>
