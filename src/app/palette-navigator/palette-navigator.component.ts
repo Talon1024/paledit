@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { Palcollection } from '../palette-model/palcollection';
 import { PalcollectionOperationService } from '../palcollection-operation.service';
 
@@ -11,17 +11,15 @@ export class PaletteNavigatorComponent implements OnInit {
 
   @Output() palIndexChange = new EventEmitter<number>();
   private colPalIndex: number; // User input (actually index + 1)
-  maxPal: number;
 
   constructor(private colOp: PalcollectionOperationService) { }
 
   ngOnInit() {
     this.colPalIndex = 1;
-    this.maxPal = this.colOp.numPals();
   }
 
   nextPal() {
-    if (this.colPalIndex < this.maxPal) { this.colPalIndex += 1; }
+    if (this.colPalIndex < this.colOp.numPals()) { this.colPalIndex += 1; }
     this.setPalIndex(this.colPalIndex);
   }
 
@@ -36,23 +34,22 @@ export class PaletteNavigatorComponent implements OnInit {
   }
 
   lastPal() {
-    this.colPalIndex = this.maxPal;
+    this.colPalIndex = this.colOp.numPals();
     this.setPalIndex(this.colPalIndex);
   }
 
   addPal() {
     this.colOp.addPal(this.colPalIndex - 1);
-    this.maxPal += 1;
     this.colPalIndex += 1;
     this.setPalIndex(this.colPalIndex);
   }
 
   removePal() {
     if (this.colOp.removePal(this.colPalIndex - 1)) {
-      if (this.colPalIndex === this.maxPal) {
+      // Already removed a palette
+      if (this.colPalIndex === this.colOp.numPals() + 1) {
         this.colPalIndex -= 1;
       }
-      this.maxPal -= 1;
       this.setPalIndex(this.colPalIndex);
     }
   }
