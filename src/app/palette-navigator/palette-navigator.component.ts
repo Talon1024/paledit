@@ -1,5 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Palcollection } from '../palette-model/palcollection';
+import { PalcollectionOperationService } from '../palcollection-operation.service';
 
 @Component({
   selector: 'app-palette-navigator',
@@ -10,12 +11,13 @@ export class PaletteNavigatorComponent implements OnInit {
 
   @Output() palIndexChange = new EventEmitter<number>();
   private colPalIndex: number; // User input (actually index + 1)
-  @Input() maxPal: number;
+  maxPal: number;
 
-  constructor() { }
+  constructor(private colOp: PalcollectionOperationService) { }
 
   ngOnInit() {
     this.colPalIndex = 1;
+    this.maxPal = this.colOp.numPals();
   }
 
   nextPal() {
@@ -39,11 +41,20 @@ export class PaletteNavigatorComponent implements OnInit {
   }
 
   addPal() {
-    // this.palModify.emit('add');
+    this.colOp.addPal(this.colPalIndex - 1);
+    this.maxPal += 1;
+    this.colPalIndex += 1;
+    this.setPalIndex(this.colPalIndex);
   }
 
   removePal() {
-    // this.palModify.emit('remove');
+    if (this.colOp.removePal(this.colPalIndex - 1)) {
+      if (this.colPalIndex === this.maxPal) {
+        this.colPalIndex -= 1;
+      }
+      this.maxPal -= 1;
+      this.setPalIndex(this.colPalIndex);
+    }
   }
 
   setPalIndex(palIndex: number) {

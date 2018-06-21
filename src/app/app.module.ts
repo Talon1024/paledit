@@ -7,6 +7,7 @@ import { ColorPickerModule } from 'ngx-color-picker';
 import { KeyboardService } from './keyboard.service';
 import { PaletteIoService } from './palette-io.service';
 import { PaletteOperationService } from './palette-operation.service';
+import { PalcollectionOperationService } from './palcollection-operation.service';
 import { SettingsService } from './settings.service';
 
 import { AppComponent } from './app.component';
@@ -37,7 +38,8 @@ const assetUrl = '/assets/';
     KeyboardService,
     PaletteIoService,
     SettingsService,
-    PaletteOperationService
+    PaletteOperationService,
+    PalcollectionOperationService
   ],
   bootstrap: [AppComponent]
 })
