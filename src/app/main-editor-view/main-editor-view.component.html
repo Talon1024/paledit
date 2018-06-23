@@ -4,43 +4,7 @@
   <app-palette-view
     [palette]="palette"
     (selected)="setSelectionRange($event)"></app-palette-view>
-  <div class="widget">
-    <h3>Colour Ranges</h3>
-    <ol>
-      <li>Range list</li>
-      <li>Range list</li>
-      <li>Range list</li>
-      <li>Range list</li>
-    </ol>
-    <div>
-      <button class="button">+</button>
-      <button class="button">-</button>
-    </div>
-    <div>
-      <button class="button">Import</button>
-      <button class="button">Export</button>
-    </div>
-  </div>
-  <div class="widget">
-    <h3>Translations</h3>
-    <ol>
-      <li>Translation</li>
-      <li>Translation</li>
-      <li>Translation</li>
-      <li>Translation</li>
-    </ol>
-    <div>
-      <button class="button">+</button>
-      <button class="button">-</button>
-    </div>
-    <div>
-      <button class="button">Import</button>
-      <button class="button">Export</button>
-    </div>
-  </div>
-  <div class="widget">
-    <h3>Selected colour</h3>
-  </div>
+  <app-palette-operations></app-palette-operations>
   <app-palette-navigator *ngIf="colOp.collection" (palIndexChange)="setPalIndex($event)"></app-palette-navigator>
 </div>
 <app-gradient-editor [range]="selectionRange"></app-gradient-editor>

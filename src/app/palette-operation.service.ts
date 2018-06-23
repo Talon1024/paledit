@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Palette } from './palette-model/palette';
 import { Palcolour } from './palette-model/palcolour';
+import { Rgb, Rgbcolour } from './palette-model/rgb';
 import { ColourRange } from './palette-model/colour-range';
 import { ColourSubRange } from './palette-model/colour-sub-range';
 import { Gradient } from './gradient-model/gradient';
@@ -11,7 +12,7 @@ export class PaletteOperationService {
   private lastSelectedIndex: number;
   palette: Palette;
   palColours: Palcolour[];
-  selectionRange: ColourRange;
+  selectionRange?: ColourRange;
 
   constructor() { }
 
@@ -142,30 +143,28 @@ export class PaletteOperationService {
     }
   }
 
-  updatePalette() {
+  private updatePalette() {
     for (const colour of this.palColours) {
       this.palette.setColour(colour.index, colour);
     }
   }
 
+  private getRange() {
+    return this.selectionRange || new ColourRange([new ColourSubRange(0, 255)]);
+  }
+
   reverse() {
-    const indices = this.selectionRange.getIndices().sort((a, b) => a - b);
+    const range = this.getRange();
+    const indices = range.getIndices().sort((a, b) => a - b);
     for (let x = 0, y = indices.length - 1, m = Math.floor(indices.length / 2); x < m; x++, y--) {
       this.swap(indices[x], indices[y]);
     }
     this.updatePalette();
   }
 
-/*
-  private reverseSubRange(subRange:ColourSubRange) {
-    let [start, end] = subRange.sorted();
-    for (let x = start, y = end, m = Math.floor(start + end / 2); x < m; x++, y--) {
-      this.swap(x, y);
-    }
-  }
-*/
-
   private swap(firstIdx: number, secondIdx: number) {
+    if (firstIdx === secondIdx) { return; }
+
     const tempColour = this.palColours[firstIdx];
     this.palColours[firstIdx] = this.palColours[secondIdx];
     this.palColours[firstIdx].index = firstIdx;
@@ -173,13 +172,23 @@ export class PaletteOperationService {
     this.palColours[secondIdx].index = secondIdx;
   }
 
+  /*
+  tint(colour: Rgb) {
+    //
+  }
+
+  shiftHue(by: number) {
+    //
+  }
+  */
+
   applyGradient(gradient: Gradient) {
-    for (const x of this.selectionRange.getIndices()) {
-      const palColour = new Palcolour(gradient.colourAt(x, this.selectionRange));
-      palColour.index = x;
-      palColour.selected = true; // Applied to selection range
-      palColour.palette = this.palette;
-      this.palColours[x] = palColour;
+    const range: ColourRange = this.getRange();
+    for (const x of range.getIndices()) {
+      const colour = gradient.colourAt(x, range);
+      this.palColours[x].red = colour.red;
+      this.palColours[x].green = colour.green;
+      this.palColours[x].blue = colour.blue;
     }
     this.updatePalette();
   }

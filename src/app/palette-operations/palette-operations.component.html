@@ -1,0 +1,7 @@
+<div class="widget">
+  <h3>Palette operations</h3>
+  <label>Colour: <input [(colorPicker)]="curColour" class="narrowInput" [style.background-color]="curColour"></label>
+  <div *ngIf="palOp.selectionRange">
+    <button class="button" (click)="palOp.reverse()">Reverse Selection</button>
+  </div>
+</div>

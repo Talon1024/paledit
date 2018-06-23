@@ -16,6 +16,7 @@ import { PaletteViewComponent } from './palette-view/palette-view.component';
 import { GradientEditorComponent } from './gradient-editor/gradient-editor.component';
 import { PaletteNavigatorComponent } from './palette-navigator/palette-navigator.component';
 import { PaletteLoaderComponent } from './palette-loader/palette-loader.component';
+import { PaletteOperationsComponent } from './palette-operations/palette-operations.component';
 
 const assetUrl = '/assets/';
 
@@ -26,7 +27,8 @@ const assetUrl = '/assets/';
     PaletteViewComponent,
     GradientEditorComponent,
     PaletteNavigatorComponent,
-    PaletteLoaderComponent
+    PaletteLoaderComponent,
+    PaletteOperationsComponent
   ],
   imports: [
     BrowserModule,

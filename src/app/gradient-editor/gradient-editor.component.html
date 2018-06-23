@@ -26,7 +26,9 @@
       <button class="button" (click)="nextStop()">›</button>
     </div>
     <label>
-      Stop Colour: <input [(colorPicker)]="curColour" (colorPickerChange)="setCurStopColor(curColour)" [style.background]="curColour"/>
+      Stop Colour: <input [(colorPicker)]="curColour"
+        (colorPickerChange)="setCurStopColor(curColour)"
+        class="narrowInput" [style.background-color]="curColour"/>
     </label>
   </div>
   <div class="operations">
