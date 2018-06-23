@@ -43,7 +43,7 @@ describe('Gradient', () => {
     colourRange.subRanges = [subRange];
 
     // Now for the actual test
-    const expected = new Rgbcolour(128, 128, 128);
+    const expected = Rgbcolour.makeRgb(128, 128, 128);
 
     expect(gradient.colourAt(rangeStart + 8, colourRange)).toEqual(expected);
   });
@@ -65,7 +65,7 @@ describe('Gradient', () => {
     colourRange.subRanges = [subRange];
 
     // Now for the actual test
-    const expected = new Rgbcolour(128, 128, 0);
+    const expected = Rgbcolour.makeRgb(128, 128, 0);
     const palIdx = 4 + rangeStart;
 
     expect(gradient.colourAt(palIdx, colourRange)).toEqual(expected);
@@ -83,7 +83,7 @@ describe('Gradient', () => {
     colourRange.subRanges = [subRange];
 
     // Now for the actual test
-    const expected = new Rgbcolour(0, 0, 0);
+    const expected = Rgbcolour.makeRgb(0, 0, 0);
 
     expect(gradient.colourAt(rangeStart, colourRange)).toEqual(expected);
   });
@@ -101,7 +101,7 @@ describe('Gradient', () => {
     colourRange.subRanges = [subRange];
 
     // Now for the actual test
-    const expected = new Rgbcolour(255, 255, 255);
+    const expected = Rgbcolour.makeRgb(255, 255, 255);
 
     expect(gradient.colourAt(rangeEnd, colourRange)).toEqual(expected);
   });
@@ -122,7 +122,7 @@ describe('Gradient', () => {
     colourRange.subRanges = [subRange];
 
     // Now for the actual test
-    const expected = new Rgbcolour(0, 255, 0);
+    const expected = Rgbcolour.makeRgb(0, 255, 0);
 
     expect(gradient.colourAt(Math.floor((rangeStart + rangeEnd) / 2), colourRange)).toEqual(expected);
   });

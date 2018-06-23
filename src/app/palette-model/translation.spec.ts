@@ -20,8 +20,8 @@ describe('PalTranslation', () => {
     const trans = new PalTranslation();
     trans.source = new ColourSubRange(16, 32);
     trans.dest = new Rgbrange();
-    trans.dest.start = new Rgbcolour(100, 140, 255);
-    trans.dest.end = new Rgbcolour(255, 140, 0);
+    trans.dest.start = Rgbcolour.makeRgb(100, 140, 255);
+    trans.dest.end = Rgbcolour.makeRgb(255, 140, 0);
 
     const expected = '16:32=[100,140,255]:[255,140,0]';
     expect(trans.toString()).toEqual(expected);
@@ -43,7 +43,7 @@ describe('PalTranslation', () => {
     const trans = new PalTranslation();
     trans.source = new ColourSubRange(16, 32);
     trans.dest = new Rgbrange();
-    trans.dest.start = new Rgbcolour(255, 140, 0);
+    trans.dest.start = Rgbcolour.makeRgb(255, 140, 0);
     trans.dest.effect = '#';
 
     const expected = '16:32=#[255,140,0]';
@@ -54,7 +54,7 @@ describe('PalTranslation', () => {
     const trans = new PalTranslation();
     trans.source = new ColourSubRange(16, 32);
     trans.dest = new Rgbrange();
-    trans.dest.start = new Rgbcolour(255, 140, 0);
+    trans.dest.start = Rgbcolour.makeRgb(255, 140, 0);
     trans.dest.effect = '@39';
 
     const expected = '16:32=@39[255,140,0]';

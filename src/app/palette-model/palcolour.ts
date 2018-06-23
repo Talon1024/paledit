@@ -1,8 +1,6 @@
-import { Rgbcolour } from './rgb';
-import { Palette } from './palette';
+import { Rgb } from './rgb';
 
-export class Palcolour extends Rgbcolour {
+export class Palcolour {
   index: number;
-  palette: Palette;
-  selected = false;
+  rgb: Rgb;
 }

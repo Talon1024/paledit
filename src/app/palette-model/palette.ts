@@ -1,4 +1,4 @@
-import { Rgbcolour } from './rgb';
+import { Rgb, Rgbcolour } from './rgb';
 import { Palcolour } from './palcolour';
 import { ColourRange } from './colour-range';
 
@@ -22,14 +22,14 @@ export class Palette {
     const green = this.data[start + 1];
     const blue = this.data[start + 2];
 
-    const rgb: Palcolour = new Palcolour(red, green, blue);
-    rgb.index = index;
-    rgb.palette = this;
+    const rgb: Palcolour = {
+      index, rgb: {red, green, blue}
+    };
 
     return rgb;
   }
 
-  setColour(index: number, colour: Rgbcolour) {
+  setColour(index: number, colour: Rgb) {
     const start = index * 3;
     this.data[start] = colour.red;
     this.data[start + 1] = colour.green;
@@ -37,7 +37,7 @@ export class Palette {
   }
 
   setColourRgb(index: number, red: number, green: number, blue: number) {
-    const colour = new Rgbcolour(red, green, blue);
+    const colour = {red, green, blue};
     this.setColour(index, colour);
   }
 

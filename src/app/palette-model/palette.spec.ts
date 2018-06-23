@@ -27,9 +27,9 @@ describe('Palette', () => {
     const palData: Uint8ClampedArray = base64.toByteArray(palstr);
     const palette = Palette.fromData(palData);
     const palColour = palette.colourAt(162);
-    expect(palColour.red).toBe(162);
-    expect(palColour.green).toBe(162);
-    expect(palColour.blue).toBe(162);
+    expect(palColour.rgb.red).toBe(162);
+    expect(palColour.rgb.green).toBe(162);
+    expect(palColour.rgb.blue).toBe(162);
     expect(palColour.index).toBe(162);
   });
 });

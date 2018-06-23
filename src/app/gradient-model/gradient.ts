@@ -85,7 +85,7 @@ export class Gradient {
     return stopIdxs;
   }
 
-  colourAt(palIdx: number, palRange: ColourRange): Rgbcolour {
+  colourAt(palIdx: number, palRange: ColourRange): Rgb {
     if (!palRange) { return; }
     const rangeLen = palRange.getLength();
     const stopIdxs: number[] = this.getStopRangeIdxs(palRange);
@@ -121,11 +121,11 @@ export class Gradient {
         blendFactor = 0.0;
       }
 
-      const prevColour = new Rgbcolour(prevStop.colour);
-      const nextColour = new Rgbcolour(nextStop.colour);
-      const resultColour = prevColour.blend(blendFactor, nextColour, Rgbcolour.tint);
+      const prevColour = prevStop.colour;
+      const nextColour = nextStop.colour;
+      const resultColour = Rgbcolour.blend(prevColour, blendFactor, nextColour, Rgbcolour.tint);
 
-      return resultColour;
+      return {red: resultColour.red, green: resultColour.green, blue: resultColour.blue};
     } else {
       // Average colours of all stops at this index
       let sumRed = 0, sumGreen = 0, sumBlue = 0, colourCount = 0;
@@ -139,7 +139,7 @@ export class Gradient {
       const avgGreen = Math.round(sumGreen / colourCount);
       const avgBlue = Math.round(sumBlue / colourCount);
 
-      return new Rgbcolour(avgRed, avgGreen, avgBlue);
+      return {red: avgRed, green: avgGreen, blue: avgBlue};
     }
   }
 
