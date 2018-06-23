@@ -6,6 +6,11 @@ import { ColourRange } from './palette-model/colour-range';
 import { ColourSubRange } from './palette-model/colour-sub-range';
 import { Gradient } from './gradient-model/gradient';
 
+interface IRangeOperationOptions {
+  colour: Palcolour;
+  range: ColourRange;
+}
+
 @Injectable()
 export class PaletteOperationService {
 
@@ -153,6 +158,14 @@ export class PaletteOperationService {
     return this.selectionRange || new ColourRange([new ColourSubRange(0, 255)]);
   }
 
+  private rangeOperate(op: (idx: number, options?: IRangeOperationOptions) => void) {
+    const range = this.getRange();
+    for (const x of range.getIndices()) {
+      op(x, {colour: this.palColours[x], range: range});
+    }
+    this.updatePalette();
+  }
+
   reverse() {
     const range = this.getRange();
     const indices = range.getIndices().sort((a, b) => a - b);
@@ -172,25 +185,34 @@ export class PaletteOperationService {
     this.palColours[secondIdx].index = secondIdx;
   }
 
-  /*
-  tint(colour: Rgb) {
-    //
+  tint(colour: Rgb, factor: number) {
+    this.rangeOperate((x, o) => {
+      const inColour = new Rgbcolour(colour);
+      const newColour = o.colour.blend(factor, inColour, Rgbcolour.tint);
+      o.colour.red = newColour.red;
+      o.colour.green = newColour.green;
+      o.colour.blue = newColour.blue;
+    });
   }
 
   shiftHue(by: number) {
-    //
+    this.rangeOperate((x, o) => {
+      const hsv = o.colour.hsv();
+      hsv.hue += by;
+      const newColour = Rgbcolour.fromHSV(hsv.hue, hsv.saturation, hsv.value);
+      o.colour.red = newColour.red;
+      o.colour.green = newColour.green;
+      o.colour.blue = newColour.blue;
+    });
   }
-  */
 
   applyGradient(gradient: Gradient) {
-    const range: ColourRange = this.getRange();
-    for (const x of range.getIndices()) {
-      const colour = gradient.colourAt(x, range);
+    this.rangeOperate((x, o) => {
+      const colour = gradient.colourAt(x, o.range);
       this.palColours[x].red = colour.red;
       this.palColours[x].green = colour.green;
       this.palColours[x].blue = colour.blue;
-    }
-    this.updatePalette();
+    });
   }
 
 }
