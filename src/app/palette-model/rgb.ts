@@ -10,23 +10,11 @@ export interface Hsv {
   value: number;
 }
 
-export class Rgbcolour implements Rgb {
+export class Rgbcolour {
   static readonly components = [ 'red', 'green', 'blue' ];
 
-  red: number;
-  green: number;
-  blue: number;
-
-  constructor(redOrRgb: number | Rgb = 0, green: number = 0, blue: number = 0) {
-    if (Rgbcolour.isRgb(redOrRgb)) {
-      this.red = redOrRgb.red;
-      this.green = redOrRgb.green;
-      this.blue = redOrRgb.blue;
-    } else {
-      this.red = (<number>redOrRgb) % 256;
-      this.green = green % 256;
-      this.blue = blue % 256;
-    }
+  static makeRgb(red: number = 0, green: number = 0, blue: number = 0): Rgb {
+    return {red, green, blue};
   }
 
   // Rgb type guard
@@ -37,32 +25,32 @@ export class Rgbcolour implements Rgb {
         rgb.hasOwnProperty('blue'));
   }
 
-  static round(colour: Rgbcolour): Rgbcolour {
+  static round(colour: Rgb): Rgb {
     for (const part of Rgbcolour.components) {
       colour[part] = Math.round(colour[part]);
     }
     return colour;
   }
 
-  static tint(percentage: number, colour: Rgbcolour, otherColour: Rgbcolour): Rgbcolour {
+  static tint(percentage: number, colour: Rgb, otherColour: Rgb): Rgb {
     const thisPct = 1 - percentage;
-    const newColour = new Rgbcolour();
+    const newColour = Rgbcolour.makeRgb();
     for (const part of Rgbcolour.components) {
       newColour[part] = colour[part] * thisPct + otherColour[part] * percentage;
     }
     return newColour;
   }
 
-  static add(percentage: number, colour: Rgbcolour, otherColour: Rgbcolour): Rgbcolour {
-    const newColour = new Rgbcolour();
+  static add(percentage: number, colour: Rgb, otherColour: Rgb): Rgb {
+    const newColour = Rgbcolour.makeRgb();
     for (const part of Rgbcolour.components) {
       newColour[part] = colour[part] + otherColour[part] * percentage;
     }
     return newColour;
   }
 
-  static fromHSV(hue: number, saturation: number, value: number): Rgbcolour {
-    if (hue >= 360 || hue < 0) { return new Rgbcolour(0, 0, 0); }
+  static fromHSV(hue: number, saturation: number, value: number): Rgb {
+    if (hue >= 360 || hue < 0) { return {red: 0, green: 0, blue: 0}; }
 
     // https: //en.wikipedia.org/wiki/HSL_and_HSV#From_HSV
     const chroma = value * saturation;
@@ -79,11 +67,11 @@ export class Rgbcolour implements Rgb {
 
     const m = value - chroma;
     const colour = hueSections[Math.floor(colourSection)];
-    return new Rgbcolour(colour.red + m, colour.green + m, colour.blue + m);
+    return Rgbcolour.makeRgb(colour.red + m, colour.green + m, colour.blue + m);
   }
 
-  static fromHex(hex: string): Rgbcolour {
-    const newColour = new Rgbcolour();
+  static fromHex(hex: string): Rgb {
+    const newColour = Rgbcolour.makeRgb();
     if (hex.startsWith('#')) {
       hex = hex.substr(1);
     }
@@ -93,7 +81,7 @@ export class Rgbcolour implements Rgb {
     return newColour;
   }
 
-  hsv(): Hsv {
+  static hsv(colour: Rgb): Hsv {
     // Modified from:
     // https: //github.com/Qix-/color-convert/blob/master/conversions.js#L97
     /*
@@ -110,9 +98,9 @@ export class Rgbcolour implements Rgb {
     The above copyright notice and this permission notice shall be
     included in all copies or substantial portions of the Software.
     */
-    const r = this.red;
-    const g = this.green;
-    const b = this.blue;
+    const r = colour.red;
+    const g = colour.green;
+    const b = colour.blue;
     const min = Math.min(r, g, b);
     const max = Math.max(r, g, b);
     const delta = max - min;
@@ -148,46 +136,46 @@ export class Rgbcolour implements Rgb {
     };
   }
 
-  toHex(): string {
-    const rgb = new Rgbcolour();
+  static toHex(colour: Rgb): string {
+    const rgb = {red: '', green: '', blue: ''};
     for (const part of Rgbcolour.components) {
-      rgb[part] = this[part].toString(16);
+      rgb[part] = colour[part].toString(16);
       if (rgb[part].length < 2) { rgb[part] = `0${rgb[part]}`; }
     }
     const { red, green, blue } = rgb;
     return `#${red}${green}${blue}`;
   }
 
-  opposite(minDiff: number = 0): Rgbcolour {
-    let red = 0xFF - this.red;
-    let green = 0xFF - this.green;
-    let blue = 0xFF - this.blue;
-    if (Math.abs(this.red - red) < minDiff) {
-      red += this.red > 128 ? -minDiff : minDiff;
+  static opposite(colour: Rgb, minDiff: number = 0): Rgb {
+    let red = 0xFF - colour.red;
+    let green = 0xFF - colour.green;
+    let blue = 0xFF - colour.blue;
+    if (Math.abs(colour.red - red) < minDiff) {
+      red += colour.red > 128 ? -minDiff : minDiff;
     }
-    if (Math.abs(this.green - green) < minDiff) {
-      green += this.green > 128 ? -minDiff : minDiff;
+    if (Math.abs(colour.green - green) < minDiff) {
+      green += colour.green > 128 ? -minDiff : minDiff;
     }
-    if (Math.abs(this.blue - blue) < minDiff) {
-      blue += this.blue > 128 ? -minDiff : minDiff;
+    if (Math.abs(colour.blue - blue) < minDiff) {
+      blue += colour.blue > 128 ? -minDiff : minDiff;
     }
-    return new Rgbcolour(red, green, blue);
+    return Rgbcolour.makeRgb(red, green, blue);
   }
 
-  getStyles(): Object {
+  static getStyles(colour: Rgb): Object {
     return {
-      'background-color': this.toHex(),
-      'color': this.opposite(64).toHex()
+      'background-color': Rgbcolour.toHex(colour),
+      'color': Rgbcolour.toHex(Rgbcolour.opposite(colour, 64))
     };
   }
 
-  blend(percentage: number, colour: Rgbcolour, func: (p: number, c: Rgbcolour, d: Rgbcolour) => Rgbcolour): Rgbcolour {
-    return Rgbcolour.round(func(percentage, this, colour));
+  static blend(colour: Rgb, percentage: number, other: Rgb, func: (p: number, c: Rgb, d: Rgb) => Rgb): Rgb {
+    return Rgbcolour.round(func(percentage, colour, other));
   }
 
-  equals(other: Rgbcolour): boolean {
-    return other.red === this.red &&
-      other.green === this.green &&
-      other.blue === this.blue;
+  static equals(colour: Rgb, other: Rgb): boolean {
+    return other.red === colour.red &&
+      other.green === colour.green &&
+      other.blue === colour.blue;
   }
 }
