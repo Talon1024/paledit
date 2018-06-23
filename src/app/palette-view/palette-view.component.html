@@ -5,4 +5,3 @@
     (click)="selectPalColour(colour.index)">#{{colour.index}}</div>
 </div>
 <label><input type="checkbox" [(ngModel)]="lockSelection">Lock selection</label>
-<button [disabled]="!selectionRange" class="button" (click)="palOp.reverse()">Reverse Selection</button>
