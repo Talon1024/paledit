@@ -29,7 +29,7 @@ export class PalTranslation {
     }
 
     const result = new PalTranslation();
-    const RE_PAL = /(\d+): (\d+)/g;
+    const RE_PAL = /(\d+):(\d+)/g;
     const RE_RGB = /\[([\d.]+),([\d.]+),([\d.]+)\]/g;
     let matchStr = transtr;
 
@@ -94,16 +94,16 @@ export class PalTranslation {
   }
 
   toString(): string {
-    const srcPart = `${this.source.start}: ${this.source.end}`;
+    const srcPart = `${this.source.start}:${this.source.end}`;
     let dstPart;
     if (PalTranslation.isRgb(this.dest)) {
       const effect = this.dest.effect || '';
       dstPart = `${effect}[${this.dest.start.red},${this.dest.start.green},${this.dest.start.blue}]`;
       if (!effect.startsWith('@') && !effect.startsWith('#')) { // tint (@amount)
-        dstPart += `: [${this.dest.end.red},${this.dest.end.green},${this.dest.end.blue}]`;
+        dstPart += `:[${this.dest.end.red},${this.dest.end.green},${this.dest.end.blue}]`;
       }
     } else {
-      dstPart = `${this.dest.start}: ${this.dest.end}`;
+      dstPart = `${this.dest.start}:${this.dest.end}`;
     }
     return `${srcPart}=${dstPart}`;
   }
