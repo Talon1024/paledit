@@ -40,7 +40,7 @@ export class GradientEditorComponent implements OnInit {
 
   previewColourStyle(palIdx: number): SafeStyle {
     const colour = this.gradient.colourAt(palIdx, this.range);
-    return this.sanitizer.bypassSecurityTrustStyle(colour.toHex());
+    return this.sanitizer.bypassSecurityTrustStyle(Rgbcolour.toHex(colour));
   }
 
   stopPositionStyle(stop: GradientStop): SafeStyle {
@@ -72,10 +72,8 @@ export class GradientEditorComponent implements OnInit {
     }
 
     const newPos = (this.gradient.stops[this.curStopIdx].position + this.gradient.stops[otherStopIdx].position) / 2;
-    const newColour = (
-      new Rgbcolour(this.gradient.stops[this.curStopIdx].colour)
-      .blend(0.5, new Rgbcolour(this.gradient.stops[otherStopIdx].colour), Rgbcolour.tint)
-    );
+    const newColour = Rgbcolour.blend(this.gradient.stops[this.curStopIdx].colour,
+      0.5, this.gradient.stops[otherStopIdx].colour, Rgbcolour.tint);
     const newStop = new GradientStop(newPos, newColour);
     this.gradient.addStop(newStop);
     this.setCurStopIdx(newStopIdx);
@@ -117,7 +115,7 @@ export class GradientEditorComponent implements OnInit {
   setCurStopIdx(idx: number) {
     this.curStopIdx = idx;
     this.curStopPos = this.gradient.stops[idx].position;
-    this.curColour = new Rgbcolour(this.gradient.stops[idx].colour).toHex();
+    this.curColour = Rgbcolour.toHex(this.gradient.stops[idx].colour);
   }
 
   setCurStopColor(colour: string) {

@@ -150,7 +150,7 @@ export class PaletteOperationService {
 
   private updatePalette() {
     for (const colour of this.palColours) {
-      this.palette.setColour(colour.index, colour);
+      this.palette.setColour(colour.index, colour.rgb);
     }
   }
 
@@ -187,31 +187,31 @@ export class PaletteOperationService {
 
   tint(colour: Rgb, factor: number) {
     this.rangeOperate((x, o) => {
-      const inColour = new Rgbcolour(colour);
-      const newColour = o.colour.blend(factor, inColour, Rgbcolour.tint);
-      o.colour.red = newColour.red;
-      o.colour.green = newColour.green;
-      o.colour.blue = newColour.blue;
+      const inColour = colour;
+      const newColour = Rgbcolour.blend(o.colour.rgb, factor, inColour, Rgbcolour.tint);
+      o.colour.rgb.red = newColour.red;
+      o.colour.rgb.green = newColour.green;
+      o.colour.rgb.blue = newColour.blue;
     });
   }
 
   shiftHue(by: number) {
     this.rangeOperate((x, o) => {
-      const hsv = o.colour.hsv();
+      const hsv = Rgbcolour.hsv(o.colour.rgb);
       hsv.hue += by;
       const newColour = Rgbcolour.fromHSV(hsv.hue, hsv.saturation, hsv.value);
-      o.colour.red = newColour.red;
-      o.colour.green = newColour.green;
-      o.colour.blue = newColour.blue;
+      o.colour.rgb.red = newColour.red;
+      o.colour.rgb.green = newColour.green;
+      o.colour.rgb.blue = newColour.blue;
     });
   }
 
   applyGradient(gradient: Gradient) {
     this.rangeOperate((x, o) => {
       const colour = gradient.colourAt(x, o.range);
-      this.palColours[x].red = colour.red;
-      this.palColours[x].green = colour.green;
-      this.palColours[x].blue = colour.blue;
+      this.palColours[x].rgb.red = colour.red;
+      this.palColours[x].rgb.green = colour.green;
+      this.palColours[x].rgb.blue = colour.blue;
     });
   }
 

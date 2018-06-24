@@ -1,6 +1,6 @@
 <div class="palette" [style.grid-template-columns]="settings.palColumnStyle()" *ngIf="palColours">
   <div *ngFor="let colour of palColours"
-    class="palcolour" [ngStyle]="colour.getStyles()"
+    class="palcolour" [ngStyle]="getStyles(colour)"
     [class.selected]="colour.selected"
     (click)="selectPalColour(colour.index)">#{{colour.index}}</div>
 </div>

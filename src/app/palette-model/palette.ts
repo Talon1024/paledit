@@ -23,7 +23,7 @@ export class Palette {
     const blue = this.data[start + 2];
 
     const rgb: Palcolour = {
-      index, rgb: {red, green, blue}
+      index, selected: false, rgb: {red, green, blue}
     };
 
     return rgb;

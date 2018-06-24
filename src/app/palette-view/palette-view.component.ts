@@ -2,10 +2,11 @@ import { Component, OnInit, OnChanges, Input, SimpleChanges, Output, EventEmitte
 import { Palette } from '../palette-model/palette';
 import { Palcolour } from '../palette-model/palcolour';
 import { ColourRange } from '../palette-model/colour-range';
-import { ColourSubRange } from '../palette-model/colour-sub-range';
-import { KeyboardService, KeyState } from '../keyboard.service';
+import { Rgbcolour } from '../palette-model/rgb';
+import { KeyboardService } from '../keyboard.service';
 import { SettingsService } from '../settings.service';
 import { PaletteOperationService } from '../palette-operation.service';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-palette-view',
@@ -26,7 +27,8 @@ export class PaletteViewComponent implements OnInit, OnChanges {
   constructor(
     private keyboard: KeyboardService,
     private settings: SettingsService,
-    private palOp: PaletteOperationService) {
+    private palOp: PaletteOperationService,
+    private sanitizer: DomSanitizer) {
       this.keyState = {};
     }
 
@@ -39,6 +41,11 @@ export class PaletteViewComponent implements OnInit, OnChanges {
     this.palOp.setPalette(this.palette);
     this.palColours = this.palOp.palColours;
     if (this.selectionRange && this.lockSelection) { this.palOp.rangeToSelection(this.selectionRange); }
+  }
+
+  getStyles(colour: Palcolour) {
+    const styles = Rgbcolour.getStyles(colour.rgb);
+    return styles;
   }
 
   ngOnInit(): void {
