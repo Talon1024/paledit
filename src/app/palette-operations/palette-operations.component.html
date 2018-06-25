@@ -1,7 +1,24 @@
 <div class="widget">
   <h3>Palette operations</h3>
-  <label>Colour: <input [(colorPicker)]="curColour" class="narrowInput" [style.background-color]="curColour"></label>
   <div *ngIf="palOp.selectionRange">
     <button class="button" (click)="palOp.reverse()">Reverse Selection</button>
+  </div>
+  <div class="">
+    <button class="button" (click)="tint(tintPct.value)">Tint:</button>
+    <input [(colorPicker)]="tintColour" class="narrowInput widget" [style.background-color]="tintColour">
+    %<input class="narrowInput widget" type="number" step=".1" min="0" max="100" #tintPct>
+  </div>
+  <div class="">
+    <button class="button" (click)="colourize()">Colourize:</button>
+    <input [(colorPicker)]="colourizeColour" class="narrowInput widget" [style.background-color]="colourizeColour">
+  </div>
+  <div class="">
+    <button class="button" (click)="saturate(saturateAmt.value)">Saturate:</button>
+    %<input class="narrowInput widget" type="number" step=".1" min="-100" max="100" #saturateAmt>
+  </div>
+  <div class="">
+    <button class="button" (click)="hueShift(hueShiftAmt.value)">Shift hue:</button>
+    <input class="narrowInput widget" type="number" step="1" min="-360" max="360" #hueShiftAmt>
+    degrees
   </div>
 </div>
