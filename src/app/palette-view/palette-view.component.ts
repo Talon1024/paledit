@@ -6,7 +6,6 @@ import { Rgbcolour } from '../palette-model/rgb';
 import { KeyboardService } from '../keyboard.service';
 import { SettingsService } from '../settings.service';
 import { PaletteOperationService } from '../palette-operation.service';
-import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-palette-view',
@@ -27,8 +26,7 @@ export class PaletteViewComponent implements OnInit, OnChanges {
   constructor(
     private keyboard: KeyboardService,
     private settings: SettingsService,
-    private palOp: PaletteOperationService,
-    private sanitizer: DomSanitizer) {
+    private palOp: PaletteOperationService) {
       this.keyState = {};
     }
 
@@ -59,8 +57,8 @@ export class PaletteViewComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes.hasOwnProperty('palette')) {
-      if (changes['palette'].currentValue) { this.onSetPalette(); }
+    if (changes.hasOwnProperty('palette') && changes['palette'] != null) {
+      this.onSetPalette();
     }
   }
 }
