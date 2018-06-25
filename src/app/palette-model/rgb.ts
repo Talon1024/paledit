@@ -49,6 +49,11 @@ export class Rgbcolour {
     return newColour;
   }
 
+  static fromHsv(hsv: Hsv) {
+    // Simple wrapper that takes an Hsv object instead of individual hue, saturation, value arguments.
+    return Rgbcolour.fromHSV(hsv.hue, hsv.saturation, hsv.value);
+  }
+
   static fromHSV(hue: number, saturation: number, value: number): Rgb {
     if (hue >= 360 || hue < 0) { return {red: 0, green: 0, blue: 0}; }
 

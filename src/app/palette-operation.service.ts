@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Palette } from './palette-model/palette';
 import { Palcolour } from './palette-model/palcolour';
-import { Rgb, Rgbcolour } from './palette-model/rgb';
+import { Rgb, Hsv, Rgbcolour } from './palette-model/rgb';
 import { ColourRange } from './palette-model/colour-range';
 import { ColourSubRange } from './palette-model/colour-sub-range';
 import { Gradient } from './gradient-model/gradient';
 
 interface IRangeOperationOptions {
-  colour: Palcolour;
+  pCol: Palcolour;
   range: ColourRange;
 }
 
@@ -161,7 +161,7 @@ export class PaletteOperationService {
   private rangeOperate(op: (idx: number, options?: IRangeOperationOptions) => void) {
     const range = this.getRange();
     for (const x of range.getIndices()) {
-      op(x, {colour: this.palColours[x], range: range});
+      op(x, {pCol: this.palColours[x], range: range});
     }
     this.updatePalette();
   }
@@ -187,22 +187,39 @@ export class PaletteOperationService {
 
   tint(colour: Rgb, factor: number) {
     this.rangeOperate((x, o) => {
-      const inColour = colour;
-      const newColour = Rgbcolour.blend(o.colour.rgb, factor, inColour, Rgbcolour.tint);
-      o.colour.rgb.red = newColour.red;
-      o.colour.rgb.green = newColour.green;
-      o.colour.rgb.blue = newColour.blue;
+      const newColour = Rgbcolour.blend(o.pCol.rgb, factor, colour, Rgbcolour.tint);
+      o.pCol.rgb.red = newColour.red;
+      o.pCol.rgb.green = newColour.green;
+      o.pCol.rgb.blue = newColour.blue;
+    });
+  }
+
+  colourize(colour: Rgb) {
+    this.rangeOperate((x, o) => {
+      const colHsv: Hsv = Rgbcolour.hsv(colour);
+      const {hue, saturation} = colHsv;
+      const otherHsv = Rgbcolour.hsv(o.pCol.rgb);
+      const combined: Hsv = {
+        hue, saturation, value: otherHsv.value
+      };
+      o.pCol.rgb = Rgbcolour.fromHsv(combined);
+    });
+  }
+
+  saturate(pct: number) {
+    this.rangeOperate((x, o) => {
+      const colHsv = Rgbcolour.hsv(o.pCol.rgb);
     });
   }
 
   shiftHue(by: number) {
     this.rangeOperate((x, o) => {
-      const hsv = Rgbcolour.hsv(o.colour.rgb);
+      const hsv = Rgbcolour.hsv(o.pCol.rgb);
       hsv.hue += by;
       const newColour = Rgbcolour.fromHSV(hsv.hue, hsv.saturation, hsv.value);
-      o.colour.rgb.red = newColour.red;
-      o.colour.rgb.green = newColour.green;
-      o.colour.rgb.blue = newColour.blue;
+      o.pCol.rgb.red = newColour.red;
+      o.pCol.rgb.green = newColour.green;
+      o.pCol.rgb.blue = newColour.blue;
     });
   }
 
