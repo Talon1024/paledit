@@ -119,6 +119,7 @@ export class GradientEditorComponent implements OnInit {
   }
 
   setCurStopColor(colour: string) {
+    this.curColour = colour;
     this.gradient.stops[this.curStopIdx].colour = Rgbcolour.fromHex(this.curColour);
   }
 
