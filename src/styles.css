@@ -37,3 +37,8 @@
 .narrowInput {
   width: 4rem;
 }
+
+a[download] {
+  color: inherit;
+  text-decoration: none;
+}
