@@ -216,7 +216,13 @@ export class PaletteOperationService {
     this.rangeOperate((x, o) => {
       const hsv = Rgbcolour.hsv(o.pCol.rgb);
       let newHue = hsv.hue + by;
-      if (newHue >= 360) { newHue -= 360; }
+
+      if (newHue >= 360) {
+        newHue -= 360;
+      } else if (newHue < 0) {
+        newHue += 360;
+      }
+
       const newColour = Rgbcolour.fromHSV(newHue, hsv.saturation, hsv.value);
       o.pCol.rgb.red = newColour.red;
       o.pCol.rgb.green = newColour.green;
