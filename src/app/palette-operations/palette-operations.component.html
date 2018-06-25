@@ -6,7 +6,7 @@
   <div class="">
     <button class="button" (click)="tint(tintPct.value)">Tint:</button>
     <input [(colorPicker)]="tintColour" class="narrowInput widget" [style.background-color]="tintColour">
-    %<input class="narrowInput widget" type="number" step=".1" min="0" max="100" #tintPct>
+    %<input class="narrowInput widget" type="number" step=".1" min="0" max="100" value="0" #tintPct>
   </div>
   <div class="">
     <button class="button" (click)="colourize()">Colourize:</button>
@@ -14,11 +14,11 @@
   </div>
   <div class="">
     <button class="button" (click)="saturate(saturateAmt.value)">Saturate:</button>
-    %<input class="narrowInput widget" type="number" step=".1" min="-100" max="100" #saturateAmt>
+    %<input class="narrowInput widget" type="number" step=".1" min="-100" max="100" value="0" #saturateAmt>
   </div>
   <div class="">
     <button class="button" (click)="hueShift(hueShiftAmt.value)">Shift hue:</button>
-    <input class="narrowInput widget" type="number" step="1" min="-360" max="360" #hueShiftAmt>
+    <input class="narrowInput widget" type="number" step="1" min="-360" max="360" value="0" #hueShiftAmt>
     degrees
   </div>
 </div>

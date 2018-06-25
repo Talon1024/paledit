@@ -15,21 +15,24 @@ export class PaletteOperationsComponent implements OnInit {
   constructor(private palOp: PaletteOperationService) { }
 
   ngOnInit() {
+    this.tintColour = '#ffffff';
+    this.colourizeColour = '#ffffff';
   }
 
-  tint(pct: number) {
-    const actualPct = pct / 100;
+  tint(pct: string) {
+    const actualPct = parseFloat(pct) / 100;
     const colour = Rgbcolour.fromHex(this.tintColour);
     this.palOp.tint(colour, actualPct);
   }
 
   colourize() {
-    const colourizeColour = Rgbcolour.fromHex(this.colourizeColour);
-    this.palOp.colourize(colourizeColour);
+    const colour = Rgbcolour.fromHex(this.colourizeColour);
+    this.palOp.colourize(colour);
   }
 
-  hueShift(by: number) {
-    this.palOp.shiftHue(by);
+  hueShift(by: string) {
+    const degs = parseFloat(by);
+    this.palOp.shiftHue(degs);
   }
 
   saturate(by: number) {}

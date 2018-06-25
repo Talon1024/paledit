@@ -71,8 +71,9 @@ export class Rgbcolour {
     hueSections[5] = {red: chroma, green: 0, blue: x};
 
     const m = value - chroma;
-    const colour = hueSections[Math.floor(colourSection)];
-    return Rgbcolour.makeRgb(colour.red + m, colour.green + m, colour.blue + m);
+    let colour = hueSections[Math.floor(colourSection)];
+    colour = Rgbcolour.makeRgb(colour.red + m, colour.green + m, colour.blue + m);
+    return Rgbcolour.round(colour);
   }
 
   static fromHex(hex: string): Rgb {
