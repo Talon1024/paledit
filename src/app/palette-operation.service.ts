@@ -103,6 +103,22 @@ export class PaletteOperationService {
     return this.selectionToRange();
   }
 
+  selectAll(): ColourRange {
+    let allSelected = true;
+    for (const colour of this.palColours) {
+      if (!colour.selected) {
+        allSelected = false;
+        break;
+      }
+    }
+
+    const newSel = !allSelected;
+    for (const colour of this.palColours) {
+      colour.selected = newSel;
+    }
+    return this.selectionToRange();
+  }
+
   selectionToRange(): ColourRange {
     const subRanges: ColourSubRange[] = [];
     let subRangeStart = 0, subRangeEnd = 0, inSubRange = false;

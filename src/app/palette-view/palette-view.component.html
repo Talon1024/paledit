@@ -4,4 +4,4 @@
     [class.selected]="colour.selected"
     (click)="selectPalColour(colour.index)">#{{colour.index}}</div>
 </div>
-<label><input type="checkbox" [(ngModel)]="lockSelection">Lock selection</label>
+<button class="button" (click)="selectAll()">Select all</button><label><input type="checkbox" [(ngModel)]="lockSelection">Lock selection</label>
