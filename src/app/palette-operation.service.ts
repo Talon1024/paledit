@@ -11,6 +11,12 @@ interface IRangeOperationOptions {
   range: ColourRange;
 }
 
+export interface HsvUsage {
+  hue: boolean;
+  saturation: boolean;
+  value: boolean;
+}
+
 @Injectable()
 export class PaletteOperationService {
 
@@ -194,7 +200,7 @@ export class PaletteOperationService {
     });
   }
 
-  colourize(colour: Rgb, use?: {hue: boolean, saturation: boolean, value: boolean}) {
+  colourize(colour: Rgb, use?: HsvUsage) {
     if (!use) {
       use = {hue: true, saturation: true, value: false};
     }

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { PaletteOperationService } from '../palette-operation.service';
+import { PaletteOperationService, HsvUsage } from '../palette-operation.service';
 import { Rgb, Rgbcolour } from '../palette-model/rgb';
 
 @Component({
@@ -11,11 +11,7 @@ export class PaletteOperationsComponent implements OnInit {
 
   private tintColour: string;
   private colourizeColour: string;
-  private colourizeUse: {
-    hue: boolean,
-    saturation: boolean,
-    value: boolean
-  };
+  private colourizeUse: HsvUsage;
 
   constructor(private palOp: PaletteOperationService) { }
 
