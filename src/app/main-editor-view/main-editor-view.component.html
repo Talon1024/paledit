@@ -1,10 +1,15 @@
-<app-palette-loader
-  (selectPalFile)="readPaletteFile($event)"></app-palette-loader>
 <div class="editor-main">
-  <app-palette-view *ngIf="palette" [palette]="palette"
-    (selected)="setSelectionRange($event)"></app-palette-view>
-  <app-palette-operations></app-palette-operations>
-  <app-palette-navigator *ngIf="colOp.collection" (palIndexChange)="setPalIndex($event)"></app-palette-navigator>
+  <div class="editor-col">
+    <app-palette-loader (selectPalFile)="readPaletteFile($event)"></app-palette-loader>
+  </div>
+  <div class="editor-col">
+    <app-palette-view *ngIf="palette" [palette]="palette"
+      (selected)="setSelectionRange($event)"></app-palette-view>
+  </div>
+  <div class="editor-col">
+    <app-palette-navigator *ngIf="colOp.collection" (palIndexChange)="setPalIndex($event)"></app-palette-navigator>
+    <app-palette-operations></app-palette-operations>
+  </div>
 </div>
 <app-gradient-editor [range]="selectionRange"></app-gradient-editor>
 <a class="button" [download]="palFileName" (click)="savePalette()" [href]="palDataURI">Save Palette</a>
