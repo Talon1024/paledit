@@ -11,12 +11,22 @@ export class PaletteOperationsComponent implements OnInit {
 
   private tintColour: string;
   private colourizeColour: string;
+  private colourizeUse: {
+    hue: boolean,
+    saturation: boolean,
+    value: boolean
+  };
 
   constructor(private palOp: PaletteOperationService) { }
 
   ngOnInit() {
     this.tintColour = '#ffffff';
     this.colourizeColour = '#ffffff';
+    this.colourizeUse = {
+      hue: true,
+      saturation: true,
+      value: false
+    };
   }
 
   tint(pct: string) {
@@ -27,7 +37,7 @@ export class PaletteOperationsComponent implements OnInit {
 
   colourize() {
     const colour = Rgbcolour.fromHex(this.colourizeColour);
-    this.palOp.colourize(colour);
+    this.palOp.colourize(colour, this.colourizeUse);
   }
 
   hueShift(by: string) {

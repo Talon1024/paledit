@@ -194,13 +194,18 @@ export class PaletteOperationService {
     });
   }
 
-  colourize(colour: Rgb) {
+  colourize(colour: Rgb, use?: {hue: boolean, saturation: boolean, value: boolean}) {
+    if (!use) {
+      use = {hue: true, saturation: true, value: false};
+    }
     this.rangeOperate((x, o) => {
       const colHsv: Hsv = Rgbcolour.hsv(colour);
-      const {hue, saturation} = colHsv;
+      const {hue, saturation, value} = colHsv;
       const otherHsv = Rgbcolour.hsv(o.pCol.rgb);
       const combined: Hsv = {
-        hue, saturation, value: otherHsv.value
+        hue: use.hue ? hue : otherHsv.hue,
+        saturation: use.saturation ? saturation : otherHsv.saturation,
+        value: use.value ? value : otherHsv.value
       };
       o.pCol.rgb = Rgbcolour.fromHsv(combined);
     });

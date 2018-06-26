@@ -11,6 +11,9 @@
   <div class="">
     <button class="button" (click)="colourize()">Colourize:</button>
     <input [(colorPicker)]="colourizeColour" class="narrowInput widget" [style.background-color]="colourizeColour">
+    <label>Hue <input [(ngModel)]="colourizeUse.hue" type="checkbox" checked></label>
+    <label>Sat <input [(ngModel)]="colourizeUse.saturation" type="checkbox" checked></label>
+    <label>Val <input [(ngModel)]="colourizeUse.value" type="checkbox"></label>
   </div>
   <div class="">
     <button class="button" (click)="saturate(saturateAmt.value)">Saturate:</button>
