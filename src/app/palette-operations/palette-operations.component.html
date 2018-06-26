@@ -5,12 +5,12 @@
   </div>
   <div class="">
     <button class="button" (click)="tint(tintPct.value)">Tint:</button>
-    <input [(colorPicker)]="tintColour" cpPosition="bottom" class="narrowInput widget" [style.background-color]="tintColour">
+    <span [(colorPicker)]="tintColour" cpPosition="bottom" class="colourPick widget" [style.background-color]="tintColour"></span>
     %<input class="narrowInput widget" type="number" step=".1" min="0" max="100" value="0" #tintPct>
   </div>
   <div class="">
     <button class="button" (click)="colourize()">Colourize:</button>
-    <input [(colorPicker)]="colourizeColour" cpPosition="bottom" class="narrowInput widget" [style.background-color]="colourizeColour">
+    <span [(colorPicker)]="colourizeColour" cpPosition="bottom" class="colourPick widget" [style.background-color]="colourizeColour"></span>
     <label>Hue <input [(ngModel)]="colourizeUse.hue" type="checkbox" checked></label>
     <label>Sat <input [(ngModel)]="colourizeUse.saturation" type="checkbox" checked></label>
     <label>Val <input [(ngModel)]="colourizeUse.value" type="checkbox"></label>

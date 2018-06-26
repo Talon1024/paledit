@@ -16,8 +16,8 @@ export class PaletteOperationsComponent implements OnInit {
   constructor(private palOp: PaletteOperationService) { }
 
   ngOnInit() {
-    this.tintColour = '#ffffff';
-    this.colourizeColour = '#ffffff';
+    this.tintColour = '#ff8080';
+    this.colourizeColour = '#80ff80';
     this.colourizeUse = {
       hue: true,
       saturation: true,

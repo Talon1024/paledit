@@ -26,8 +26,8 @@
       <button class="button" (click)="nextStop()">›</button>
     </div>
     <label>
-      Stop Colour: <input [colorPicker]="curColour" cpPosition="top" (colorPickerChange)="setCurStopColor($event)"
-        class="narrowInput widget" [style.background-color]="curColour"/>
+      Stop Colour: <span [colorPicker]="curColour" cpPosition="top" (colorPickerChange)="setCurStopColor($event)"
+        class="colourPick widget" [style.background-color]="curColour"></span>
     </label>
   </div>
   <div class="operations">
