@@ -2,6 +2,6 @@
   <div *ngFor="let colour of palColours"
     class="palcolour" [ngStyle]="getStyles(colour)"
     [class.selected]="colour.selected"
-    (click)="selectPalColour(colour.index)">#{{colour.index}}</div>
+    (click)="selectPalColour(colour.index)"><span *ngIf="showNumbers">#{{colour.index}}</span></div>
 </div>
-<button class="button" (click)="selectAll()">Select all</button><label><input type="checkbox" [(ngModel)]="lockSelection">Lock selection</label>
+<button class="button" (click)="selectAll()">Select all</button><label><input type="checkbox" [(ngModel)]="lockSelection">Lock selection</label><label><input type="checkbox" [(ngModel)]="showNumbers">Colour numbers</label>

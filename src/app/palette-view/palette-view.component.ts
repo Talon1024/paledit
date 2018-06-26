@@ -20,14 +20,14 @@ export class PaletteViewComponent implements OnInit, OnChanges {
   @Input() palette: Palette;
   private palColours: Palcolour[];
   private selectionRange: ColourRange;
-  private lockSelection = false;
+  private lockSelection: boolean;
+  private showNumbers: boolean;
   @Output() selected = new EventEmitter<ColourRange>();
 
   constructor(
     private keyboard: KeyboardService,
     private settings: SettingsService,
     private palOp: PaletteOperationService) {
-      this.keyState = {};
     }
 
   selectPalColour(colourIndex: number) {
@@ -52,6 +52,9 @@ export class PaletteViewComponent implements OnInit, OnChanges {
   }
 
   ngOnInit(): void {
+    this.keyState = {};
+    this.lockSelection = false;
+    this.showNumbers = true;
     this.keyboard.observeKeyboard(['Shift', 'Control']).subscribe((press) => {
       this.keyState[press.key] = press.state;
     });
