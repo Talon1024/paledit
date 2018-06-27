@@ -189,22 +189,22 @@ export class PaletteOperationService {
   }
 
   reverse() {
+    const swap = (firstIdx: number, secondIdx: number) => {
+      if (firstIdx === secondIdx) { return; }
+
+      const tempColour = this.palColours[firstIdx];
+      this.palColours[firstIdx] = this.palColours[secondIdx];
+      this.palColours[firstIdx].index = firstIdx;
+      this.palColours[secondIdx] = tempColour;
+      this.palColours[secondIdx].index = secondIdx;
+    };
+
     const range = this.getRange();
     const indices = range.getIndices().sort((a, b) => a - b);
     for (let x = 0, y = indices.length - 1, m = Math.floor(indices.length / 2); x < m; x++, y--) {
-      this.swap(indices[x], indices[y]);
+      swap(indices[x], indices[y]);
     }
     this.updatePalette();
-  }
-
-  private swap(firstIdx: number, secondIdx: number) {
-    if (firstIdx === secondIdx) { return; }
-
-    const tempColour = this.palColours[firstIdx];
-    this.palColours[firstIdx] = this.palColours[secondIdx];
-    this.palColours[firstIdx].index = firstIdx;
-    this.palColours[secondIdx] = tempColour;
-    this.palColours[secondIdx].index = secondIdx;
   }
 
   tint(colour: Rgb, factor: number) {
