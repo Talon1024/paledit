@@ -1,10 +1,13 @@
 /* You can add global styles to this file, and also import other style files */
 
+html { font-size: 12px; }
+
 * { box-sizing: border-box; }
 
 .button {
   border: 1px solid black;
   border-radius: 8px;
+  padding: 2px;
   margin: 2px;
   min-width: 20px;
   min-height: 20px;
@@ -40,8 +43,8 @@
 
 .colourPick {
   display: inline-block;
-  width: 4rem;
-  height: 1rem;
+  width: 2.5rem;
+  height: 1.25rem;
   user-select: none;
   vertical-align: middle;
   cursor: pointer;
@@ -50,4 +53,8 @@
 a[download] {
   color: inherit;
   text-decoration: none;
+}
+
+label > * {
+  vertical-align: middle;
 }
