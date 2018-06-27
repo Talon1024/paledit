@@ -27,7 +27,9 @@ export class PaletteOperationService {
   palColours: Palcolour[];
   selectionRange?: ColourRange;
 
-  constructor() { }
+  constructor() {
+    this.palColours = new Array(256);
+  }
 
   selectPalColour(colourIndex: number, keyState: {[key: string]: boolean}): ColourRange | null {
     /*
@@ -164,11 +166,11 @@ export class PaletteOperationService {
 
   setPalette(pal: Palette) {
     this.palette = pal;
-    if (!this.palColours) {
-      this.palColours = new Array(this.palette.getLength());
+    if (pal.getLength() !== this.palColours.length) {
+      this.palColours = new Array(pal.getLength());
     }
-    for (let i = 0; i < this.palette.getLength(); i++) {
-      this.palColours[i] = this.palette.colourAt(i);
+    for (let i = 0; i < pal.getLength(); i++) {
+      this.palColours[i] = pal.colourAt(i);
     }
   }
 
@@ -199,11 +201,9 @@ export class PaletteOperationService {
     const swap = (firstIdx: number, secondIdx: number) => {
       if (firstIdx === secondIdx) { return; }
 
-      const tempColour = this.palColours[firstIdx];
-      this.palColours[firstIdx] = this.palColours[secondIdx];
-      this.palColours[firstIdx].index = firstIdx;
-      this.palColours[secondIdx] = tempColour;
-      this.palColours[secondIdx].index = secondIdx;
+      const tempColour = this.palColours[firstIdx].rgb;
+      this.palColours[firstIdx].rgb = this.palColours[secondIdx].rgb;
+      this.palColours[secondIdx].rgb = tempColour;
     };
 
     const range = this.getRange();
