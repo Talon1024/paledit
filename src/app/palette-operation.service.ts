@@ -7,6 +7,8 @@ import { ColourSubRange } from './palette-model/colour-sub-range';
 import { Gradient } from './gradient-model/gradient';
 
 interface IRangeOperationOptions {
+  pIdx: number;
+  rIdx: number;
   pCol: Palcolour;
   range: ColourRange;
 }
@@ -180,10 +182,15 @@ export class PaletteOperationService {
     return this.selectionRange || new ColourRange([new ColourSubRange(0, 255)]);
   }
 
-  private rangeOperate(op: (idx: number, options?: IRangeOperationOptions) => void) {
+  private rangeOperate(op: (options: IRangeOperationOptions) => void) {
     const range = this.getRange();
     for (const x of range.getIndices()) {
-      op(x, {pCol: this.palColours[x], range: range});
+      op({
+        pIdx: x,
+        rIdx: range.palToRangeIdx(x),
+        pCol: this.palColours[x],
+        range: range
+      });
     }
     this.updatePalette();
   }
@@ -208,7 +215,7 @@ export class PaletteOperationService {
   }
 
   tint(colour: Rgb, factor: number) {
-    this.rangeOperate((x, o) => {
+    this.rangeOperate((o) => {
       const newColour = Rgbcolour.blend(o.pCol.rgb, factor, colour, Rgbcolour.tint);
       o.pCol.rgb.red = newColour.red;
       o.pCol.rgb.green = newColour.green;
@@ -220,7 +227,7 @@ export class PaletteOperationService {
     if (!use) {
       use = {hue: true, saturation: true, value: false};
     }
-    this.rangeOperate((x, o) => {
+    this.rangeOperate((o) => {
       const colHsv: Hsv = Rgbcolour.hsv(colour);
       const {hue, saturation, value} = colHsv;
       const otherHsv = Rgbcolour.hsv(o.pCol.rgb);
@@ -234,13 +241,13 @@ export class PaletteOperationService {
   }
 
   saturate(pct: number) {
-    this.rangeOperate((x, o) => {
+    this.rangeOperate((o) => {
       const colHsv = Rgbcolour.hsv(o.pCol.rgb);
     });
   }
 
   shiftHue(by: number) {
-    this.rangeOperate((x, o) => {
+    this.rangeOperate((o) => {
       const hsv = Rgbcolour.hsv(o.pCol.rgb);
       let newHue = hsv.hue + by;
 
@@ -258,11 +265,11 @@ export class PaletteOperationService {
   }
 
   applyGradient(gradient: Gradient) {
-    this.rangeOperate((x, o) => {
-      const colour = gradient.colourAt(x, o.range);
-      this.palColours[x].rgb.red = colour.red;
-      this.palColours[x].rgb.green = colour.green;
-      this.palColours[x].rgb.blue = colour.blue;
+    this.rangeOperate((o) => {
+      const colour = gradient.colourAt(o.pIdx, o.range);
+      this.palColours[o.pIdx].rgb.red = colour.red;
+      this.palColours[o.pIdx].rgb.green = colour.green;
+      this.palColours[o.pIdx].rgb.blue = colour.blue;
     });
   }
 
