@@ -1,16 +1,16 @@
 <div class="pallist widget" *ngIf="colOp.numPals() >= 1">
-  <h3>Palette Navigator</h3>
-  <div>Palette: <input type="number"
+  <h3 i18n="Widget title">Palette Navigator</h3>
+  <label i18n="Number of currently selected palette">Palette: <input type="number"
     class="narrowInput"
     [(ngModel)]="colPalIndex"
     (change)="setPalIndex(colPalIndex)"
-    min="1" [max]="colOp.numPals()">/{{colOp.numPals()}}</div>
+    min="1" [max]="colOp.numPals()">/{{colOp.numPals()}}</label>
   <div>
-    <span class="button firstPal" (click)="firstPal()"></span>
-    <span class="button prevPal" (click)="prevPal()"></span>
-    <span class="button remPal" (click)="removePal()">-</span>
-    <span class="button addPal" (click)="addPal()">+</span>
-    <span class="button nextPal" (click)="nextPal()"></span>
-    <span class="button lastPal" (click)="lastPal()"></span>
+    <span class="button" (click)="firstPal()" i18n="Go to first palette in the collection">&#xAB;</span>
+    <span class="button" (click)="prevPal()" i18n="Go to previous palette in the collection">&#x2039;</span>
+    <span class="button" (click)="removePal()" i18n="Remove a palette from the collection">-</span>
+    <span class="button" (click)="addPal()" i18n="Add a palette to the collection">+</span>
+    <span class="button" (click)="nextPal()" i18n="Go to next palette in the collection">&#x203A;</span>
+    <span class="button" (click)="lastPal()" i18n="Go to last palette in the collection">&#xBB;</span>
   </div>
 </div>

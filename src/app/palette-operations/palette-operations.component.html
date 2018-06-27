@@ -4,23 +4,23 @@
     <span class="button" (click)="palOp.reverse()">Reverse</span>
   </div>
   <div class="">
-    <span class="button" (click)="tint(tintPct.value)">Tint:</span>
+    <span class="button" (click)="tint(tintPct.value)" i18n="Blends the source colours with the selected colour">Tint:</span>
     <span [(colorPicker)]="tintColour" cpPosition="bottom" class="colourPick widget" [style.background-color]="tintColour"></span>
     %<input class="narrowInput widget" type="number" step=".1" min="0" max="100" value="0" #tintPct>
   </div>
   <div class="">
-    <span class="button" (click)="colourize()">Colourize:</span>
+    <span class="button" (click)="colourize()" i18n="Replaces one or more HSV components of the source colours with those of the target colour">Colourize:</span>
     <span [(colorPicker)]="colourizeColour" cpPosition="bottom" class="colourPick widget" [style.background-color]="colourizeColour"></span>
-    <label>Hue <input [(ngModel)]="colourizeUse.hue" type="checkbox" checked></label>
-    <label>Sat <input [(ngModel)]="colourizeUse.saturation" type="checkbox" checked></label>
-    <label>Val <input [(ngModel)]="colourizeUse.value" type="checkbox"></label>
+    <label i18n="Hue">Hue <input [(ngModel)]="colourizeUse.hue" type="checkbox" checked></label>
+    <label i18n="Saturation">Sat <input [(ngModel)]="colourizeUse.saturation" type="checkbox" checked></label>
+    <label i18n="Value">Val <input [(ngModel)]="colourizeUse.value" type="checkbox"></label>
   </div>
   <div class="">
-    <span class="button" (click)="saturate(saturateAmt.value)">Saturate:</span>
+    <span class="button" (click)="saturate(saturateAmt.value)" i18n="Increases or decreases the saturation of the source colours">Saturate:</span>
     %<input class="narrowInput widget" type="number" step=".1" min="-100" max="100" value="0" #saturateAmt>
   </div>
   <div class="">
-    <span class="button" (click)="hueShift(hueShiftAmt.value)">Shift hue:</span>
+    <span class="button" (click)="hueShift(hueShiftAmt.value)" i18n="Changes the hue of the source colours">Shift hue:</span>
     <input class="narrowInput widget" type="number" step="1" min="-360" max="360" value="0" #hueShiftAmt>
     degrees
   </div>

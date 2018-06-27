@@ -12,5 +12,5 @@
   </div>
 </div>
 <app-gradient-editor [range]="selectionRange"></app-gradient-editor>
-<a class="button" [download]="palFileName" (click)="savePalette()" [href]="palDataURI">Save Palette</a>
-<a class="button" [download]="cmapFileName" [href]="cmapDataURI">Save Colourmap</a>
+<a class="button" [download]="palFileName" (click)="savePalette()" [href]="palDataURI" i18n="Save palette to a file">Save Palette</a>
+<a class="button" [download]="cmapFileName" [href]="cmapDataURI" i18n="Save colourmap to a file">Save Colourmap</a>
