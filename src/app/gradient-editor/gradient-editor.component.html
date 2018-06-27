@@ -3,13 +3,7 @@
     Gradient Editor
   </h3>
   <div class="gradient-root">
-    <div class="gradient" [style.background-image]="gradientStyle()">
-      <div *ngFor="let stop of gradient.stops; let i = index"
-        class="gradient-stop"
-        [class.selected]="i === curStopIdx"
-        [style.left]="stopPositionStyle(stop)"
-        (mousedown)="handleStopClickDown($event, i)"></div>
-    </div>
+    <app-gradient-slider [gradient]="gradient" [curStopIdx]="curStopIdx" (select)="setCurStopIdx($event)"></app-gradient-slider>
     <div class="gradient-preview" *ngIf="range">
       <div *ngFor="let pidx of range.getIndices()" [style.background-color]="previewColourStyle(pidx)"></div>
     </div>

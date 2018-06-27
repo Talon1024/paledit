@@ -1,9 +1,15 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Directive, Component, OnInit, Input, ViewChild } from '@angular/core';
 import { ColourRange } from '../palette-model/colour-range';
 import { Rgbcolour } from '../palette-model/rgb';
 import { Gradient, GradientStop } from '../gradient-model/gradient';
 import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
 import { PaletteOperationService } from '../palette-operation.service';
+
+/*
+@Directive({selector: 'app-gradient-slider'})
+class GradientDirective {
+}
+*/
 
 @Component({
   selector: 'app-gradient-editor',
@@ -17,6 +23,8 @@ export class GradientEditorComponent implements OnInit {
   private curColour: string;
   private curStopPos: number;
   @Input() range: ColourRange;
+
+  // @ViewChild(GradientDirective) gradElement: GradientDirective;
 
   constructor(private sanitizer: DomSanitizer,
     private palOp: PaletteOperationService) {}
@@ -34,22 +42,9 @@ export class GradientEditorComponent implements OnInit {
     return gradient;
   }
 
-  gradientStyle(): SafeStyle {
-    return this.sanitizer.bypassSecurityTrustStyle(this.gradient.toCssString());
-  }
-
   previewColourStyle(palIdx: number): SafeStyle {
     const colour = this.gradient.colourAt(palIdx, this.range);
     return this.sanitizer.bypassSecurityTrustStyle(Rgbcolour.toHex(colour));
-  }
-
-  stopPositionStyle(stop: GradientStop): SafeStyle {
-    return this.sanitizer.bypassSecurityTrustStyle(stop.posPercent());
-  }
-
-  handleStopClickDown(e: MouseEvent, idx: number) {
-    // Click and drag
-    this.setCurStopIdx(idx);
   }
 
   handleStopPosChange(data: string) {

@@ -26,6 +26,7 @@ import localeEnCanada from '@angular/common/locales/en-CA';
 import localeEnCanadaExtra from '@angular/common/locales/extra/en-CA';
 import localeIt from '@angular/common/locales/it';
 import localeItExtra from '@angular/common/locales/extra/it';
+import { GradientSliderComponent } from './gradient-slider/gradient-slider.component';
 
 const assetUrl = '/assets/';
 
@@ -37,7 +38,8 @@ const assetUrl = '/assets/';
     GradientEditorComponent,
     PaletteNavigatorComponent,
     PaletteLoaderComponent,
-    PaletteOperationsComponent
+    PaletteOperationsComponent,
+    GradientSliderComponent
   ],
   imports: [
     BrowserModule,
