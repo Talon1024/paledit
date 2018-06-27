@@ -1,4 +1,5 @@
-.gradient {
+app-gradient {
+  display: block;
   height: 30px;
   border: 1px solid black;
   position: relative;

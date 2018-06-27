@@ -17,6 +17,7 @@ import { AppComponent } from './app.component';
 import { MainEditorViewComponent } from './main-editor-view/main-editor-view.component';
 import { PaletteViewComponent } from './palette-view/palette-view.component';
 import { GradientEditorComponent } from './gradient-editor/gradient-editor.component';
+import { GradientSliderComponent, GradientDirective } from './gradient-slider/gradient-slider.component';
 import { PaletteNavigatorComponent } from './palette-navigator/palette-navigator.component';
 import { PaletteLoaderComponent } from './palette-loader/palette-loader.component';
 import { PaletteOperationsComponent } from './palette-operations/palette-operations.component';
@@ -26,7 +27,6 @@ import localeEnCanada from '@angular/common/locales/en-CA';
 import localeEnCanadaExtra from '@angular/common/locales/extra/en-CA';
 import localeIt from '@angular/common/locales/it';
 import localeItExtra from '@angular/common/locales/extra/it';
-import { GradientSliderComponent } from './gradient-slider/gradient-slider.component';
 
 const assetUrl = '/assets/';
 
@@ -39,7 +39,7 @@ const assetUrl = '/assets/';
     PaletteNavigatorComponent,
     PaletteLoaderComponent,
     PaletteOperationsComponent,
-    GradientSliderComponent
+    GradientSliderComponent, GradientDirective
   ],
   imports: [
     BrowserModule,
