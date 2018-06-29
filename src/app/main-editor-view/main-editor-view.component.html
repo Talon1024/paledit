@@ -26,6 +26,8 @@
 <app-modal [(visible)]="helpVisible">
   <h2>Using Paledit</h2>
   <h3>Colour selection</h3>
+  <p>The colour below your mouse will have a flashing border.</p>
+  <p>Selected colours will pulsate.</p>
   <p>Click on a colour in the palette to select it, and deselect all other colours.</p>
   <p>Ctrl-click on a colour to select it if it is not already selected, or to deselect it if it is selected.</p>
   <p>Shift-click on a colour to select or deselect all of the colours between the last selected colour and the colour you click on, depending on whether they are already selected or not.</p>
@@ -60,4 +62,7 @@
   <p>The dropdown menu that says (0, 0, 0) at 0% is a list of gradient stops.</p>
   <p>The number box beside it shows the position of the currently selected stop.</p>
   <p>The stop colour box shows the colour of the currently selected stop. You can set a new colour by clicking on this box.</p>
+  <p>The currently selected gradient stop will pulsate.</p>
+  <p>Apply the gradient to the selected colour range, or all of the colours in the palette by clicking "Apply".</p>
+  <p>Below the gradient itself, you can see a preview of what the gradient will look like if applied to the selected colour range.</p>
 </app-modal>
