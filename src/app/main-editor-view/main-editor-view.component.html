@@ -29,11 +29,35 @@
   <p>Click on a colour in the palette to select it, and deselect all other colours.</p>
   <p>Ctrl-click on a colour to select it if it is not already selected, or to deselect it if it is selected.</p>
   <p>Shift-click on a colour to select or deselect all of the colours between the last selected colour and the colour you click on, depending on whether they are already selected or not.</p>
-  <h3>Colour operations</h3>
+  <h3>Palette navigation</h3>
+  <p>PLAYPAL files can contain many different palettes. Use the palette navigator to switch between them.</p>
+  <p>Controls:</p>
+  <ul>
+    <li>&#xAB; First palette</li>
+    <li>&#x2039; Previous palette</li>
+    <li>- Remove palette</li>
+    <li>+ Add palette</li>
+    <li>&#x203A; Next palette</li>
+    <li>&#xBB; Last palette</li>
+  </ul>
+  <p>Entering a number into the palette number box will go to that palette.</p>
+  <h3>Palette operations</h3>
   <p>Operations are applied to the selected colours, or the entire palette if no colours are selected.</p>
   <p><i>Reverse</i> flips the order of the selected colours.</p>
   <p><i>Tint</i> blends the selected colours with the specified colour by the specified factor as a percentage.</p>
   <p><i>Colourize</i> sets the hue, saturation, and/or value of the selected colours to that of the specified colour.</p>
-  <p><i>Saturate</i> increases or decreases the saturation of the selected colours.</p>
+  <p><i>Saturate</i> increases or decreases the saturation of the selected colours. (Actually, I haven't implemented this function yet.)</p>
   <p><i>Shift hue</i> changes the hue of the selected colours by the specified amount of degrees.</p>
+  <h3>Gradient editing</h3>
+  <p>Use the gradient editor to edit gradients which you can apply to your palette.</p>
+  <p>Controls:</p>
+  <ul>
+    <li>+ Add stop</li>
+    <li>- Remove stop</li>
+    <li>&#x203A; Next stop</li>
+    <li>&#x2039; Previous stop</li>
+  </ul>
+  <p>The dropdown menu that says (0, 0, 0) at 0% is a list of gradient stops.</p>
+  <p>The number box beside it shows the position of the currently selected stop.</p>
+  <p>The stop colour box shows the colour of the currently selected stop. You can set a new colour by clicking on this box.</p>
 </app-modal>
