@@ -20,6 +20,7 @@ import { GradientEditorComponent } from './gradient-editor/gradient-editor.compo
 import { PaletteNavigatorComponent } from './palette-navigator/palette-navigator.component';
 import { PaletteLoaderComponent } from './palette-loader/palette-loader.component';
 import { PaletteOperationsComponent } from './palette-operations/palette-operations.component';
+import { ModalComponent } from './modal/modal.component';
 
 // Languages/locales
 import localeEnCanada from '@angular/common/locales/en-CA';
@@ -37,7 +38,8 @@ const assetUrl = '/assets/';
     GradientEditorComponent,
     PaletteNavigatorComponent,
     PaletteLoaderComponent,
-    PaletteOperationsComponent
+    PaletteOperationsComponent,
+    ModalComponent
   ],
   imports: [
     BrowserModule,
