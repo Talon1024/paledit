@@ -8,8 +8,8 @@
   font-family: monospace;
   justify-content: center;
   align-items: center;
-  min-width: 6.25%; /* 1/16 */
-  min-height: 20px;
+  min-width: 2rem;
+  min-height: 1.75rem;
   padding: 3px 0;
   user-select: none;
   position: relative;
