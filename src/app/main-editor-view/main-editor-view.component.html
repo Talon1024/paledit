@@ -1,6 +1,14 @@
+<app-modal [visible]="true">
+  <h2>Welcome to Paledit!</h2>
+  <p>This is an early release.</p>
+  <p>ZDoom forums thread (TODO)</p>
+  <p><a href="https://github.com/Talon1024/paledit">GitHub repository</a></p>
+</app-modal>
+
 <div class="editor-main">
   <div class="editor-col">
     <app-palette-loader (selectPalFile)="readPaletteFile($event)"></app-palette-loader>
+    <span class="button" (click)="showHelp()">Help!</span>
   </div>
   <div class="editor-col">
     <app-palette-view *ngIf="palette" [palette]="palette"
@@ -14,3 +22,18 @@
 <app-gradient-editor [range]="selectionRange"></app-gradient-editor>
 <a class="button" [download]="palFileName" (click)="savePalette()" [href]="palDataURI" i18n="Save palette to a file">Save Palette</a>
 <a class="button" [download]="cmapFileName" [href]="cmapDataURI" i18n="Save colourmap to a file">Save Colourmap</a>
+
+<app-modal [(visible)]="helpVisible">
+  <h2>Using Paledit</h2>
+  <h3>Colour selection</h3>
+  <p>Click on a colour in the palette to select it, and deselect all other colours.</p>
+  <p>Ctrl-click on a colour to select it if it is not already selected, or to deselect it if it is selected.</p>
+  <p>Shift-click on a colour to select or deselect all of the colours between the last selected colour and the colour you click on, depending on whether they are already selected or not.</p>
+  <h3>Colour operations</h3>
+  <p>Operations are applied to the selected colours, or the entire palette if no colours are selected.</p>
+  <p><i>Reverse</i> flips the order of the selected colours.</p>
+  <p><i>Tint</i> blends the selected colours with the specified colour by the specified factor as a percentage.</p>
+  <p><i>Colourize</i> sets the hue, saturation, and/or value of the selected colours to that of the specified colour.</p>
+  <p><i>Saturate</i> increases or decreases the saturation of the selected colours.</p>
+  <p><i>Shift hue</i> changes the hue of the selected colours by the specified amount of degrees.</p>
+</app-modal>

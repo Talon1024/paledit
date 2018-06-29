@@ -1,8 +1,14 @@
-/* You can add global styles to this file, and also import other style files */
+/* Base styles */
 
 html { font-size: 12px; }
-
 * { box-sizing: border-box; }
+h1 { font-size: 2rem; margin: .75rem 0; }
+h2 { font-size: 1.5rem; margin: .5rem 0; }
+h3 { font-size: 1.25rem; margin: .5rem 0; }
+p { font-size: 1rem; margin: .5rem 0; }
+i { font-style: italic; }
+
+/* Paledit styles */
 
 .button {
   border: 1px solid black;
@@ -35,6 +41,8 @@ html { font-size: 12px; }
 .widget > h3:first-child {
   text-align: center;
   border-bottom: 1px solid black;
+  margin: 0;
+  padding: .5rem 0;
 }
 
 .narrowInput {

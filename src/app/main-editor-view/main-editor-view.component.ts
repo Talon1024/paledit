@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { ModalComponent } from '../modal/modal.component';
 import { Palette } from '../palette-model/palette';
 import { ColourRange } from '../palette-model/colour-range';
 import { Palcollection } from '../palette-model/palcollection';
@@ -20,6 +21,8 @@ export class MainEditorViewComponent implements OnInit {
   private cmapFileName = 'colormap.lmp';
   private cmapDataURI: SafeUrl;
   private selectionRange: ColourRange;
+
+  private helpVisible = false;
 
   private readonly assetUrl = '/assets';
 
@@ -64,6 +67,10 @@ export class MainEditorViewComponent implements OnInit {
       this.setPalIndex(0);
     });
     this.cmapDataURI = this.sanitizer.bypassSecurityTrustUrl('data:,Not implemented yet.');
+  }
+
+  showHelp() {
+    this.helpVisible = true;
   }
 
 }
