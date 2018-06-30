@@ -24,7 +24,7 @@ export class MainEditorViewComponent implements OnInit {
 
   private helpVisible = false;
 
-  private readonly assetUrl = '/assets';
+  private readonly assetUrl = 'assets';
 
   constructor(private httpClient: HttpClient,
     private paletteIo: PaletteIoService,
