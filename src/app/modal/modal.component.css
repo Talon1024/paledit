@@ -19,6 +19,7 @@
   border-radius: 7px;
   padding: 7px;
   overflow: auto;
+  position: relative;
 }
 
 .modal-closer {
@@ -30,4 +31,22 @@
 .modal-closer > span.button {
   width: 5rem;
   height: 2rem;
+}
+
+.modal-closer-top {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.modal-closer-top .button {
+  border-top: none;
+  border-right: none;
+  border-radius: 0;
+  border-bottom-left-radius: 1rem;
+  font-size: 2rem;
+  overflow: hidden;
+  width: 1.5rem;
+  height: 1.5rem;
+  margin: 0;
 }
