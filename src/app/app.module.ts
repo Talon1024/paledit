@@ -11,6 +11,7 @@ import { PaletteIoService } from './palette-io.service';
 import { PaletteOperationService } from './palette-operation.service';
 import { PalcollectionOperationService } from './palcollection-operation.service';
 import { SettingsService } from './settings.service';
+import { WadReaderService } from './wad-reader.service';
 
 // Components
 import { AppComponent } from './app.component';
@@ -53,7 +54,8 @@ const assetUrl = '/assets/';
     PaletteIoService,
     SettingsService,
     PaletteOperationService,
-    PalcollectionOperationService
+    PalcollectionOperationService,
+    WadReaderService
   ],
   bootstrap: [AppComponent]
 })
