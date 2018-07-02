@@ -31,7 +31,7 @@ export class MainEditorViewComponent implements OnInit {
     private colOp: PalcollectionOperationService,
     private sanitizer: DomSanitizer) {}
 
-  readPaletteFile(file) {
+  readPaletteFile(file: File) {
     this.paletteIo.getPaletteFile(file)
         .subscribe((collection: Palcollection) => {
       this.colOp.collection = collection;
