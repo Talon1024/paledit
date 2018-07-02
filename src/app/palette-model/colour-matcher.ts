@@ -27,7 +27,7 @@ export class ColourMatcher {
 
   static findMatchSquare(colour: Rgb, palette: Palette): number {
     const square = (x) => x * x;
-    let lowestDiff = 768;
+    let lowestDiff = 196608;
     let lowestDiffIdx = 0;
     for (let i = 0; i < palette.getLength(); i++) {
       const palColour = palette.colourAt(i).rgb;
