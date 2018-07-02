@@ -4,12 +4,11 @@ import { Rgb } from './rgb';
 export class ColourMatcher {
   constructor () {}
 
-  findMatch(colour: Rgb, palette: Palette, by: (c: Rgb, p: Palette) => number): number {
+  static findMatch(colour: Rgb, palette: Palette, by: (c: Rgb, p: Palette) => number): number {
     return by(colour, palette);
   }
 
-  findMatchRGB(colour: Rgb, palette: Palette): number {
-    const closestMatch = 0;
+  static findMatchSubtract(colour: Rgb, palette: Palette): number {
     let lowestDiff = 768;
     let lowestDiffIdx = 0;
     for (let c = 0; c < palette.getLength(); c++) {
@@ -21,6 +20,25 @@ export class ColourMatcher {
       if (aggregateDiff < lowestDiff) {
         lowestDiff = aggregateDiff;
         lowestDiffIdx = c;
+      }
+    }
+    return lowestDiffIdx;
+  }
+
+  static findMatchSquare(colour: Rgb, palette: Palette): number {
+    const square = (x) => x * x;
+    let lowestDiff = 768;
+    let lowestDiffIdx = 0;
+    for (let i = 0; i < palette.getLength(); i++) {
+      const palColour = palette.colourAt(i).rgb;
+      const diff =
+        square(colour.red - palColour.red) +
+        square(colour.green - palColour.green) +
+        square(colour.blue - palColour.blue);
+
+      if (diff < lowestDiff) {
+        lowestDiff = diff;
+        lowestDiffIdx = i;
       }
     }
     return lowestDiffIdx;
