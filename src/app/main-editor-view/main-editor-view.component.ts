@@ -23,6 +23,7 @@ export class MainEditorViewComponent implements OnInit {
   private selectionRange: ColourRange;
 
   private helpVisible = false;
+  private loadVisible = false;
 
   private readonly assetUrl = 'assets';
 
@@ -32,11 +33,14 @@ export class MainEditorViewComponent implements OnInit {
     private sanitizer: DomSanitizer) {}
 
   readPaletteFile(file: File) {
+    this.loadVisible = true;
     this.paletteIo.getPaletteFile(file)
         .subscribe((collection: Palcollection) => {
+      this.loadVisible = false;
       this.colOp.collection = collection;
       this.setPalIndex(0);
     }, (error: any) => {
+      this.loadVisible = false;
       console.error(error);
     });
   }
