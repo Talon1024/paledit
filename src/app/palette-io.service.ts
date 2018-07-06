@@ -13,12 +13,15 @@ export class PaletteIoService {
   constructor(private wadIo: WadReaderService) {}
 
   private readFromWadFile = (file: File, callback: (error: any, result: Palcollection) => void) => {
-    this.wadIo.readWadFile(file, () => {
+    this.wadIo.readWadFile(file, (e) => {
+      if (e) { callback(e, null); }
+
       const playpal = this.wadIo.getLump('PLAYPAL');
       if (playpal instanceof Error) {
         callback(playpal as Error, null);
       }
       const data = new Uint8ClampedArray((playpal as DoomWadLump).data);
+
       let collection = null, error = null;
       try {
         collection = Palcollection.fromData(data);

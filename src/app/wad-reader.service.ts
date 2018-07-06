@@ -17,6 +17,7 @@ class DoomWadHead {
 export class WadReaderService {
 
   lumps: DoomWadLump[];
+  name: string;
 
   constructor() { }
 
@@ -47,11 +48,12 @@ export class WadReaderService {
         }
       }
     }
-    return new TypeError(`No ${name} in this WAD!`);
+    return new TypeError(`No ${name} lump in ${this.name}!`);
   }
 
   readWadFile(file: File, callback: (error: any) => void) {
     const fileReader = new FileReader();
+    this.name = file.name;
     fileReader.readAsArrayBuffer(file);
     fileReader.onload = () => {
       const wad = fileReader.result as ArrayBuffer;
