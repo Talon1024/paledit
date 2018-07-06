@@ -7,6 +7,7 @@ import { HttpClient } from '@angular/common/http';
 import { PaletteIoService } from '../palette-io.service';
 import { PalcollectionOperationService } from '../palcollection-operation.service';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { MessageService } from '../message.service';
 
 @Component({
   selector: 'app-main-editor-view',
@@ -30,7 +31,8 @@ export class MainEditorViewComponent implements OnInit {
   constructor(private httpClient: HttpClient,
     private paletteIo: PaletteIoService,
     private colOp: PalcollectionOperationService,
-    private sanitizer: DomSanitizer) {}
+    private sanitizer: DomSanitizer,
+    private msg: MessageService) {}
 
   readPaletteFile(file: File) {
     this.loadVisible = true;
@@ -39,9 +41,9 @@ export class MainEditorViewComponent implements OnInit {
       this.loadVisible = false;
       this.colOp.collection = collection;
       this.setPalIndex(0);
-    }, (error: any) => {
+    }, (error: Error) => {
       this.loadVisible = false;
-      console.error(error);
+      this.msg.error(error.message);
     });
   }
 
