@@ -1,3 +1,17 @@
 .editor-main {
   display: flex;
 }
+
+@keyframes loadThrob {
+  from {
+    transform: rotate(0turn);
+  }
+  to {
+    transform: rotate(1turn);
+  }
+}
+
+.loading {
+  animation: loadThrob 1s linear 0s infinite normal none running;
+  vertical-align: middle;
+}
