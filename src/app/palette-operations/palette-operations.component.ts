@@ -9,6 +9,7 @@ import { Rgb, Rgbcolour } from '../palette-model/rgb';
 })
 export class PaletteOperationsComponent implements OnInit {
 
+  private gradFactor: boolean;
   private tintColour: string;
   private colourizeColour: string;
   private colourizeUse: HsvUsage;

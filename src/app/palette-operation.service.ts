@@ -214,8 +214,11 @@ export class PaletteOperationService {
     this.updatePalette();
   }
 
-  tint(colour: Rgb, factor: number) {
+  tint(colour: Rgb, factor: number, factorGrad?: Gradient) {
     this.rangeOperate((o) => {
+      if (factorGrad) {
+        factor = factorGrad.colourAt(o.pIdx, o.range).red / 255;
+      }
       const newColour = Rgbcolour.blend(o.pCol.rgb, factor, colour, Rgbcolour.tint);
       o.pCol.rgb.red = newColour.red;
       o.pCol.rgb.green = newColour.green;
@@ -223,32 +226,55 @@ export class PaletteOperationService {
     });
   }
 
-  colourize(colour: Rgb, use?: HsvUsage) {
+  colourize(colour: Rgb, use: HsvUsage, factorGrad?: Gradient) {
+    /*
     if (!use) {
       use = {hue: true, saturation: true, value: false};
     }
+    */
     this.rangeOperate((o) => {
-      const colHsv: Hsv = Rgbcolour.hsv(colour);
-      const {hue, saturation, value} = colHsv;
-      const otherHsv = Rgbcolour.hsv(o.pCol.rgb);
+      const {hue, saturation, value} = Rgbcolour.hsv(colour);
+      const origHsv = Rgbcolour.hsv(o.pCol.rgb);
+
+      let factor;
+      if (factorGrad) {
+        factor = factorGrad.colourAt(o.pIdx, o.range).red / 255;
+      } else {
+        factor = 1.0;
+      }
+
       const combined: Hsv = {
-        hue: use.hue ? hue : otherHsv.hue,
-        saturation: use.saturation ? saturation : otherHsv.saturation,
-        value: use.value ? value : otherHsv.value
+        hue: use.hue ? hue * factor + origHsv.hue * (1.0 - factor) : origHsv.hue,
+        saturation: use.saturation ? saturation * factor + origHsv.saturation * (1.0 - factor) : origHsv.saturation,
+        value: use.value ? value * factor + origHsv.value * (1.0 - factor) : origHsv.value
       };
+
       o.pCol.rgb = Rgbcolour.fromHsv(combined);
     });
   }
 
-  saturate(pct: number) {
+  saturate(pct: number, factorGrad?: Gradient) {
     this.rangeOperate((o) => {
       const colHsv = Rgbcolour.hsv(o.pCol.rgb);
+      let newSat = colHsv.saturation;
+      if (factorGrad) {
+        pct *= factorGrad.colourAt(o.pIdx, o.range).red / 255;
+      }
+      newSat = Math.min(newSat + pct, 1);
+
+      const newColour = Rgbcolour.fromHSV(colHsv.hue, newSat, colHsv.value);
+      o.pCol.rgb.red = newColour.red;
+      o.pCol.rgb.green = newColour.green;
+      o.pCol.rgb.blue = newColour.blue;
     });
   }
 
-  shiftHue(by: number) {
+  shiftHue(by: number, factorGrad?: Gradient) {
     this.rangeOperate((o) => {
       const hsv = Rgbcolour.hsv(o.pCol.rgb);
+      if (factorGrad) {
+        by *= factorGrad.colourAt(o.pIdx, o.range).red / 255;
+      }
       let newHue = hsv.hue + by;
 
       if (newHue >= 360) {
