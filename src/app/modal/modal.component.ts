@@ -9,11 +9,11 @@ export class ModalComponent implements OnInit {
 
   @Input() visible: boolean;
   @Output() visibleChange = new EventEmitter<boolean>();
+  @Input() closeable = true;
 
   constructor() { }
 
   ngOnInit() {
-    this.visible = this.visible || false;
   }
 
   close() {

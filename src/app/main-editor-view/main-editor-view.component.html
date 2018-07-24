@@ -5,9 +5,12 @@
   <p><a href="https://github.com/Talon1024/paledit">GitHub repository</a></p>
 </app-modal>
 
+<app-modal [(visible)]="loadVisible" [closeable]="false"><img src="assets/loading.svg" alt="Loading" class="loading"> Loading...</app-modal>
+
 <div class="editor-main">
   <div class="editor-col">
     <app-palette-loader (selectPalFile)="readPaletteFile($event)"></app-palette-loader>
+    <app-message-log></app-message-log>
     <span class="button" (click)="showHelp()">Help!</span>
   </div>
   <div class="editor-col">
@@ -26,7 +29,7 @@
 <app-modal [(visible)]="helpVisible">
   <h2>Using Paledit</h2>
   <p>Drag and drop a palette file onto the palette loader, or select a palette file from within your browser to load it.</p>
-  <p>As of now, Paledit only loads raw palette files, where each palette is 768 bytes.</p>
+  <p>Paledit can read raw palette files, as well as Doom WADs.</p>
   <h3>Colour selection</h3>
   <p>The colour below your mouse will have a flashing border.</p>
   <p>Selected colours will pulsate.</p>

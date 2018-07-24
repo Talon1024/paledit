@@ -11,6 +11,8 @@ import { PaletteIoService } from './palette-io.service';
 import { PaletteOperationService } from './palette-operation.service';
 import { PalcollectionOperationService } from './palcollection-operation.service';
 import { SettingsService } from './settings.service';
+import { WadReaderService } from './wad-reader.service';
+import { MessageService } from './message.service';
 
 // Components
 import { AppComponent } from './app.component';
@@ -20,6 +22,7 @@ import { GradientEditorComponent } from './gradient-editor/gradient-editor.compo
 import { PaletteNavigatorComponent } from './palette-navigator/palette-navigator.component';
 import { PaletteLoaderComponent } from './palette-loader/palette-loader.component';
 import { PaletteOperationsComponent } from './palette-operations/palette-operations.component';
+import { MessageLogComponent } from './message-log/message-log.component';
 import { ModalComponent } from './modal/modal.component';
 
 // Languages/locales
@@ -39,7 +42,8 @@ const assetUrl = '/assets/';
     PaletteNavigatorComponent,
     PaletteLoaderComponent,
     PaletteOperationsComponent,
-    ModalComponent
+    ModalComponent,
+    MessageLogComponent
   ],
   imports: [
     BrowserModule,
@@ -53,7 +57,9 @@ const assetUrl = '/assets/';
     PaletteIoService,
     SettingsService,
     PaletteOperationService,
-    PalcollectionOperationService
+    PalcollectionOperationService,
+    WadReaderService,
+    MessageService
   ],
   bootstrap: [AppComponent]
 })

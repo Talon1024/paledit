@@ -1,0 +1,8 @@
+<div class="widget">
+  <h3>Message Log</h3>
+  <p *ngFor="let m of msg.messages">
+    <span class="mdate">{{m.date | date:"mediumTime"}}</span>
+    <span [class]="getMessageClass(m)">{{m.level | titlecase}}</span
+    ><span class="mtxt">: {{m.text}}</span>
+  </p>
+</div>

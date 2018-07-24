@@ -1,10 +1,10 @@
 <div class="modal-bg" *ngIf="visible">
   <div class="modal">
-    <div class="modal-closer-top">
+    <div class="modal-closer-top" *ngIf="closeable">
       <span class="button" (click)="close()">×</span>
     </div>
     <ng-content></ng-content> <!-- Thanks to https://blog.mgechev.com/2016/01/23/angular2-viewchildren-contentchildren-difference-viewproviders/ -->
-    <div class="modal-closer">
+    <div class="modal-closer" *ngIf="closeable">
       <span class="button" (click)="close()">Close</span>
     </div>
   </div>

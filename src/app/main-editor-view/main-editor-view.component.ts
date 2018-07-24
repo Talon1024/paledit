@@ -7,6 +7,7 @@ import { HttpClient } from '@angular/common/http';
 import { PaletteIoService } from '../palette-io.service';
 import { PalcollectionOperationService } from '../palcollection-operation.service';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { MessageService } from '../message.service';
 
 @Component({
   selector: 'app-main-editor-view',
@@ -23,21 +24,26 @@ export class MainEditorViewComponent implements OnInit {
   private selectionRange: ColourRange;
 
   private helpVisible = false;
+  private loadVisible = false;
 
   private readonly assetUrl = 'assets';
 
   constructor(private httpClient: HttpClient,
     private paletteIo: PaletteIoService,
     private colOp: PalcollectionOperationService,
-    private sanitizer: DomSanitizer) {}
+    private sanitizer: DomSanitizer,
+    private msg: MessageService) {}
 
-  readPaletteFile(file) {
+  readPaletteFile(file: File) {
+    this.loadVisible = true;
     this.paletteIo.getPaletteFile(file)
         .subscribe((collection: Palcollection) => {
+      this.loadVisible = false;
       this.colOp.collection = collection;
       this.setPalIndex(0);
-    }, (error: any) => {
-      console.error(error);
+    }, (error: Error) => {
+      this.loadVisible = false;
+      this.msg.error(error.message);
     });
   }
 
