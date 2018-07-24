@@ -58,15 +58,6 @@ export class Gradient {
     return palIdx;
   }
 
-  private stopRangeIndex(stop: GradientStop, range: ColourRange): number {
-    const length = range.getLength() - 1;
-    let stopPos = stop.position;
-    if (this.reverse) { stopPos = 1.0 - stopPos; }
-
-    const rangeIdx = Math.floor(stopPos * length);
-    return rangeIdx;
-  }
-
   getStopPalIdxs(range: ColourRange): number[] {
     const stopIdxs: number[] = new Array(this.stops.length);
     for (let i = 0; i < this.stops.length; i++) {
@@ -76,24 +67,35 @@ export class Gradient {
     return stopIdxs;
   }
 
+
+  private stopRangeIndex(stop: GradientStop, range: ColourRange): number {
+    return this.stopIndex(stop, range.getLength());
+  }
+
+  private stopIndex(stop: GradientStop, length: number): number {
+    length -= 1;
+    let stopPos = stop.position;
+    if (this.reverse) { stopPos = 1.0 - stopPos; }
+
+    const rangeIdx = Math.floor(stopPos * length);
+    return rangeIdx;
+  }
+
   getStopRangeIdxs(range: ColourRange): number[] {
-    const stopIdxs: number[] = new Array(this.stops.length);
+    return this.getStopIdxs(range.getLength());
+  }
+
+  getStopIdxs(length: number): number[] {
+    const stopIdxs: number[] = new Array<number>(this.stops.length);
     for (let i = 0; i < this.stops.length; i++) {
       const stop = this.stops[i];
-      stopIdxs[i] = this.stopRangeIndex(stop, range);
+      stopIdxs[i] = this.stopIndex(stop, length);
     }
     return stopIdxs;
   }
 
-  colourAt(palIdx: number, palRange: ColourRange): Rgb {
-    if (!palRange) { return; }
-    const rangeLen = palRange.getLength();
-    const stopIdxs: number[] = this.getStopRangeIdxs(palRange);
-
-    // Is the index within the range?
-    const rangeIdx = palRange.palToRangeIdx(palIdx);
-    if (rangeIdx < 0) { return; }
-
+  colourIn(rangeIdx: number, rangeLen: number): Rgb {
+    const stopIdxs = this.getStopIdxs(rangeLen);
     const stopsAtIdx = this.stops.filter((e, i) => stopIdxs[i] === rangeIdx);
     if (stopsAtIdx.length === 0) {
       // Find colour at this index
@@ -141,6 +143,17 @@ export class Gradient {
 
       return {red: avgRed, green: avgGreen, blue: avgBlue};
     }
+  }
+
+  colourAt(palIdx: number, palRange: ColourRange): Rgb {
+    if (!palRange) { return; }
+    const rangeLen = palRange.getLength();
+
+    // Is the index within the range?
+    const rangeIdx = palRange.palToRangeIdx(palIdx);
+    if (rangeIdx < 0) { return; }
+
+    return this.colourIn(rangeIdx, rangeLen);
   }
 
   toCssString(direction: string = 'to right'): string {
