@@ -4,6 +4,6 @@
     [class.selected]="colour.selected"
     (click)="selectPalColour(colour.index)"><span *ngIf="showNumbers">#{{colour.index}}</span></div>
 </div>
-<span class="button" (click)="selectAll()" i18n="Select (or deselect) all colours in the palette">Select all</span>
+<span *ngIf="multiple" class="button" (click)="selectAll()" i18n="Select (or deselect) all colours in the palette">Select all</span>
 <label i18n="Prevents selection from changing when navigating between palettes"><input type="checkbox" [(ngModel)]="lockSelection">Lock selection</label>
 <label i18n="Shows or hides palette colour numbers"><input type="checkbox" [(ngModel)]="showNumbers">Colour numbers</label>

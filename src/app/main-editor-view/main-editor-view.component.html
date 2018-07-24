@@ -14,7 +14,7 @@
     <span class="button" (click)="showHelp()">Help!</span>
   </div>
   <div class="editor-col">
-    <app-palette-view *ngIf="palette" [palette]="palette"
+    <app-palette-view *ngIf="palette" [palette]="palette" [multiple]="true"
       (selected)="setSelectionRange($event)"></app-palette-view>
   </div>
   <div class="editor-col">

@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ModalComponent } from '../modal/modal.component';
 import { Palette } from '../palette-model/palette';
+import { Rgb } from '../palette-model/rgb';
 import { ColourRange } from '../palette-model/colour-range';
 import { Palcollection } from '../palette-model/palcollection';
 import { HttpClient } from '@angular/common/http';
@@ -22,6 +23,7 @@ export class MainEditorViewComponent implements OnInit {
   private cmapFileName = 'colormap.lmp';
   private cmapDataURI: SafeUrl;
   private selectionRange: ColourRange;
+  private selectedRgb?: Rgb;
 
   private helpVisible = false;
   private loadVisible = false;
@@ -53,6 +55,12 @@ export class MainEditorViewComponent implements OnInit {
 
   setSelectionRange(range: ColourRange) {
     this.selectionRange = range;
+    if (range.getLength() === 1) {
+      const selectedIdx = range.getIndices()[0];
+      this.selectedRgb = this.palette.colourAt(selectedIdx).rgb;
+    } else {
+      this.selectedRgb = null;
+    }
   }
 
   savePalette() {

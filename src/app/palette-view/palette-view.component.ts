@@ -18,6 +18,7 @@ export class PaletteViewComponent implements OnInit, OnChanges {
 
   private keyState: {[key: string]: boolean};
   @Input() palette: Palette;
+  @Input() multiple: boolean;
   private palColours: Palcolour[];
   private selectionRange: ColourRange;
   private lockSelection: boolean;
@@ -31,6 +32,9 @@ export class PaletteViewComponent implements OnInit, OnChanges {
     }
 
   selectPalColour(colourIndex: number) {
+    if (!this.multiple) {
+      this.keyState = {};
+    }
     this.selectionRange = this.palOp.selectPalColour(colourIndex, this.keyState);
     this.selected.emit(this.selectionRange);
   }
