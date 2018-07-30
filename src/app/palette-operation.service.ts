@@ -4,7 +4,7 @@ import { Palcolour } from './palette-model/palcolour';
 import { Rgb, Hsv, Rgbcolour } from './palette-model/rgb';
 import { ColourRange } from './palette-model/colour-range';
 import { ColourSubRange } from './palette-model/colour-sub-range';
-import { Gradient } from './gradient-model/gradient';
+import { Gradient, GradientStop } from './gradient-model/gradient';
 
 interface IRangeOperationOptions {
   pIdx: number;
@@ -26,9 +26,16 @@ export class PaletteOperationService {
   palette: Palette;
   palColours: Palcolour[];
   selectionRange?: ColourRange;
+  gradient: Gradient;
 
   constructor() {
     this.palColours = new Array(256);
+    /*
+    this.gradient = new Gradient([
+      new GradientStop(0.0, {red: 0, green: 0, blue: 0}),
+      new GradientStop(1.0, {red: 255, green: 255, blue: 255})
+    ]);
+    */
   }
 
   selectPalColour(colourIndex: number, keyState: {[key: string]: boolean}): ColourRange | null {
@@ -214,10 +221,10 @@ export class PaletteOperationService {
     this.updatePalette();
   }
 
-  tint(colour: Rgb, factor: number, factorGrad?: Gradient) {
+  tint(colour: Rgb, factor: number, factorGrad: boolean = false) {
     this.rangeOperate((o) => {
       if (factorGrad) {
-        factor = factorGrad.colourAt(o.pIdx, o.range).red / 255;
+        factor = this.gradient.colourAt(o.pIdx, o.range).red / 255;
       }
       const newColour = Rgbcolour.blend(o.pCol.rgb, factor, colour, Rgbcolour.tint);
       o.pCol.rgb.red = newColour.red;
@@ -226,7 +233,7 @@ export class PaletteOperationService {
     });
   }
 
-  colourize(colour: Rgb, use: HsvUsage, factorGrad?: Gradient) {
+  colourize(colour: Rgb, use: HsvUsage, factorGrad: boolean = false) {
     /*
     if (!use) {
       use = {hue: true, saturation: true, value: false};
@@ -238,7 +245,7 @@ export class PaletteOperationService {
 
       let factor;
       if (factorGrad) {
-        factor = factorGrad.colourAt(o.pIdx, o.range).red / 255;
+        factor = this.gradient.colourAt(o.pIdx, o.range).red / 255;
       } else {
         factor = 1.0;
       }
@@ -253,12 +260,12 @@ export class PaletteOperationService {
     });
   }
 
-  saturate(pct: number, factorGrad?: Gradient) {
+  saturate(pct: number, factorGrad: boolean = false) {
     this.rangeOperate((o) => {
       const colHsv = Rgbcolour.hsv(o.pCol.rgb);
       let newSat = colHsv.saturation;
       if (factorGrad) {
-        pct *= factorGrad.colourAt(o.pIdx, o.range).red / 255;
+        pct *= this.gradient.colourAt(o.pIdx, o.range).red / 255;
       }
       newSat = Math.min(newSat + pct, 1);
 
@@ -269,11 +276,11 @@ export class PaletteOperationService {
     });
   }
 
-  shiftHue(by: number, factorGrad?: Gradient) {
+  shiftHue(by: number, factorGrad: boolean = false) {
     this.rangeOperate((o) => {
       const hsv = Rgbcolour.hsv(o.pCol.rgb);
       if (factorGrad) {
-        by *= factorGrad.colourAt(o.pIdx, o.range).red / 255;
+        by *= this.gradient.colourAt(o.pIdx, o.range).red / 255;
       }
       let newHue = hsv.hue + by;
 
@@ -290,9 +297,9 @@ export class PaletteOperationService {
     });
   }
 
-  applyGradient(gradient: Gradient) {
+  applyGradient() {
     this.rangeOperate((o) => {
-      const colour = gradient.colourAt(o.pIdx, o.range);
+      const colour = this.gradient.colourAt(o.pIdx, o.range);
       this.palColours[o.pIdx].rgb.red = colour.red;
       this.palColours[o.pIdx].rgb.green = colour.green;
       this.palColours[o.pIdx].rgb.blue = colour.blue;

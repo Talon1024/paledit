@@ -12,7 +12,6 @@ import { PaletteOperationService } from '../palette-operation.service';
 })
 export class GradientEditorComponent implements OnInit {
 
-  private gradient: Gradient;
   private curStopIdx = 0;
   private curColour: string;
   private curStopPos: number;
@@ -22,7 +21,7 @@ export class GradientEditorComponent implements OnInit {
     private palOp: PaletteOperationService) {}
 
   ngOnInit() {
-    this.gradient = this.defaultGradient();
+    this.palOp.gradient = this.defaultGradient();
     this.setCurStopIdx(0);
   }
 
@@ -35,11 +34,11 @@ export class GradientEditorComponent implements OnInit {
   }
 
   gradientStyle(): SafeStyle {
-    return this.sanitizer.bypassSecurityTrustStyle(this.gradient.toCssString());
+    return this.sanitizer.bypassSecurityTrustStyle(this.palOp.gradient.toCssString());
   }
 
   previewColourStyle(palIdx: number): SafeStyle {
-    const colour = this.gradient.colourAt(palIdx, this.range);
+    const colour = this.palOp.gradient.colourAt(palIdx, this.range);
     return this.sanitizer.bypassSecurityTrustStyle(Rgbcolour.toHex(colour));
   }
 
@@ -56,14 +55,14 @@ export class GradientEditorComponent implements OnInit {
     const newPos = parseFloat(data);
     this.curStopPos = newPos;
 
-    this.gradient.stops[this.curStopIdx].position = newPos;
-    this.gradient.stops.sort((a, b) => {
+    this.palOp.gradient.stops[this.curStopIdx].position = newPos;
+    this.palOp.gradient.stops.sort((a, b) => {
       return a.position - b.position;
     });
   }
 
   addStop() {
-    const stopCount = this.gradient.stops.length;
+    const stopCount = this.palOp.gradient.stops.length;
     let otherStopIdx = this.curStopIdx + 1;
     let newStopIdx = otherStopIdx;
     if (otherStopIdx >= stopCount) {
@@ -71,21 +70,21 @@ export class GradientEditorComponent implements OnInit {
       newStopIdx = this.curStopIdx;
     }
 
-    const newPos = (this.gradient.stops[this.curStopIdx].position + this.gradient.stops[otherStopIdx].position) / 2;
-    const newColour = Rgbcolour.blend(this.gradient.stops[this.curStopIdx].colour,
-      0.5, this.gradient.stops[otherStopIdx].colour, Rgbcolour.tint);
+    const newPos = (this.palOp.gradient.stops[this.curStopIdx].position + this.palOp.gradient.stops[otherStopIdx].position) / 2;
+    const newColour = Rgbcolour.blend(this.palOp.gradient.stops[this.curStopIdx].colour,
+      0.5, this.palOp.gradient.stops[otherStopIdx].colour, Rgbcolour.tint);
     const newStop = new GradientStop(newPos, newColour);
-    this.gradient.addStop(newStop);
+    this.palOp.gradient.addStop(newStop);
     this.setCurStopIdx(newStopIdx);
   }
 
   removeStop() {
-    const stopCount = this.gradient.stops.length;
+    const stopCount = this.palOp.gradient.stops.length;
     if (stopCount <= 2) { return; }
     let stopIdx = this.curStopIdx;
 
-    this.gradient.stops.splice(stopIdx, 1);
-    this.gradient.stops.sort((a, b) => {
+    this.palOp.gradient.stops.splice(stopIdx, 1);
+    this.palOp.gradient.stops.sort((a, b) => {
       return a.position - b.position;
     });
 
@@ -98,8 +97,8 @@ export class GradientEditorComponent implements OnInit {
 
   nextStop() {
     let stopIdx = this.curStopIdx + 1;
-    if (stopIdx >= this.gradient.stops.length) {
-      stopIdx = this.gradient.stops.length - 1;
+    if (stopIdx >= this.palOp.gradient.stops.length) {
+      stopIdx = this.palOp.gradient.stops.length - 1;
     }
     this.setCurStopIdx(stopIdx);
   }
@@ -114,17 +113,17 @@ export class GradientEditorComponent implements OnInit {
 
   setCurStopIdx(idx: number) {
     this.curStopIdx = idx;
-    this.curStopPos = this.gradient.stops[idx].position;
-    this.curColour = Rgbcolour.toHex(this.gradient.stops[idx].colour);
+    this.curStopPos = this.palOp.gradient.stops[idx].position;
+    this.curColour = Rgbcolour.toHex(this.palOp.gradient.stops[idx].colour);
   }
 
   setCurStopColor(colour: string) {
     this.curColour = colour;
-    this.gradient.stops[this.curStopIdx].colour = Rgbcolour.fromHex(this.curColour);
+    this.palOp.gradient.stops[this.curStopIdx].colour = Rgbcolour.fromHex(this.curColour);
   }
 
   applyGradient() {
-    this.palOp.applyGradient(this.gradient);
+    this.palOp.applyGradient();
   }
 
 }
