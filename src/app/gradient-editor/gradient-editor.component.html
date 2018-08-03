@@ -1,10 +1,10 @@
-<div class="widget" *ngIf="palOp.gradient">
+<div class="widget" *ngIf="gradient">
   <h3 i18n="Widget title">
     Gradient Editor
   </h3>
   <div class="gradient-root">
     <div class="gradient" [style.background-image]="gradientStyle()">
-      <div *ngFor="let stop of palOp.gradient.stops; let i = index"
+      <div *ngFor="let stop of gradient.stops; let i = index"
         class="gradient-stop"
         [class.selected]="i === curStopIdx"
         [style.left]="stopPositionStyle(stop)"
@@ -18,10 +18,10 @@
     <div class="">
       <span class="button" (click)="addStop()" i18n="Add a stop to the gradient">+</span>
       <span class="button" (click)="removeStop()" i18n="Remove a stop from the gradient">-</span>
-      <select #stopList *ngIf="palOp.gradient.stops" (change)="setCurStopIdx(stopList.selectedIndex)" class="widget">
-        <option *ngFor="let stop of palOp.gradient.stops; let i = index" [selected]="i === curStopIdx">{{stop}}</option>
+      <select #stopList *ngIf="gradient.stops" (change)="setCurStopIdx(stopList.selectedIndex)" class="widget">
+        <option *ngFor="let stop of gradient.stops; let i = index" [selected]="i === curStopIdx">{{stop}}</option>
       </select>
-      <input #stopPos class="narrowInput widget" type="number" step=".01" [value]="curStopPos" (change)="handleStopPosChange(stopPos.value)" min="0" max="1">
+      <input #stopPos class="narrowInput widget" type="number" step=".01" [value]="curStopPos" (change)="setCurStopPos(stopPos.value)" min="0" max="1">
       <span class="button" (click)="prevStop()" i18n="Go to the previous stop">‹</span>
       <span class="button" (click)="nextStop()" i18n="Go to the next stop">›</span>
     </div>

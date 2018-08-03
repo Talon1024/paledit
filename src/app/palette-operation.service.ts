@@ -4,6 +4,7 @@ import { Palcolour } from './palette-model/palcolour';
 import { Rgb, Hsv, Rgbcolour } from './palette-model/rgb';
 import { ColourRange } from './palette-model/colour-range';
 import { ColourSubRange } from './palette-model/colour-sub-range';
+import { GradientService } from './gradient.service';
 import { Gradient, GradientStop } from './gradient-model/gradient';
 
 interface IRangeOperationOptions {
@@ -26,16 +27,9 @@ export class PaletteOperationService {
   palette: Palette;
   palColours: Palcolour[];
   selectionRange?: ColourRange;
-  gradient: Gradient;
 
-  constructor() {
+  constructor(private grad: GradientService) {
     this.palColours = new Array(256);
-    /*
-    this.gradient = new Gradient([
-      new GradientStop(0.0, {red: 0, green: 0, blue: 0}),
-      new GradientStop(1.0, {red: 255, green: 255, blue: 255})
-    ]);
-    */
   }
 
   selectPalColour(colourIndex: number, keyState: {[key: string]: boolean}): ColourRange | null {
@@ -224,7 +218,8 @@ export class PaletteOperationService {
   tint(colour: Rgb, factor: number, factorGrad: boolean = false) {
     this.rangeOperate((o) => {
       if (factorGrad) {
-        factor = this.gradient.colourAt(o.pIdx, o.range).red / 255;
+        const fgrad = this.grad.gradient;
+        factor = fgrad.colourAt(o.pIdx, o.range).red / 255;
       }
       const newColour = Rgbcolour.blend(o.pCol.rgb, factor, colour, Rgbcolour.tint);
       o.pCol.rgb.red = newColour.red;
@@ -245,7 +240,8 @@ export class PaletteOperationService {
 
       let factor;
       if (factorGrad) {
-        factor = this.gradient.colourAt(o.pIdx, o.range).red / 255;
+        const fgrad = this.grad.gradient;
+        factor = fgrad.colourAt(o.pIdx, o.range).red / 255;
       } else {
         factor = 1.0;
       }
@@ -265,7 +261,8 @@ export class PaletteOperationService {
       const colHsv = Rgbcolour.hsv(o.pCol.rgb);
       let newSat = colHsv.saturation;
       if (factorGrad) {
-        pct *= this.gradient.colourAt(o.pIdx, o.range).red / 255;
+        const fgrad = this.grad.gradient;
+        pct *= fgrad.colourAt(o.pIdx, o.range).red / 255;
       }
       newSat = Math.min(newSat + pct, 1);
 
@@ -280,7 +277,8 @@ export class PaletteOperationService {
     this.rangeOperate((o) => {
       const hsv = Rgbcolour.hsv(o.pCol.rgb);
       if (factorGrad) {
-        by *= this.gradient.colourAt(o.pIdx, o.range).red / 255;
+        const fgrad = this.grad.gradient;
+        by *= fgrad.colourAt(o.pIdx, o.range).red / 255;
       }
       let newHue = hsv.hue + by;
 
@@ -299,7 +297,8 @@ export class PaletteOperationService {
 
   applyGradient() {
     this.rangeOperate((o) => {
-      const colour = this.gradient.colourAt(o.pIdx, o.range);
+      const grad = this.grad.gradient;
+      const colour = grad.colourAt(o.pIdx, o.range);
       this.palColours[o.pIdx].rgb.red = colour.red;
       this.palColours[o.pIdx].rgb.green = colour.green;
       this.palColours[o.pIdx].rgb.blue = colour.blue;
