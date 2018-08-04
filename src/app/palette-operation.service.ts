@@ -217,11 +217,12 @@ export class PaletteOperationService {
 
   tint(colour: Rgb, factor: number, factorGrad: boolean = false) {
     this.rangeOperate((o) => {
+      let factor2 = factor;
       if (factorGrad) {
         const fgrad = this.grad.gradient;
-        factor = fgrad.colourAt(o.pIdx, o.range).red / 255;
+        factor2 = fgrad.colourAt(o.pIdx, o.range).red / 255;
       }
-      const newColour = Rgbcolour.blend(o.pCol.rgb, factor, colour, Rgbcolour.tint);
+      const newColour = Rgbcolour.blend(o.pCol.rgb, factor2, colour, Rgbcolour.tint);
       o.pCol.rgb.red = newColour.red;
       o.pCol.rgb.green = newColour.green;
       o.pCol.rgb.blue = newColour.blue;
@@ -258,13 +259,14 @@ export class PaletteOperationService {
 
   saturate(pct: number, factorGrad: boolean = false) {
     this.rangeOperate((o) => {
+      let pct2 = pct;
       const colHsv = Rgbcolour.hsv(o.pCol.rgb);
       let newSat = colHsv.saturation;
       if (factorGrad) {
         const fgrad = this.grad.gradient;
-        pct *= fgrad.colourAt(o.pIdx, o.range).red / 255;
+        pct2 *= fgrad.colourAt(o.pIdx, o.range).red / 255;
       }
-      newSat = Math.min(newSat + pct, 1);
+      newSat = Math.min(newSat + pct2, 1);
 
       const newColour = Rgbcolour.fromHSV(colHsv.hue, newSat, colHsv.value);
       o.pCol.rgb.red = newColour.red;
@@ -275,12 +277,15 @@ export class PaletteOperationService {
 
   shiftHue(by: number, factorGrad: boolean = false) {
     this.rangeOperate((o) => {
+      let by2 = by;
       const hsv = Rgbcolour.hsv(o.pCol.rgb);
       if (factorGrad) {
         const fgrad = this.grad.gradient;
-        by *= fgrad.colourAt(o.pIdx, o.range).red / 255;
+        console.log(fgrad.colourAt(o.pIdx, o.range).red / 255, by2);
+        by2 *= (fgrad.colourAt(o.pIdx, o.range).red / 255);
+        console.log(by2);
       }
-      let newHue = hsv.hue + by;
+      let newHue = hsv.hue + by2;
 
       if (newHue >= 360) {
         newHue -= 360;
