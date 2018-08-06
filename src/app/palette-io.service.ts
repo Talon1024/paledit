@@ -1,10 +1,7 @@
 import { Injectable } from '@angular/core';
 import * as base64 from 'base64-js';
 import { Palcollection } from './palette-model/palcollection';
-import { Observable } from 'rxjs/Observable';
-//  import { catchError, map, tap } from 'rxjs/operators';
-import { of } from 'rxjs/observable/of';
-import { bindNodeCallback } from 'rxjs/observable/bindNodeCallback';
+import { Observable, bindNodeCallback } from 'rxjs';
 import { WadReaderService, DoomWadLump } from './wad-reader.service';
 
 @Injectable()
@@ -68,6 +65,7 @@ export class PaletteIoService {
     return data64;
   }
 
+/*
   private handleError<T>(operation: string = 'operation', result?: T) {
     return (error: any): Observable<T> => {
       console.error(error);
@@ -75,5 +73,5 @@ export class PaletteIoService {
       return of(result as T);
     };
   }
-
+*/
 }

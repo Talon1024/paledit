@@ -1,7 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import { Observer } from 'rxjs/Observer';
-import { TeardownLogic } from 'rxjs/Subscription';
+import { Observable, Observer, TeardownLogic } from 'rxjs';
 
 export class KeyState {
   event: KeyboardEvent;
