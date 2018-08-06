@@ -9,6 +9,7 @@ import { Rgb, Rgbcolour } from '../palette-model/rgb';
 })
 export class PaletteOperationsComponent implements OnInit {
 
+  private gradFactor: boolean;
   private tintColour: string;
   private colourizeColour: string;
   private colourizeUse: HsvUsage;
@@ -23,23 +24,27 @@ export class PaletteOperationsComponent implements OnInit {
       saturation: true,
       value: false
     };
+    this.gradFactor = false;
   }
 
   tint(pct: string) {
     const actualPct = parseFloat(pct) / 100;
     const colour = Rgbcolour.fromHex(this.tintColour);
-    this.palOp.tint(colour, actualPct);
+    this.palOp.tint(colour, actualPct, this.gradFactor);
   }
 
   colourize() {
     const colour = Rgbcolour.fromHex(this.colourizeColour);
-    this.palOp.colourize(colour, this.colourizeUse);
+    this.palOp.colourize(colour, this.colourizeUse, this.gradFactor);
   }
 
   hueShift(by: string) {
     const degs = parseFloat(by);
-    this.palOp.shiftHue(degs);
+    this.palOp.shiftHue(degs, this.gradFactor);
   }
 
-  saturate(by: number) {}
+  saturate(by: string) {
+    const amt = parseFloat(by);
+    this.palOp.saturate(amt, this.gradFactor);
+  }
 }

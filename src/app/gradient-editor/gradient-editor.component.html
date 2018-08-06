@@ -21,7 +21,7 @@
       <select #stopList *ngIf="gradient.stops" (change)="setCurStopIdx(stopList.selectedIndex)" class="widget">
         <option *ngFor="let stop of gradient.stops; let i = index" [selected]="i === curStopIdx">{{stop}}</option>
       </select>
-      <input #stopPos class="narrowInput widget" type="number" step=".01" [value]="curStopPos" (change)="handleStopPosChange(stopPos.value)" min="0" max="1">
+      <input #stopPos class="narrowInput widget" type="number" step=".01" [value]="curStopPos" (change)="setCurStopPos(stopPos.value)" min="0" max="1">
       <span class="button" (click)="prevStop()" i18n="Go to the previous stop">‹</span>
       <span class="button" (click)="nextStop()" i18n="Go to the next stop">›</span>
     </div>

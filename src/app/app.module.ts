@@ -13,6 +13,7 @@ import { PalcollectionOperationService } from './palcollection-operation.service
 import { SettingsService } from './settings.service';
 import { WadReaderService } from './wad-reader.service';
 import { MessageService } from './message.service';
+import { GradientService } from './gradient.service';
 
 // Components
 import { AppComponent } from './app.component';
@@ -59,7 +60,8 @@ const assetUrl = '/assets/';
     PaletteOperationService,
     PalcollectionOperationService,
     WadReaderService,
-    MessageService
+    MessageService,
+    GradientService
   ],
   bootstrap: [AppComponent]
 })

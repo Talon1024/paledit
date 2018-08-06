@@ -4,7 +4,8 @@ import { Palcolour } from './palette-model/palcolour';
 import { Rgb, Hsv, Rgbcolour } from './palette-model/rgb';
 import { ColourRange } from './palette-model/colour-range';
 import { ColourSubRange } from './palette-model/colour-sub-range';
-import { Gradient } from './gradient-model/gradient';
+import { GradientService } from './gradient.service';
+import { Gradient, GradientStop } from './gradient-model/gradient';
 
 interface IRangeOperationOptions {
   pIdx: number;
@@ -27,7 +28,7 @@ export class PaletteOperationService {
   palColours: Palcolour[];
   selectionRange?: ColourRange;
 
-  constructor() {
+  constructor(private grad: GradientService) {
     this.palColours = new Array(256);
   }
 
@@ -214,42 +215,77 @@ export class PaletteOperationService {
     this.updatePalette();
   }
 
-  tint(colour: Rgb, factor: number) {
+  tint(colour: Rgb, factor: number, factorGrad: boolean = false) {
     this.rangeOperate((o) => {
-      const newColour = Rgbcolour.blend(o.pCol.rgb, factor, colour, Rgbcolour.tint);
+      let factor2 = factor;
+      if (factorGrad) {
+        const fgrad = this.grad.gradient;
+        factor2 = fgrad.colourAt(o.pIdx, o.range).red / 255;
+      }
+      const newColour = Rgbcolour.blend(o.pCol.rgb, factor2, colour, Rgbcolour.tint);
       o.pCol.rgb.red = newColour.red;
       o.pCol.rgb.green = newColour.green;
       o.pCol.rgb.blue = newColour.blue;
     });
   }
 
-  colourize(colour: Rgb, use?: HsvUsage) {
+  colourize(colour: Rgb, use: HsvUsage, factorGrad: boolean = false) {
+    /*
     if (!use) {
       use = {hue: true, saturation: true, value: false};
     }
+    */
     this.rangeOperate((o) => {
-      const colHsv: Hsv = Rgbcolour.hsv(colour);
-      const {hue, saturation, value} = colHsv;
-      const otherHsv = Rgbcolour.hsv(o.pCol.rgb);
+      const {hue, saturation, value} = Rgbcolour.hsv(colour);
+      const origHsv = Rgbcolour.hsv(o.pCol.rgb);
+
+      let factor;
+      if (factorGrad) {
+        const fgrad = this.grad.gradient;
+        factor = fgrad.colourAt(o.pIdx, o.range).red / 255;
+      } else {
+        factor = 1.0;
+      }
+
       const combined: Hsv = {
-        hue: use.hue ? hue : otherHsv.hue,
-        saturation: use.saturation ? saturation : otherHsv.saturation,
-        value: use.value ? value : otherHsv.value
+        hue: use.hue ? hue * factor + origHsv.hue * (1.0 - factor) : origHsv.hue,
+        saturation: use.saturation ? saturation * factor + origHsv.saturation * (1.0 - factor) : origHsv.saturation,
+        value: use.value ? value * factor + origHsv.value * (1.0 - factor) : origHsv.value
       };
+
       o.pCol.rgb = Rgbcolour.fromHsv(combined);
     });
   }
 
-  saturate(pct: number) {
+  saturate(pct: number, factorGrad: boolean = false) {
     this.rangeOperate((o) => {
+      let pct2 = pct;
       const colHsv = Rgbcolour.hsv(o.pCol.rgb);
+      let newSat = colHsv.saturation;
+      if (factorGrad) {
+        const fgrad = this.grad.gradient;
+        pct2 *= fgrad.colourAt(o.pIdx, o.range).red / 255;
+      }
+      newSat = Math.min(newSat + pct2, 1);
+
+      const newColour = Rgbcolour.fromHSV(colHsv.hue, newSat, colHsv.value);
+      o.pCol.rgb.red = newColour.red;
+      o.pCol.rgb.green = newColour.green;
+      o.pCol.rgb.blue = newColour.blue;
     });
   }
 
-  shiftHue(by: number) {
+  shiftHue(by: number, factorGrad: boolean = false) {
     this.rangeOperate((o) => {
+      let by2 = by;
       const hsv = Rgbcolour.hsv(o.pCol.rgb);
-      let newHue = hsv.hue + by;
+      if (factorGrad) {
+        const fgrad = this.grad.gradient;
+        console.log(fgrad.colourAt(o.pIdx, o.range).red / 255, by2);
+        by2 *= (fgrad.colourAt(o.pIdx, o.range).red / 255);
+        console.log(by2);
+      }
+      let newHue = hsv.hue + by2;
 
       if (newHue >= 360) {
         newHue -= 360;
@@ -264,9 +300,10 @@ export class PaletteOperationService {
     });
   }
 
-  applyGradient(gradient: Gradient) {
+  applyGradient() {
     this.rangeOperate((o) => {
-      const colour = gradient.colourAt(o.pIdx, o.range);
+      const grad = this.grad.gradient;
+      const colour = grad.colourAt(o.pIdx, o.range);
       this.palColours[o.pIdx].rgb.red = colour.red;
       this.palColours[o.pIdx].rgb.green = colour.green;
       this.palColours[o.pIdx].rgb.blue = colour.blue;
