@@ -5,7 +5,6 @@ import { Rgb, Hsv, Rgbcolour } from './palette-model/rgb';
 import { ColourRange } from './palette-model/colour-range';
 import { ColourSubRange } from './palette-model/colour-sub-range';
 import { GradientService } from './gradient.service';
-import { Gradient, GradientStop } from './gradient-model/gradient';
 
 interface IRangeOperationOptions {
   pIdx: number;
@@ -26,6 +25,7 @@ export class PaletteOperationService {
   private lastSelectedIndex: number;
   palette: Palette;
   palColours: Palcolour[];
+  colourClipboard: Palcolour[];
   selectionRange?: ColourRange;
 
   constructor(private grad: GradientService) {
@@ -308,6 +308,20 @@ export class PaletteOperationService {
       this.palColours[o.pIdx].rgb.green = colour.green;
       this.palColours[o.pIdx].rgb.blue = colour.blue;
     });
+  }
+
+  copyColours() {
+    this.colourClipboard = [];
+    this.rangeOperate((o) => {
+      this.colourClipboard.push(o.pCol);
+    });
+  }
+
+  pasteColours() {
+    for (const pCol of this.colourClipboard) {
+      this.palColours[pCol.index].rgb = pCol.rgb;
+    }
+    this.updatePalette();
   }
 
 }

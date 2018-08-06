@@ -25,6 +25,9 @@
     degrees
   </div>
   <div class="">
-    <label for=""><input type="checkbox" [(ngModel)]="gradFactor"> Use red channel from gradient as factor</label>
+    <span class="button" (click)="copy()">Copy selection</span> <span class="button" (click)="paste()">Paste</span>
+  </div>
+  <div class="">
+    <label><input type="checkbox" [(ngModel)]="gradFactor"> Use red channel from gradient as factor</label>
   </div>
 </div>

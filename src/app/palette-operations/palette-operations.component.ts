@@ -47,4 +47,12 @@ export class PaletteOperationsComponent implements OnInit {
     const amt = parseFloat(by);
     this.palOp.saturate(amt, this.gradFactor);
   }
+
+  copy() {
+    this.palOp.copyColours();
+  }
+
+  paste() {
+    this.palOp.pasteColours();
+  }
 }
