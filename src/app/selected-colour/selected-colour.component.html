@@ -1,0 +1,42 @@
+<div class="widget">
+  <h3>Selected Colour</h3>
+  <!-- Multiple colours selected -->
+  <div>
+    {{rangeLen}} {{ "colour" | plural:rangeLen }} selected.
+  </div>
+  <!-- 1 colour selected -->
+  <div *ngIf="rangeLen === 1">
+    Colour: <span [colorPicker]="curColour" cpPosition="bottom" (colorPickerChange)="setCurColour($event)"
+      class="colourPick widget" [style.background-color]="curColour"></span><br/>
+      <div class="sbs">
+        <table>
+          <tr>
+            <th>Red:</th>
+            <td>{{curRgb.red}}</td>
+          </tr>
+          <tr>
+            <th>Green:</th>
+            <td>{{curRgb.green}}</td>
+          </tr>
+          <tr>
+            <th>Blue:</th>
+            <td>{{curRgb.blue}}</td>
+          </tr>
+        </table>
+        <table>
+          <tr>
+            <th>Hue:</th>
+            <td>{{curHsv.hue | real}}°</td>
+          </tr>
+          <tr>
+            <th>Saturation:</th>
+            <td>{{curHsv.saturation * 100 | real}}%</td>
+          </tr>
+          <tr>
+            <th>Value:</th>
+            <td>{{curHsv.value}}</td>
+          </tr>
+        </table>
+      </div>
+  </div>
+</div>

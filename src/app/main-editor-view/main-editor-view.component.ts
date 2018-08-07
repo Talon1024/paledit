@@ -1,5 +1,4 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { ModalComponent } from '../modal/modal.component';
 import { Palette } from '../palette-model/palette';
 import { Rgb } from '../palette-model/rgb';
 import { ColourRange } from '../palette-model/colour-range';

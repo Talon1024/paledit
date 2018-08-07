@@ -25,12 +25,15 @@ import { PaletteLoaderComponent } from './palette-loader/palette-loader.componen
 import { PaletteOperationsComponent } from './palette-operations/palette-operations.component';
 import { MessageLogComponent } from './message-log/message-log.component';
 import { ModalComponent } from './modal/modal.component';
+import { SelectedColourComponent } from './selected-colour/selected-colour.component';
 
 // Languages/locales
 import localeEnCanada from '@angular/common/locales/en-CA';
 import localeEnCanadaExtra from '@angular/common/locales/extra/en-CA';
 import localeIt from '@angular/common/locales/it';
 import localeItExtra from '@angular/common/locales/extra/it';
+import { PluralPipe } from './plural.pipe';
+import { ReadableRealNumberPipe } from './readable-real-number.pipe';
 
 const assetUrl = '/assets/';
 
@@ -44,7 +47,10 @@ const assetUrl = '/assets/';
     PaletteLoaderComponent,
     PaletteOperationsComponent,
     ModalComponent,
-    MessageLogComponent
+    MessageLogComponent,
+    SelectedColourComponent,
+    PluralPipe,
+    ReadableRealNumberPipe
   ],
   imports: [
     BrowserModule,

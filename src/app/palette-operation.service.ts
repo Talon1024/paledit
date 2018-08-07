@@ -175,9 +175,17 @@ export class PaletteOperationService {
     }
   }
 
-  private updatePalette() {
-    for (const colour of this.palColours) {
-      this.palette.setColour(colour.index, colour.rgb);
+  private updatePalette(updated?: ColourRange) {
+    const idxs: number[] = updated ? updated.getIndices() : (() => {
+      const result = [];
+      for (let i = 0; i < this.palColours.length; i++) {
+        result.push(i);
+      }
+      return result;
+    })();
+    for (const idx of idxs) {
+      const colour = this.palColours[idx].rgb;
+      this.palette.setColour(idx, colour);
     }
   }
 
@@ -321,6 +329,15 @@ export class PaletteOperationService {
     for (const pCol of this.colourClipboard) {
       this.palColours[pCol.index].rgb = pCol.rgb;
     }
+    this.updatePalette();
+  }
+
+  colourAt(idx: number): Rgb {
+    return this.palColours[idx].rgb;
+  }
+
+  setColourAt(idx: number, colour: Rgb) {
+    this.palColours[idx].rgb = colour;
     this.updatePalette();
   }
 

@@ -1,0 +1,8 @@
+.sbs {
+  display: flex;
+  justify-content: space-around;
+}
+
+.sbs > * {
+  flex-grow: 1;
+}
