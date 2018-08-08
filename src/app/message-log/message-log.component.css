@@ -1,0 +1,23 @@
+.mdate {
+  font-size: .8rem;
+  display: inline-block;
+  width: 6rem;
+  text-align: center;
+  margin: 0 5px;
+}
+
+.error {
+  color: #F00;
+}
+
+.warning {
+  color: #AA0;
+}
+
+.info {
+  color: #225;
+}
+
+.mlvl, .mtxt {
+  vertical-align: middle;
+}
