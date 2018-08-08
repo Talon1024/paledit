@@ -11,7 +11,7 @@ import { PaletteOperationService } from '../palette-operation.service';
 export class SelectedColourComponent implements OnInit, OnChanges {
 
   @Input() range: ColourRange;
-  private rangeLen: number;
+  public rangeLen: number;
   private curColour: string;
   private curRgb: Rgb;
   private curHsv: Hsv;

@@ -1,10 +1,10 @@
-<div class="pallist widget" *ngIf="colOp.numPals() >= 1">
+<div class="pallist widget" *ngIf="numPals >= 1">
   <h3 i18n="Widget title">Palette Navigator</h3>
   <label i18n="Number of currently selected palette">Palette: <input type="number"
     class="narrowInput"
     [(ngModel)]="colPalIndex"
     (change)="setPalIndex(colPalIndex)"
-    min="1" [max]="colOp.numPals()">/{{colOp.numPals()}}</label>
+    min="1" [max]="numPals">/{{numPals}}</label>
   <div>
     <span class="button" (click)="firstPal()" i18n="Go to first palette in the collection">&#xAB;</span>
     <span class="button" (click)="prevPal()" i18n="Go to previous palette in the collection">&#x2039;</span>

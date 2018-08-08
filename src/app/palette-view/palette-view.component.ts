@@ -19,10 +19,10 @@ export class PaletteViewComponent implements OnInit, OnChanges {
   private keyState: {[key: string]: boolean};
   @Input() palette: Palette;
   @Input() multiple: boolean;
-  private palColours: Palcolour[];
+  public palColours: Palcolour[];
   private selectionRange: ColourRange;
-  private lockSelection: boolean;
-  private showNumbers: boolean;
+  public lockSelection: boolean;
+  public showNumbers: boolean;
   @Output() selected = new EventEmitter<ColourRange>();
 
   constructor(

@@ -9,7 +9,7 @@ export class PaletteIoService {
 
   constructor(private wadIo: WadReaderService) {}
 
-  private readFromWadFile = (file: File, callback: (error: any, result: Palcollection) => void) => {
+  private readFromWadFile = (file: File, callback: (error: any, result: Uint8ClampedArray) => void) => {
     this.wadIo.readWadFile(file, (e) => {
       if (e) { callback(e, null); }
 
@@ -18,39 +18,26 @@ export class PaletteIoService {
         callback(playpal as Error, null);
       }
       const data = new Uint8ClampedArray((playpal as DoomWadLump).data);
-
-      let collection = null, error = null;
-      try {
-        collection = Palcollection.fromData(data);
-      } catch (e) {
-        error = e;
-      }
-      callback(error, collection);
+      callback(null, data);
     });
   }
 
   // Wrapper for rxjs bindNodeCallback
-  private readPaletteFile(file: File, callback: (error: any, result: Palcollection) => void) {
+  private readPaletteFile(file: File, callback: (error: any, result: Uint8ClampedArray) => void) {
     const fileReader = new FileReader();
     fileReader.readAsArrayBuffer(file);
     fileReader.onload = () => {
       const data = new Uint8ClampedArray(fileReader.result as ArrayBuffer);
-      let collection = null, error = null;
-      try {
-        collection = Palcollection.fromData(data);
-      } catch (e) {
-        error = e;
-      }
-      callback(error, collection);
+      callback(null, data);
     };
     fileReader.onerror = () => {
       callback(fileReader.error, null);
     };
   }
 
-  getPaletteFile(file: File): Observable<Palcollection> {
+  getPaletteFile(file: File): Observable<Uint8ClampedArray> {
     const fname = file.name.toLowerCase();
-    let observableFile: (f: File) => Observable<Palcollection>;
+    let observableFile: (f: File) => Observable<Uint8ClampedArray>;
     if (fname.endsWith('wad')) {
       observableFile = bindNodeCallback(this.readFromWadFile);
     } else {

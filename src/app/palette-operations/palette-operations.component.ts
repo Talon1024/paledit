@@ -9,10 +9,10 @@ import { Rgb, Rgbcolour } from '../palette-model/rgb';
 })
 export class PaletteOperationsComponent implements OnInit {
 
-  private gradFactor: boolean;
-  private tintColour: string;
-  private colourizeColour: string;
-  private colourizeUse: HsvUsage;
+  public gradFactor: boolean;
+  public tintColour: string;
+  public colourizeColour: string;
+  public colourizeUse: HsvUsage;
 
   constructor(private palOp: PaletteOperationService) { }
 
@@ -54,5 +54,9 @@ export class PaletteOperationsComponent implements OnInit {
 
   paste() {
     this.palOp.pasteColours();
+  }
+
+  reverse() {
+    this.palOp.reverse();
   }
 }

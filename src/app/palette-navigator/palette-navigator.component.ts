@@ -1,5 +1,4 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
-import { Palcollection } from '../palette-model/palcollection';
 import { PalcollectionOperationService } from '../palcollection-operation.service';
 
 @Component({
@@ -11,10 +10,12 @@ export class PaletteNavigatorComponent implements OnInit {
 
   @Output() palIndexChange = new EventEmitter<number>();
   private colPalIndex: number; // User input (actually index + 1)
+  public numPals: number;
 
   constructor(private colOp: PalcollectionOperationService) { }
 
   ngOnInit() {
+    this.numPals = 1;
     this.colPalIndex = 1;
   }
 

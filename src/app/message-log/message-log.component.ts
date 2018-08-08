@@ -8,12 +8,17 @@ import { MessageService, IMessage } from '../message.service';
 })
 export class MessageLogComponent implements OnInit {
 
+  messages: IMessage[];
+
   constructor(private msg: MessageService) { }
 
   ngOnInit() {
+    this.msg.subscribe((m) => {
+      this.messages.push(m);
+    });
   }
 
-  private getMessageClass(msg: IMessage) {
+  getMessageClass(msg: IMessage) {
     return `mlvl ${msg.level}`;
   }
 

@@ -17,7 +17,7 @@ export class GradientEditorComponent implements OnInit {
   private curColour: string;
   private curStopPos: number;
   @Input() range: ColourRange;
-  private gradient: Gradient;
+  public gradient: Gradient;
 
   constructor(private sanitizer: DomSanitizer,
     private palOp: PaletteOperationService,
