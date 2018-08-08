@@ -2,7 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { ColourRange } from '../palette-model/colour-range';
 import { Rgbcolour } from '../palette-model/rgb';
 import { Gradient, GradientStop } from '../gradient-model/gradient';
-import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
+import { DomSanitizer, SafeStyle, SafeUrl } from '@angular/platform-browser';
 import { PaletteOperationService } from '../palette-operation.service';
 import { GradientService } from '../gradient.service';
 
@@ -18,6 +18,9 @@ export class GradientEditorComponent implements OnInit {
   private curStopPos: number;
   @Input() range: ColourRange;
   private gradient: Gradient;
+
+  public gradJsonUrl: SafeUrl;
+  public readonly gradJsonFname: string = 'gradient.json';
 
   constructor(private sanitizer: DomSanitizer,
     private palOp: PaletteOperationService,
@@ -109,6 +112,25 @@ export class GradientEditorComponent implements OnInit {
     this.grad.reverse();
     this.gradient = this.grad.gradient;
     this.setCurStopIdx(stopIdx);
+  }
+
+  exportGradient() {
+    const json = this.grad.export();
+    const url = `data:application/json,${json}`;
+    this.gradJsonUrl = this.sanitizer.bypassSecurityTrustUrl(url);
+  }
+
+  importGradient(e: Event) {
+    const input = e.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      const reader = new FileReader();
+      const file = input.files[0];
+      reader.readAsText(file);
+      reader.onload = () => {
+        this.grad.import(reader.result);
+        this.gradient = this.grad.gradient;
+      };
+    }
   }
 
 }

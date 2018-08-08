@@ -31,6 +31,12 @@
     </label>
   </div>
   <div class="operations">
-    <span class="button" (click)="applyGradient()" i18n="Set the selected colours to the colours of the gradient">Apply</span> <span class="button" (click)="reverseGradient()" i18n="Reverse the gradient">Reverse</span>
+    <span class="button" (click)="applyGradient()" i18n="Set the selected colours to the colours of the gradient">Apply</span>
+    <span class="button" (click)="reverseGradient()" i18n="Reverse the gradient">Reverse</span>
+    <a class="button" (click)="exportGradient()" i18n="Export the gradient to JSON" [download]="gradJsonFname" [href]="gradJsonUrl">Export</a>
+    <label><a class="button" i18n="Import a gradient from a JSON file">
+      Import
+      <input type="file" class="importer" (change)="importGradient($event)">
+    </a></label>
   </div>
 </div>

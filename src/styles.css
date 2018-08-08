@@ -66,3 +66,7 @@ a[download] {
 label > * {
   vertical-align: middle;
 }
+
+.importer {
+  display: none;
+}
