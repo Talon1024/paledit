@@ -74,4 +74,11 @@ export class GradientService {
   stopCount(): number {
     return this._gradient.stops.length;
   }
+
+  reverse() {
+    this._gradient.stops.reverse();
+    for (const stop of this._gradient.stops) {
+      stop.position = 1 - stop.position;
+    }
+  }
 }

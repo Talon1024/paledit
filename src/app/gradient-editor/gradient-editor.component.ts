@@ -104,4 +104,11 @@ export class GradientEditorComponent implements OnInit {
     this.palOp.applyGradient();
   }
 
+  reverseGradient() {
+    const stopIdx = this.grad.stopCount() - this.curStopIdx - 1;
+    this.grad.reverse();
+    this.gradient = this.grad.gradient;
+    this.setCurStopIdx(stopIdx);
+  }
+
 }
