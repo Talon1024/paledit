@@ -13,6 +13,7 @@ export class MessageLogComponent implements OnInit {
   constructor(private msg: MessageService) { }
 
   ngOnInit() {
+    this.messages = new Array<IMessage>();
     this.msg.subscribe((m) => {
       this.messages.push(m);
     });

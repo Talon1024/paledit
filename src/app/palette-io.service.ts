@@ -15,7 +15,7 @@ export class PaletteIoService {
 
       const playpal = this.wadIo.getLump('PLAYPAL');
       if (playpal instanceof Error) {
-        callback(playpal as Error, null);
+        return callback(playpal as Error, null);
       }
       const data = new Uint8ClampedArray((playpal as DoomWadLump).data);
       callback(null, data);
