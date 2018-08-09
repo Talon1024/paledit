@@ -54,8 +54,11 @@
   <p><i>Reverse</i> flips the order of the selected colours.</p>
   <p><i>Tint</i> blends the selected colours with the specified colour by the specified factor as a percentage.</p>
   <p><i>Colourize</i> sets the hue, saturation, and/or value of the selected colours to that of the specified colour.</p>
-  <p><i>Saturate</i> increases or decreases the saturation of the selected colours. (Actually, I haven't implemented this function yet.)</p>
+  <p><i>Saturate</i> increases or decreases the saturation of the selected colours.</p>
   <p><i>Shift hue</i> changes the hue of the selected colours by the specified amount of degrees.</p>
+  <p><i>Copy Selection</i> will copy the currently selected colours to Paledit's clipboard.</p>
+  <p><i>Paste</i> will paste the copied colours to the original positions they were copied from.</p>
+  <p><i>Use red channel from gradient as factor</i> will use the red channel of the colours from the gradient to control the above operations, except for copy, paste, and reverse. That way, for example, you can shift the hue of a range of colours incrementally as opposed to applying the full shift to all of them.</p>
   <h3>Gradient editing</h3>
   <p>Use the gradient editor to edit gradients which you can apply to your palette.</p>
   <p>Controls:</p>
@@ -69,6 +72,27 @@
   <p>The number box beside it shows the position of the currently selected stop.</p>
   <p>The stop colour box shows the colour of the currently selected stop. You can set a new colour by clicking on this box.</p>
   <p>The currently selected gradient stop will pulsate.</p>
-  <p>Apply the gradient to the selected colour range, or all of the colours in the palette by clicking "Apply".</p>
   <p>Below the gradient itself, you can see a preview of what the gradient will look like if applied to the selected colour range.</p>
+  <p>Apply the gradient to the selected colour range, or all of the colours in the palette by clicking "Apply".</p>
+  <p>Reverse the positions of the stops in the gradient by clicking on the Reverse button</p>
+  <p>Export the current gradient to a JSON file by clicking on Export</p>
+  <p>Import the gradient from a gradient JSON file by clicking on Import</p>
+  <h2>Changelog</h2>
+  <h3>Youtube preview video -> v0.5 public beta</h3>
+  <p>Re-organized UI elements.</p>
+  <p>Made palette view more compact by decreasing the size of individual colours.</p>
+  <p>Made buttons more compact by changing them to &lt;span&gt; elements.</p>
+  <p>Made other UI elements, such as inputs and colour selectors more compact.</p>
+  <p>Made all sub-components widgets.</p>
+  <p>Removed "Colour ranges", "Translations", and "Selected colour" widgets.</p>
+  <p>Added modal widgets.</p>
+  <p>Initial release.</p>
+  <h3>v0.5 -> v0.6 public beta</h3>
+  <p>Added "Message log" widget to display error/warning messages.</p>
+  <p>Added WAD support.</p>
+  <p>Added "Selected colour" widget that allows users to change individual colours in the palette.</p>
+  <p>Made "Saturate" button work (Palette operations).</p>
+  <p>Added "Copy Selection" and "Paste" buttons (Palette operations).</p>
+  <p>Added "Use red channel from gradient as factor" checkbox (Palette operations).</p>
+  <p>Added "Reverse", "Import", and "Export" buttons (Gradient editor).</p>
 </app-modal>
