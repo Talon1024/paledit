@@ -16,9 +16,9 @@ import { MessageService } from '../message.service';
 export class MainEditorViewComponent implements OnInit {
 
   public palette: Palette;
-  public palFileName = 'palette.pal';
+  public readonly palFileName = 'palette.pal';
   public palDataURI: SafeUrl;
-  public cmapFileName = 'colormap.lmp';
+  public readonly cmapFileName = 'colormap.lmp';
   public cmapDataURI: SafeUrl;
   public selectionRange: ColourRange;
   public collection: Palcollection;

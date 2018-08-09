@@ -1,7 +1,12 @@
 import { Rgb, Rgbcolour } from '../palette-model/rgb';
 import { ColourRange } from '../palette-model/colour-range';
 
-export class GradientStop {
+export interface IGradientStop {
+  position: number;
+  colour: Rgb;
+}
+
+export class GradientStop implements IGradientStop {
   position: number; // 0.0 to 1.0
   colour: Rgb;
 
@@ -11,6 +16,14 @@ export class GradientStop {
     }
     this.position = position;
     this.colour = colour;
+  }
+
+  static fromObject(ob: IGradientStop): GradientStop {
+    return new GradientStop(ob.position, ob.colour);
+  }
+
+  toObject() {
+    return {position: this.position, colour: this.colour};
   }
 
   posPercent(): string {
@@ -26,32 +39,43 @@ export class GradientStop {
   }
 }
 
+export interface IGradient {
+  stops: GradientStop[];
+}
+
 export class Gradient {
   stops: GradientStop[];
-  reverse: boolean;
 
-  constructor(stops?: GradientStop[], reverse: boolean = false) {
+  constructor(stops?: IGradientStop[]) {
     if (stops) {
-      this.stops = stops;
+      this.stops = stops.map((s) => GradientStop.fromObject(s));
     } else {
       this.stops = [];
     }
-    this.reverse = reverse;
+    this.stops.sort(Gradient.sortFunction);
   }
 
+  static sortFunction(a: GradientStop, b: GradientStop): number {
+    return a.position - b.position;
+  }
+
+  static fromObject(ob: IGradient): Gradient {
+    return new Gradient(ob.stops);
+  }
+
+  toObject(): IGradient {
+    return {stops: this.stops};
+  }
 
   addStop(stop: GradientStop) {
     this.stops.push(stop);
-    this.stops.sort(function (a: GradientStop, b: GradientStop): number {
-      return a.position - b.position;
-    });
+    this.stops.sort(Gradient.sortFunction);
   }
 
   private stopPalIndex(stop: GradientStop, range: ColourRange): number {
     const length = range.getLength();
     const rangePalIdxs = range.getIndices();
-    let stopPos = stop.position;
-    if (this.reverse) { stopPos = 1.0 - stopPos; }
+    const stopPos = stop.position;
 
     const rangeIdx = Math.floor(stopPos * length);
     const palIdx = rangePalIdxs[rangeIdx];
@@ -74,8 +98,7 @@ export class Gradient {
 
   private stopIndex(stop: GradientStop, length: number): number {
     length -= 1;
-    let stopPos = stop.position;
-    if (this.reverse) { stopPos = 1.0 - stopPos; }
+    const stopPos = stop.position;
 
     const rangeIdx = Math.floor(stopPos * length);
     return rangeIdx;
