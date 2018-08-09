@@ -14,7 +14,7 @@ export class MessageLogComponent implements OnInit {
 
   ngOnInit() {
     this.messages = new Array<IMessage>();
-    this.msg.subscribe((m) => {
+    this.msg.observable.subscribe((m) => {
       this.messages.push(m);
     });
   }
