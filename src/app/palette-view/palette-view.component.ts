@@ -6,6 +6,7 @@ import { Rgbcolour } from '../palette-model/rgb';
 import { KeyboardService } from '../keyboard.service';
 import { SettingsService } from '../settings.service';
 import { PaletteOperationService } from '../palette-operation.service';
+import { PalcollectionOperationService } from '../palcollection-operation.service';
 
 @Component({
   selector: 'app-palette-view',
@@ -45,7 +46,6 @@ export class PaletteViewComponent implements OnInit, OnChanges {
   }
 
   onSetPalette() {
-    this.palOp.setPalette(this.palette);
     this.palColours = this.palOp.palColours;
     if (this.selectionRange && this.lockSelection) { this.palOp.rangeToSelection(this.selectionRange); }
   }
@@ -55,12 +55,16 @@ export class PaletteViewComponent implements OnInit, OnChanges {
     return styles;
   }
 
-  ngOnInit(): void {
+  ngOnInit() {
     this.keyState = {};
     this.lockSelection = false;
     this.showNumbers = true;
     this.keyboard.observeKeyboard(['Shift', 'Control']).subscribe((press) => {
       this.keyState[press.key] = press.state;
+    });
+    this.palOp.palChangeObv.subscribe((pal: Palette) => {
+      this.palette = pal;
+      this.onSetPalette();
     });
     document.addEventListener('visibilitychange', () => { // Fired when user switches tabs
       // Clear keyState

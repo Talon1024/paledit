@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { PalcollectionOperationService } from '../palcollection-operation.service';
 
 @Component({
@@ -8,8 +8,7 @@ import { PalcollectionOperationService } from '../palcollection-operation.servic
 })
 export class PaletteNavigatorComponent implements OnInit {
 
-  @Output() palIndexChange = new EventEmitter<number>();
-  private colPalIndex: number; // User input (actually index + 1)
+  public colPalIndex: number; // User input (actually index + 1)
   public palCount: number;
 
   constructor(private colOp: PalcollectionOperationService) { }
@@ -20,46 +19,37 @@ export class PaletteNavigatorComponent implements OnInit {
     this.colOp.palCountObv.subscribe((c: number) => {
       this.palCount = c;
     });
+    this.colOp.palChangeObv.subscribe((x: number) => {
+      this.colPalIndex = x + 1;
+    });
   }
 
   nextPal() {
-    if (this.colPalIndex < this.palCount) { this.colPalIndex += 1; }
-    this.setPalIndex(this.colPalIndex);
+    this.colOp.nextPal();
   }
 
   prevPal() {
-    if (this.colPalIndex > 1) { this.colPalIndex -= 1; }
-    this.setPalIndex(this.colPalIndex);
+    this.colOp.prevPal();
   }
 
   firstPal() {
-    this.colPalIndex = 1;
-    this.setPalIndex(this.colPalIndex);
+    this.colOp.firstPal();
   }
 
   lastPal() {
-    this.colPalIndex = this.palCount;
-    this.setPalIndex(this.colPalIndex);
+    this.colOp.lastPal();
   }
 
   addPal() {
     this.colOp.addPal(this.colPalIndex - 1);
-    this.colPalIndex += 1;
-    this.setPalIndex(this.colPalIndex);
   }
 
   removePal() {
-    if (this.colOp.removePal(this.colPalIndex - 1)) {
-      // Already removed a palette
-      if (this.colPalIndex === this.palCount + 1) {
-        this.colPalIndex -= 1;
-      }
-      this.setPalIndex(this.colPalIndex);
-    }
+    this.colOp.removePal(this.colPalIndex - 1);
   }
 
   setPalIndex(palIndex: number) {
-    this.palIndexChange.emit(palIndex - 1);
+    this.colOp.goToPal(palIndex - 1);
   }
 
 }

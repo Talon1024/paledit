@@ -15,11 +15,10 @@
     <span class="button" (click)="showHelp()">Help!</span>
   </div>
   <div class="editor-col">
-    <app-palette-view *ngIf="palette" [palette]="palette" [multiple]="true"
-      (selected)="setSelectionRange($event)"></app-palette-view>
+    <app-palette-view [multiple]="true" (selected)="setSelectionRange($event)"></app-palette-view>
   </div>
   <div class="editor-col">
-    <app-palette-navigator *ngIf="collection" (palIndexChange)="setPalIndex($event)"></app-palette-navigator>
+    <app-palette-navigator *ngIf="collection"></app-palette-navigator>
     <app-palette-operations></app-palette-operations>
   </div>
 </div>

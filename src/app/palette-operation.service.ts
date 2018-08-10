@@ -5,6 +5,8 @@ import { Rgb, Hsv, Rgbcolour } from './palette-model/rgb';
 import { ColourRange } from './palette-model/colour-range';
 import { ColourSubRange } from './palette-model/colour-sub-range';
 import { GradientService } from './gradient.service';
+import { PalcollectionOperationService } from './palcollection-operation.service';
+import { Observable, Observer, TeardownLogic } from 'rxjs';
 
 interface IRangeOperationOptions {
   pIdx: number;
@@ -23,13 +25,33 @@ export interface HsvUsage {
 export class PaletteOperationService {
 
   private lastSelectedIndex: number;
-  palette: Palette;
-  palColours: Palcolour[];
-  colourClipboard: Palcolour[];
-  selectionRange?: ColourRange;
+  public palette: Palette;
+  public palColours: Palcolour[];
+  public colourClipboard: Palcolour[];
+  public selectionRange?: ColourRange;
+  public readonly palChangeObv: Observable<Palette>;
+  private _palChangeObservers: Observer<Palette>[];
 
-  constructor(private grad: GradientService) {
-    this.palColours = new Array(256);
+  constructor(private grad: GradientService, private colOp: PalcollectionOperationService) {
+    this._palChangeObservers = [];
+    this.palChangeObv = Observable.create((obs: Observer<Palette>): TeardownLogic => {
+      this._palChangeObservers.push(obs);
+      obs.next(this.palette);
+      return () => {
+        const idx = this._palChangeObservers.findIndex((e) => e === obs);
+        this._palChangeObservers.splice(idx, 1);
+        obs.complete();
+      };
+    });
+    this.colOp.palChangeObv.subscribe((cidx: number) => {
+      const pal = this.colOp.getPal(cidx);
+      if (pal) {
+        this.setPalette(pal);
+        for (const obs of this._palChangeObservers) {
+          obs.next(this.palette);
+        }
+      }
+    });
   }
 
   selectPalColour(colourIndex: number, keyState: {[key: string]: boolean}): ColourRange | null {
@@ -167,7 +189,7 @@ export class PaletteOperationService {
 
   setPalette(pal: Palette) {
     this.palette = pal;
-    if (pal.getLength() !== this.palColours.length) {
+    if (this.palColours == null || pal.getLength() !== this.palColours.length) {
       this.palColours = new Array(pal.getLength());
     }
     for (let i = 0; i < pal.getLength(); i++) {

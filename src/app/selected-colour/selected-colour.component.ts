@@ -2,6 +2,7 @@ import { Component, OnInit, Input, OnChanges, SimpleChanges, Output, EventEmitte
 import { ColourRange } from '../palette-model/colour-range';
 import { Rgbcolour, Rgb, Hsv } from '../palette-model/rgb';
 import { PaletteOperationService } from '../palette-operation.service';
+import { PalcollectionOperationService } from '../palcollection-operation.service';
 
 @Component({
   selector: 'app-selected-colour',
@@ -17,10 +18,18 @@ export class SelectedColourComponent implements OnInit, OnChanges {
   private curHsv: Hsv;
   @Output() colourChange = new EventEmitter<Rgb>();
 
-  constructor(private palOp: PaletteOperationService) { }
+  constructor(private palOp: PaletteOperationService,
+    private colOp: PalcollectionOperationService) { }
 
   ngOnInit() {
     this.rangeLen = 0;
+    this.colOp.palChangeObv.subscribe(() => {
+      if (this.rangeLen === 1) {
+        const idx = this.range.getIndices()[0];
+        const colour = Rgbcolour.toHex(this.palOp.colourAt(idx));
+        this.setHex(colour);
+      }
+    });
   }
 
   ngOnChanges(changes: SimpleChanges) {

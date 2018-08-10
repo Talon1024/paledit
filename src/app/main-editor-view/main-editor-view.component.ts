@@ -34,6 +34,17 @@ export class MainEditorViewComponent implements OnInit {
     private sanitizer: DomSanitizer,
     private msg: MessageService) {}
 
+  ngOnInit() {
+    this.httpClient.get(`${this.assetUrl}/bwpal.pal`, {
+      responseType: 'arraybuffer'
+    }).subscribe((resp: ArrayBuffer) => {
+      const palette = Palette.fromData(new Uint8ClampedArray(resp));
+      this.colOp.createWithInitialPalette(palette);
+      this.collection = this.colOp.collection;
+    });
+    this.cmapDataURI = this.sanitizer.bypassSecurityTrustUrl('data:,Not implemented yet.');
+  }
+
   readPaletteFile(file: File) {
     this.loadVisible = true;
     this.paletteIo.getPaletteFile(file)
@@ -41,15 +52,10 @@ export class MainEditorViewComponent implements OnInit {
       this.loadVisible = false;
       this.colOp.createFromData(playpal);
       this.collection = this.colOp.collection;
-      this.setPalIndex(0);
     }, (error: Error) => {
       this.loadVisible = false;
       this.msg.error(error.message);
     });
-  }
-
-  setPalIndex(palIndex: number) {
-    this.palette = this.colOp.getPal(palIndex);
   }
 
   setSelectionRange(range: ColourRange) {
@@ -63,18 +69,6 @@ export class MainEditorViewComponent implements OnInit {
 
   saveColourmap() {
     // console.log('Saving colourmap...');
-  }
-
-  ngOnInit() {
-    this.httpClient.get(`${this.assetUrl}/bwpal.pal`, {
-      responseType: 'arraybuffer'
-    }).subscribe((resp: ArrayBuffer) => {
-      const palette = Palette.fromData(new Uint8ClampedArray(resp));
-      this.colOp.createWithInitialPalette(palette);
-      this.collection = this.colOp.collection;
-      this.setPalIndex(0);
-    });
-    this.cmapDataURI = this.sanitizer.bypassSecurityTrustUrl('data:,Not implemented yet.');
   }
 
   showHelp() {

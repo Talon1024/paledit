@@ -15,25 +15,44 @@ export class PalcollectionOperationService {
   }
   private _collection: Palcollection;
   public readonly palCountObv: Observable<number>;
+  public readonly palChangeObv: Observable<number>;
   private _palCountObservers: Observer<number>[];
+  private _palChangeObservers: Observer<number>[];
+  private palIndex: number;
 
   constructor() {
-    this.palCountObv = Observable.create((obs: Observer<number>): TeardownLogic => {
-      this._palCountObservers.push(obs);
-      obs.next(this.palCount());
-      return () => {
-        const idx = this._palCountObservers.findIndex((e) => e === obs);
-        this._palCountObservers.splice(idx, 1);
-        obs.complete();
-      };
-    });
+    function makeObservable<T>(obsArray: Observer<T>[], getInitialValue: () => T): Observable<T> {
+      return Observable.create((obs: Observer<T>): TeardownLogic => {
+        obsArray.push(obs);
+        obs.next(getInitialValue());
+        return function() {
+          const idx = obsArray.findIndex((e) => e === obs);
+          obsArray.splice(idx, 1);
+          obs.complete();
+        };
+      });
+    }
+
     this._palCountObservers = [];
+    this.palCountObv = makeObservable<number>(this._palCountObservers, () => this.palCount());
+
+    this.palIndex = 0;
+    this._palChangeObservers = [];
+    this.palChangeObv = makeObservable<number>(this._palChangeObservers, () => this.palIndex);
+  }
+
+  clampIndex(idx: number): number {
+    idx = Math.min(Math.max(idx, 0), this.palCount() - 1);
+    return idx;
   }
 
   createWithInitialPalette(pal: Palette) {
     this._collection = Palcollection.withInitialPal(pal);
     for (const obs of this._palCountObservers) {
       obs.next(1);
+    }
+    for (const obs of this._palChangeObservers) {
+      obs.next(0);
     }
   }
 
@@ -42,14 +61,22 @@ export class PalcollectionOperationService {
     for (const obs of this._palCountObservers) {
       obs.next(this.palCount());
     }
+    for (const obs of this._palChangeObservers) {
+      obs.next(0);
+    }
   }
 
   getPal(idx: number): Palette {
-    return this._collection.palettes[idx];
+    if (this._collection) {
+      return this._collection.palettes[idx];
+    }
   }
 
   palCount(): number {
-    return this._collection ? this._collection.palettes.length : 0;
+    if (this._collection) {
+      return this._collection.palettes.length;
+    }
+    return 0;
   }
 
   addPal(atIdx: number, pal?: Palette) {
@@ -58,18 +85,50 @@ export class PalcollectionOperationService {
       pal.data = new Uint8ClampedArray(this._collection.palettes[atIdx].data);
     }
     this._collection.palettes.splice(atIdx, 0, pal);
+    this.palIndex += 1;
     for (const obs of this._palCountObservers) {
       obs.next(this.palCount());
+    }
+    for (const obs of this._palChangeObservers) {
+      obs.next(this.palIndex);
     }
   }
 
   removePal(atIdx: number): boolean {
     if (this.palCount() === 1) { return false; }
     this._collection.palettes.splice(atIdx, 1);
+    this.palIndex -= 1;
+    if (this.palIndex < 0) { this.palIndex = 0; }
     for (const obs of this._palCountObservers) {
       obs.next(this.palCount());
     }
+    for (const obs of this._palChangeObservers) {
+      obs.next(this.palIndex);
+    }
     return true;
+  }
+
+  goToPal(idx: number) {
+    this.palIndex = this.clampIndex(idx);
+    for (const obs of this._palChangeObservers) {
+      obs.next(this.palIndex);
+    }
+  }
+
+  nextPal() {
+    this.goToPal(this.palIndex + 1);
+  }
+
+  prevPal() {
+    this.goToPal(this.palIndex - 1);
+  }
+
+  firstPal() {
+    this.goToPal(0);
+  }
+
+  lastPal() {
+    this.goToPal(this.palCount() - 1);
   }
 
 }
