@@ -47,6 +47,10 @@ export class PaletteViewComponent implements OnInit, OnChanges {
   onSetPalette() {
     this.palOp.setPalette(this.palette);
     this.palColours = this.palOp.palColours;
+    if (!this.lockSelection) {
+      // TODO: Temporary workaround until this sh!t gets refactored
+      setTimeout(() => this.selected.emit(null), 0);
+    }
     if (this.selectionRange && this.lockSelection) {
       this.palOp.rangeToSelection(this.selectionRange);
       this.selected.emit(this.selectionRange);
