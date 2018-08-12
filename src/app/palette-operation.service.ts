@@ -225,7 +225,7 @@ export class PaletteOperationService {
         range: range
       });
     }
-    this.updatePalette();
+    this.updatePalette(range);
   }
 
   reverse() {
@@ -242,7 +242,7 @@ export class PaletteOperationService {
     for (let x = 0, y = indices.length - 1, m = Math.floor(indices.length / 2); x < m; x++, y--) {
       swap(indices[x], indices[y]);
     }
-    this.updatePalette();
+    this.updatePalette(range);
   }
 
   tint(colour: Rgb, factor: number, factorGrad: boolean = false) {
@@ -359,8 +359,9 @@ export class PaletteOperationService {
   }
 
   setColourAt(idx: number, colour: Rgb) {
+    const range = new ColourRange([new ColourSubRange(idx, idx)]);
     this.palColours[idx].rgb = colour;
-    this.updatePalette();
+    this.updatePalette(range);
   }
 
 }

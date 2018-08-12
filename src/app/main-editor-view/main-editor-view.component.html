@@ -11,7 +11,7 @@
   <div class="editor-col">
     <app-palette-loader (selectPalFile)="readPaletteFile($event)"></app-palette-loader>
     <app-message-log></app-message-log>
-    <app-selected-colour [range]="selectionRange"></app-selected-colour>
+    <app-selected-colour [range]="selectionRange" [palette]="palette"></app-selected-colour>
     <span class="button" (click)="showHelp()">Help!</span>
   </div>
   <div class="editor-col">
@@ -24,7 +24,7 @@
 </div>
 <app-gradient-editor [range]="selectionRange"></app-gradient-editor>
 <a class="button" [download]="palFileName" (click)="savePalette()" [href]="palDataURI" i18n="Save palette to a file">Save Palette</a>
-<a class="button" [download]="cmapFileName" [href]="cmapDataURI" i18n="Save colourmap to a file">Save Colourmap</a>
+<!-- <a class="button" [download]="cmapFileName" [href]="cmapDataURI" i18n="Save colourmap to a file">Save Colourmap</a> -->
 
 <app-modal [(visible)]="helpVisible">
   <h2>Using Paledit</h2>

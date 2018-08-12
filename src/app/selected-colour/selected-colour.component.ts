@@ -1,4 +1,5 @@
 import { Component, OnInit, Input, OnChanges, SimpleChanges, Output, EventEmitter } from '@angular/core';
+import { Palette } from '../palette-model/palette';
 import { ColourRange } from '../palette-model/colour-range';
 import { Rgbcolour, Rgb, Hsv } from '../palette-model/rgb';
 import { PaletteOperationService } from '../palette-operation.service';
@@ -12,6 +13,7 @@ import { PalcollectionOperationService } from '../palcollection-operation.servic
 export class SelectedColourComponent implements OnInit, OnChanges {
 
   @Input() range: ColourRange;
+  @Input() palette: Palette;
   public rangeLen: number;
   private curColour: string;
   private curRgb: Rgb;
@@ -33,16 +35,18 @@ export class SelectedColourComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes.hasOwnProperty('range')) {
-      if (changes['range'].currentValue != null) {
-        this.rangeLen = (changes['range'].currentValue as ColourRange).getLength();
-      } else {
-        this.rangeLen = 0;
+    if (changes.hasOwnProperty('range') || changes.hasOwnProperty('palette')) {
+      if (changes.hasOwnProperty('range')) {
+        if (changes['range'].currentValue != null) {
+          this.rangeLen = (changes['range'].currentValue as ColourRange).getLength();
+        } else {
+          this.rangeLen = 0;
+        }
       }
 
       if (this.rangeLen === 1) {
         const idx = this.range.getIndices()[0];
-        const colour = Rgbcolour.toHex(this.palOp.colourAt(idx));
+        const colour = Rgbcolour.toHex(this.palette.colourAt(idx).rgb);
         this.setHex(colour);
       }
     }
