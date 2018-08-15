@@ -54,98 +54,6 @@ export class PaletteOperationService {
     });
   }
 
-  selectPalColour(colourIndex: number, keyState: {[key: string]: boolean}): ColourRange | null {
-    /*
-    If nothing is selected:
-    select the colour
-
-    If a colour is selected:
-      If shift is being held down:
-        If all colours from the last index from the new index are selected:
-          deselect all of the colours from the last index to the given index.
-        otherwise:
-          select from the last index to the given index.
-      If ctrl is being held down:
-        if the colour is selected:
-          deselect the colour
-        otherwise:
-          select the colour.
-    otherwise:
-      deselect the previous selected colour.
-      select the colour
-    */
-
-    // closures to help selection
-    const deselectAll = () => {
-      for (const colour of this.palColours) { colour.selected = false; }
-    };
-
-    const selectRange = (rStart: number, rEnd: number) => {
-      if (rStart === rEnd) { return; }
-
-      let rCur = rStart;
-      let increment = rEnd - rCur;
-      if (increment >= 1) {
-        increment = 1;
-      } else {
-        increment = -1;
-      }
-      rCur += increment;
-
-      // Are all these colours selected or not?
-      let allSelected: boolean = this.palColours[rCur].selected;
-      while (rCur !== rEnd) {
-        rCur += increment;
-        if (!(this.palColours[rCur].selected)) { allSelected = false; }
-      }
-
-      // Select (or deselect) all the colours
-      const select = !allSelected;
-      rCur = rStart;
-
-      this.palColours[rCur].selected = select;
-      while (rCur !== rEnd) {
-        rCur += increment;
-        this.palColours[rCur].selected = select;
-      }
-    };
-
-    // Selection logic, partly derived from above pseudocode
-    if (this.lastSelectedIndex >= 0) {
-      if (keyState['Shift'] && !keyState['Control']) {
-        selectRange(this.lastSelectedIndex, colourIndex);
-      } else if (keyState['Control'] && !keyState['Shift']) {
-        this.palColours[colourIndex].selected = !this.palColours[colourIndex].selected;
-      } else if (keyState['Control'] && keyState['Shift']) {
-        // Unknown
-      } else if (!keyState['Control'] && !keyState['Shift']) {
-        deselectAll();
-        this.palColours[colourIndex].selected = true;
-      }
-    } else {
-      this.palColours[colourIndex].selected = true;
-    }
-
-    this.lastSelectedIndex = colourIndex;
-    return this.selectionToRange();
-  }
-
-  selectAll(): ColourRange {
-    let allSelected = true;
-    for (const colour of this.palColours) {
-      if (!colour.selected) {
-        allSelected = false;
-        break;
-      }
-    }
-
-    const newSel = !allSelected;
-    for (const colour of this.palColours) {
-      colour.selected = newSel;
-    }
-    return this.selectionToRange();
-  }
-
   selectionToRange(): ColourRange {
     const subRanges: ColourSubRange[] = [];
     let subRangeStart = 0, subRangeEnd = 0, inSubRange = false;
@@ -179,10 +87,20 @@ export class PaletteOperationService {
 
   rangeToSelection(range: ColourRange) {
     this.selectionRange = range;
-    for (const subRange of range.subRanges) {
-      const [start, end] = subRange.sorted();
-      for (let i = start; i <= end; i++) {
-        this.palColours[i].selected = true;
+    this.updateSelection();
+  }
+
+  private updateSelection() {
+    if (this.selectionRange) {
+      for (const subRange of this.selectionRange.subRanges) {
+        const [start, end] = subRange.sorted();
+        for (let i = start; i <= end; i++) {
+          this.palColours[i].selected = true;
+        }
+      }
+    } else {
+      for (const colour of this.palColours) {
+        colour.selected = false;
       }
     }
   }

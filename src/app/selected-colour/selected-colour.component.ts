@@ -46,7 +46,7 @@ export class SelectedColourComponent implements OnInit, OnChanges {
 
       if (this.rangeLen === 1) {
         const idx = this.range.getIndices()[0];
-        const colour = Rgbcolour.toHex(this.palette.colourAt(idx).rgb);
+        const colour = Rgbcolour.toHex(this.palOp.colourAt(idx));
         this.setHex(colour);
       }
     }

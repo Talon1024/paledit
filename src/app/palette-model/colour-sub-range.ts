@@ -3,8 +3,8 @@ export class ColourSubRange {
   end: number;
 
   constructor(start: number = 0, end: number = 0) {
-    this.start = start % 256;
-    this.end = end % 256;
+    this.start = Math.floor(start % 256);
+    this.end = Math.floor(end % 256);
   }
 
   getLength(): number {
@@ -21,5 +21,9 @@ export class ColourSubRange {
   contains(palIdx: number): boolean {
     const [start, end] = this.sorted();
     return palIdx >= start && palIdx <= end;
+  }
+
+  reversed(): boolean {
+    return this.start > this.end;
   }
 }

@@ -6,7 +6,6 @@ import { Rgbcolour } from '../palette-model/rgb';
 import { KeyboardService } from '../keyboard.service';
 import { SettingsService } from '../settings.service';
 import { PaletteOperationService } from '../palette-operation.service';
-import { PalcollectionOperationService } from '../palcollection-operation.service';
 
 @Component({
   selector: 'app-palette-view',
