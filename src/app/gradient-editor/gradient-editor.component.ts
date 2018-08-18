@@ -14,9 +14,9 @@ import { indexArray } from '../indexArray';
 })
 export class GradientEditorComponent implements OnInit {
 
-  private curStopIdx = 0;
-  private curColour: string;
-  private curStopPos: number;
+  public curStopIdx = 0;
+  public curColour: string;
+  public curStopPos: number;
 
   public selectedColours: number[]; // TODO: Write structural directive to repeat an element a certain number of times.
   public selectedColourCount: number;
