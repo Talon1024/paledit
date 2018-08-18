@@ -23,7 +23,7 @@ export class PaletteSelectionService {
   constructor() {
     this._palSelectObservers = [];
     this.palSelectObv = Observable.create((ob: Observer<ColourRange>): TeardownLogic => {
-      ob.next(this.selectionRange);
+      ob.next(this._selectionRange);
       this._palSelectObservers.push(ob);
       return () => {
         const obIdx = this._palSelectObservers.findIndex((e) => e === ob);
@@ -42,15 +42,15 @@ export class PaletteSelectionService {
 
   private deselectSingle(at: number, subRangeIdx?: number) {
     if (subRangeIdx == null) {
-      subRangeIdx = this.selectionRange.subRanges.findIndex((e) => e.contains(at));
+      subRangeIdx = this._selectionRange.subRanges.findIndex((e) => e.contains(at));
       if (subRangeIdx === -1) { return null; }
     }
-    const subRange = this.selectionRange.subRanges[subRangeIdx];
+    const subRange = this._selectionRange.subRanges[subRangeIdx];
     const [start, end] = subRange.sorted();
     if (start !== end) {
       if (start === end && start === at) {
-        this.selectionRange.subRanges.splice(subRangeIdx, 1);
-        if (this.selectionRange.subRanges.length === 0) {
+        this._selectionRange.subRanges.splice(subRangeIdx, 1);
+        if (this._selectionRange.subRanges.length === 0) {
           return null;
         }
       } else if (start === at) {
@@ -61,49 +61,68 @@ export class PaletteSelectionService {
         // Split
         const beforeSubRange = new ColourSubRange(start, at - 1);
         const afterSubRange = new ColourSubRange(at + 1, end);
-        this.selectionRange.subRanges.splice(subRangeIdx, 1, beforeSubRange, afterSubRange);
+        this._selectionRange.subRanges.splice(subRangeIdx, 1, beforeSubRange, afterSubRange);
       }
     }
   }
 
   private selectSingle(at: number) {
-    if (this.selectionRange == null) {
-      this.selectionRange = this.rangeForIdx(at);
+    if (this._selectionRange == null) {
+      this._selectionRange = this.rangeForIdx(at);
       return;
     }
 
-    const deselect = this.selectionRange.contains(at);
+    const subRangeIdx = this._selectionRange.contains(at);
+    const deselect = subRangeIdx >= 0;
 
     if (deselect) {
-      this.deselectSingle(at, deselect);
+      this.deselectSingle(at, subRangeIdx);
       return;
     }
 
-    const beforeSubRange = this.selectionRange.subRanges.findIndex((subRange) => {
-      const [start, ] = subRange.sorted();
-      if (at === start - 1) {
-        return true;
-      }
-      return false;
-    });
-    const afterSubRange = this.selectionRange.subRanges.findIndex((subRange) => {
+    const beforeSubRange = this._selectionRange.subRanges.findIndex((subRange) => {
       const [, end] = subRange.sorted();
       if (at === end + 1) {
         return true;
       }
       return false;
     });
+    const afterSubRange = this._selectionRange.subRanges.findIndex((subRange) => {
+      const [start, ] = subRange.sorted();
+      if (at === start - 1) {
+        return true;
+      }
+      return false;
+    });
+
     if (beforeSubRange !== -1 && afterSubRange !== -1) {
       // Merge two sub-ranges
       const [start, end] = [
-        this.selectionRange.subRanges[beforeSubRange].sorted()[0],
-        this.selectionRange.subRanges[afterSubRange].sorted()[1]
+        this._selectionRange.subRanges[beforeSubRange].sorted()[0],
+        this._selectionRange.subRanges[afterSubRange].sorted()[1]
       ];
-      this.selectionRange.subRanges.splice(afterSubRange, 1);
-      this.selectionRange.subRanges[beforeSubRange].start = this.selectionRange.subRanges[beforeSubRange].reversed() ? end : start;
-      this.selectionRange.subRanges[beforeSubRange].end = this.selectionRange.subRanges[beforeSubRange].reversed() ? start : end;
-    } else {
+      this._selectionRange.subRanges.splice(afterSubRange, 1);
+      this._selectionRange.subRanges[beforeSubRange].start = this._selectionRange.subRanges[beforeSubRange].reversed() ? end : start;
+      this._selectionRange.subRanges[beforeSubRange].end = this._selectionRange.subRanges[beforeSubRange].reversed() ? start : end;
+    } else if (beforeSubRange !== -1 && afterSubRange === -1) {
+      const toChange = this._selectionRange.subRanges[beforeSubRange].reversed() ? 'start' : 'end';
+      this._selectionRange.subRanges[beforeSubRange][toChange] += 1;
+    } else if (beforeSubRange === -1 && afterSubRange !== -1) {
+      const toChange = this._selectionRange.subRanges[afterSubRange].reversed() ? 'end' : 'start';
+      this._selectionRange.subRanges[afterSubRange][toChange] -= 1;
+    } else if (beforeSubRange === -1 && afterSubRange === -1) {
+      const nextSubRange = this._selectionRange.subRanges.findIndex((subRange) => {
+        const [start, end] = subRange.sorted();
+        return start > at;
+      });
+      let insertIdx = -1;
+      if (nextSubRange === -1) {
+        insertIdx = this._selectionRange.subRanges.length;
+      } else {
+        insertIdx = nextSubRange;
+      }
 
+      this._selectionRange.subRanges.splice(insertIdx, 0, new ColourSubRange(at, at));
     }
   }
 
@@ -115,7 +134,7 @@ export class PaletteSelectionService {
     const rIncrement = rEnd - rStart / Math.abs(rEnd - rStart);
     const deselect: boolean = (() => {
       for (let i = rStart; i !== rEnd; i += rIncrement) {
-        if (!this.selectionRange.contains(i)) { return false; }
+        if (!this._selectionRange.contains(i)) { return false; }
       }
       return true;
     })();
@@ -158,8 +177,8 @@ export class PaletteSelectionService {
     // Selection logic, partly derived from above pseudocode
     if (this.lastSelectedIndex >= 0) {
       let subRangeIdx = -1;
-      if (this.selectionRange) {
-        subRangeIdx = this.selectionRange.contains(colourIndex);
+      if (this._selectionRange) {
+        subRangeIdx = this._selectionRange.contains(colourIndex);
       }
       if (keyState['Shift'] && !keyState['Control']) {
         // Shift - de/select all colours between last index and current index inclusive
@@ -170,19 +189,22 @@ export class PaletteSelectionService {
       } else if (keyState['Control'] && keyState['Shift']) {
         // Unknown
       } else if (!keyState['Control'] && !keyState['Shift']) {
-        this.selectionRange = this.rangeForIdx(colourIndex);
+        this._selectionRange = this.rangeForIdx(colourIndex);
       }
     } else {
-      this.selectionRange = this.rangeForIdx(colourIndex);
+      this._selectionRange = this.rangeForIdx(colourIndex);
     }
 
     this.lastSelectedIndex = colourIndex;
-    return this.selectionRange;
+    for (const ob of this._palSelectObservers) {
+      ob.next(this._selectionRange);
+    }
+    return this._selectionRange;
   }
 
   selectAll(all: boolean = null): ColourRange {
     if (all == null) {
-      const allSelected = this.selectionRange.getLength() === 256;
+      const allSelected = this._selectionRange.getLength() === 256;
       all = !allSelected;
     }
 
