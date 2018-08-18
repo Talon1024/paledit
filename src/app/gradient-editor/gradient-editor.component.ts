@@ -1,10 +1,11 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { ColourRange } from '../palette-model/colour-range';
+import { Component, OnInit } from '@angular/core';
 import { Rgbcolour } from '../palette-model/rgb';
 import { Gradient, GradientStop } from '../gradient-model/gradient';
 import { DomSanitizer, SafeStyle, SafeUrl } from '@angular/platform-browser';
 import { PaletteOperationService } from '../palette-operation.service';
+import { PaletteSelectionService } from '../palette-selection.service';
 import { GradientService } from '../gradient.service';
+import { indexArray } from '../indexArray';
 
 @Component({
   selector: 'app-gradient-editor',
@@ -16,7 +17,10 @@ export class GradientEditorComponent implements OnInit {
   private curStopIdx = 0;
   private curColour: string;
   private curStopPos: number;
-  @Input() range: ColourRange;
+
+  public selectedColours: number[]; // TODO: Write structural directive to repeat an element a certain number of times.
+  public selectedColourCount: number;
+
   public gradient: Gradient;
 
   public gradJsonUrl: SafeUrl;
@@ -24,11 +28,21 @@ export class GradientEditorComponent implements OnInit {
 
   constructor(private sanitizer: DomSanitizer,
     private palOp: PaletteOperationService,
+    private palSel: PaletteSelectionService,
     private grad: GradientService) {}
 
   ngOnInit() {
     this.gradient = this.grad.gradient;
     this.setCurStopIdx(0);
+    this.selectedColours = [];
+    this.palSel.palSelectObv.subscribe((sr) => {
+      let count = 0;
+      if (sr != null) {
+        count = sr.getLength();
+      }
+      this.selectedColourCount = count;
+      this.selectedColours = indexArray(count);
+    });
   }
 
   // Preview-related stuff
@@ -37,8 +51,8 @@ export class GradientEditorComponent implements OnInit {
     return this.sanitizer.bypassSecurityTrustStyle(this.gradient.toCssString());
   }
 
-  previewColourStyle(palIdx: number): SafeStyle {
-    const colour = this.gradient.colourAt(palIdx, this.range);
+  previewColourStyle(idx: number): SafeStyle {
+    const colour = this.gradient.colourIn(idx, this.selectedColourCount);
     return this.sanitizer.bypassSecurityTrustStyle(Rgbcolour.toHex(colour));
   }
 

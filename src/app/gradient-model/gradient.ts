@@ -119,7 +119,7 @@ export class Gradient {
 
   colourIn(rangeIdx: number, rangeLen: number): Rgb {
     const stopIdxs = this.getStopIdxs(rangeLen);
-    const stopsAtIdx = this.stops.filter((e, i) => stopIdxs[i] === rangeIdx);
+    const stopsAtIdx = this.stops.filter((_, i) => stopIdxs[i] === rangeIdx);
     if (stopsAtIdx.length === 0) {
       // Find colour at this index
       let nextStopGidx = stopIdxs.findIndex((e) => e >= rangeIdx);
