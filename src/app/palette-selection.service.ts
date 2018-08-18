@@ -48,21 +48,20 @@ export class PaletteSelectionService {
     const subRange = this._selectionRange.subRanges[subRangeIdx];
     const [start, end] = subRange.sorted();
     if (start !== end) {
-      if (start === end && start === at) {
-        this._selectionRange.subRanges.splice(subRangeIdx, 1);
-        if (this._selectionRange.subRanges.length === 0) {
-          return null;
-        }
-      } else if (start === at) {
-        subRange.start += subRange.reversed() ? 1 : -1;
+      if (start === at) {
+        const toChange = subRange.reversed() ? 'end' : 'start';
+        subRange[toChange] += subRange.reversed() ? -1 : 1;
       } else if (end === at) {
-        subRange.end -= subRange.reversed() ? 1 : -1;
+        const toChange = subRange.reversed() ? 'start' : 'end';
+        subRange[toChange] += subRange.reversed() ? 1 : -1;
       } else {
         // Split
         const beforeSubRange = new ColourSubRange(start, at - 1);
         const afterSubRange = new ColourSubRange(at + 1, end);
         this._selectionRange.subRanges.splice(subRangeIdx, 1, beforeSubRange, afterSubRange);
       }
+    } else {
+      this._selectionRange.subRanges.splice(subRangeIdx, 1);
     }
   }
 
@@ -112,7 +111,7 @@ export class PaletteSelectionService {
       this._selectionRange.subRanges[afterSubRange][toChange] -= 1;
     } else if (beforeSubRange === -1 && afterSubRange === -1) {
       const nextSubRange = this._selectionRange.subRanges.findIndex((subRange) => {
-        const [start, end] = subRange.sorted();
+        const [start, ] = subRange.sorted();
         return start > at;
       });
       let insertIdx = -1;
@@ -199,6 +198,7 @@ export class PaletteSelectionService {
     for (const ob of this._palSelectObservers) {
       ob.next(this._selectionRange);
     }
+    console.log(this._selectionRange.subRanges);
     return this._selectionRange;
   }
 
