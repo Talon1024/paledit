@@ -184,8 +184,8 @@ export class PaletteOperationService {
   }
 
   applyGradient() {
+    const grad = this.grad.gradient;
     this.rangeOperate((o) => {
-      const grad = this.grad.gradient;
       return grad.colourAt(o.pIdx, o.range);
     });
   }

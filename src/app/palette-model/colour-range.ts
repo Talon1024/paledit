@@ -19,8 +19,8 @@ export class ColourRange {
   }
 
   palToRangeIdx(palIdx: number) {
-    if (!this.contains(palIdx)) { return -1; }
-    const subRangeIdx = this.subRanges.findIndex((r) => r.contains(palIdx));
+    const subRangeIdx = this.contains(palIdx);
+    if (subRangeIdx < 0) { return -1; }
 
     const [start, ] = this.subRanges[subRangeIdx].sorted();
     let rangeIdx = palIdx - start;
