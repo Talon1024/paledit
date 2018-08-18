@@ -1,20 +1,19 @@
-import { Rgb, Rgbcolour } from './rgb';
-import { Palcolour } from './palcolour';
-import { ColourRange } from './colour-range';
+import { Rgb } from './rgb';
 
 export class Palette {
-  data: Uint8ClampedArray = new Uint8ClampedArray(768);
-  ranges: ColourRange[];
+  data: Uint8ClampedArray;
+  length: number;
 
-  static fromData(data: Uint8ClampedArray): Palette {
+  static fromData(data: Uint8ClampedArray, palLength: number): Palette {
     const pal = new Palette();
-    if (data.length !== 768) { return null; }
+    if (data.length !== palLength * 3) { return null; }
     pal.data = data;
+    pal.length = palLength;
     return pal;
   }
 
-  colourAt(index: number): Palcolour {
-    if (index > 255 || index < 0) { return null; }
+  colourAt(index: number): Rgb {
+    if (index > this.getLength() || index < 0) { return null; }
     const start = index * 3;
 
     // RGB
@@ -22,11 +21,7 @@ export class Palette {
     const green = this.data[start + 1];
     const blue = this.data[start + 2];
 
-    const rgb: Palcolour = {
-      index, selected: false, rgb: {red, green, blue}
-    };
-
-    return rgb;
+    return {red, green, blue};
   }
 
   setColour(index: number, colour: Rgb) {
@@ -46,6 +41,6 @@ export class Palette {
   }
 
   getLength(): number {
-    return 256;
+    return this.length;
   }
 }

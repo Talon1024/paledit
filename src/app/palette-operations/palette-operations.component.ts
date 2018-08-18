@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { PaletteOperationService, HsvUsage } from '../palette-operation.service';
-import { Rgb, Rgbcolour } from '../palette-model/rgb';
+import { Rgbcolour } from '../palette-model/rgb';
 
 @Component({
   selector: 'app-palette-operations',

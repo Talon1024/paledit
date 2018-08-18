@@ -9,20 +9,20 @@
 
 <div class="editor-main">
   <div class="editor-col">
-    <app-palette-loader (selectPalFile)="readPaletteFile($event)"></app-palette-loader>
+    <app-palette-loader></app-palette-loader>
     <app-message-log></app-message-log>
-    <app-selected-colour [range]="selectionRange" [palette]="palette"></app-selected-colour>
-    <span class="button" (click)="showHelp()">Help!</span>
+    <app-selected-colour></app-selected-colour>
+    <span class="button" (click)="helpVisible=true">Help!</span>
   </div>
   <div class="editor-col">
-    <app-palette-view [multiple]="true" (selected)="setSelectionRange($event)"></app-palette-view>
+    <app-palette-view [multiple]="true"></app-palette-view>
   </div>
   <div class="editor-col">
-    <app-palette-navigator *ngIf="collection"></app-palette-navigator>
+    <app-palette-navigator></app-palette-navigator>
     <app-palette-operations></app-palette-operations>
   </div>
 </div>
-<app-gradient-editor [range]="selectionRange"></app-gradient-editor>
+<app-gradient-editor></app-gradient-editor>
 <a class="button" [download]="palFileName" (click)="savePalette()" [href]="palDataURI" i18n="Save palette to a file">Save Palette</a>
 <!-- <a class="button" [download]="cmapFileName" [href]="cmapDataURI" i18n="Save colourmap to a file">Save Colourmap</a> -->
 

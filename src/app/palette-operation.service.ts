@@ -10,7 +10,6 @@ import { Observable, Observer, TeardownLogic } from 'rxjs';
 
 interface IRangeOperationOptions {
   pIdx: number;
-  rIdx: number;
   range: ColourRange;
 }
 
@@ -25,13 +24,18 @@ interface ICopiedColour {
   idx: number;
 }
 
+export interface IPaletteUpdate {
+  pal: Palette;
+  new: boolean;
+}
+
 @Injectable()
 export class PaletteOperationService {
 
   private palette: Palette;
   private colourClipboard: ICopiedColour[];
-  public readonly palChangeObv: Observable<Palette>;
-  private _palChangeObservers: Observer<Palette>[];
+  public readonly palChangeObv: Observable<IPaletteUpdate>;
+  private _palChangeObservers: Observer<IPaletteUpdate>[];
 
   constructor(
       private grad: GradientService,
@@ -39,9 +43,9 @@ export class PaletteOperationService {
       private palSel: PaletteSelectionService
     ) {
     this._palChangeObservers = [];
-    this.palChangeObv = Observable.create((obs: Observer<Palette>): TeardownLogic => {
+    this.palChangeObv = Observable.create((obs: Observer<IPaletteUpdate>): TeardownLogic => {
       this._palChangeObservers.push(obs);
-      obs.next(this.palette);
+      obs.next({pal: this.palette, new: true});
       return () => {
         const idx = this._palChangeObservers.findIndex((e) => e === obs);
         this._palChangeObservers.splice(idx, 1);
@@ -52,9 +56,6 @@ export class PaletteOperationService {
       const pal = this.colOp.getPal(cidx);
       if (pal) {
         this.setPalette(pal);
-        for (const obs of this._palChangeObservers) {
-          obs.next(this.palette);
-        }
       }
     });
   }
@@ -62,17 +63,16 @@ export class PaletteOperationService {
   setPalette(pal: Palette) {
     this.palette = pal;
     for (const obs of this._palChangeObservers) {
-      obs.next(pal);
+      obs.next({pal: this.palette, new: true});
     }
   }
 
   private getRange(): ColourRange {
-    if (this.palSel.selectionRange == null) {
-      this.palSel.selectionRange = new ColourRange([
-        new ColourSubRange(0, this.palette.getLength())
-      ]);
+    let range = this.palSel.selectionRange;
+    if (!range) {
+      range = new ColourRange([new ColourSubRange(0, this.getLength() - 1)]);
     }
-    return this.palSel.selectionRange;
+    return range;
   }
 
   private rangeOperate(op: (options: IRangeOperationOptions) => Rgb) {
@@ -80,11 +80,12 @@ export class PaletteOperationService {
     for (const x of range.getIndices()) {
       this.palette.setColour(x, op({
         pIdx: x,
-        rIdx: range.palToRangeIdx(x),
         range: range
       }));
     }
-    // this.updatePalette(range);
+    for (const obs of this._palChangeObservers) {
+      obs.next({pal: this.palette, new: false});
+    }
   }
 
   reverse() {
@@ -102,7 +103,9 @@ export class PaletteOperationService {
     for (let x = 0, y = indices.length - 1, m = Math.floor(indices.length / 2); x < m; x++, y--) {
       swap(indices[x], indices[y]);
     }
-    // this.updatePalette(range);
+    for (const obs of this._palChangeObservers) {
+      obs.next({pal: this.palette, new: false});
+    }
   }
 
   tint(colour: Rgb, factor: number, factorGrad: boolean = false) {
@@ -118,11 +121,6 @@ export class PaletteOperationService {
   }
 
   colourize(colour: Rgb, use: HsvUsage, factorGrad: boolean = false) {
-    /*
-    if (!use) {
-      use = {hue: true, saturation: true, value: false};
-    }
-    */
     this.rangeOperate((o) => {
       const {hue, saturation, value} = Rgbcolour.hsv(colour);
       const pCol = this.palette.colourAt(o.pIdx);
@@ -205,6 +203,9 @@ export class PaletteOperationService {
     for (const pCol of this.colourClipboard) {
       this.palette.setColour(pCol.idx, pCol.rgb);
     }
+    for (const obs of this._palChangeObservers) {
+      obs.next({pal: this.palette, new: false});
+    }
   }
 
   colourAt(idx: number): Rgb {
@@ -213,6 +214,27 @@ export class PaletteOperationService {
 
   setColourAt(idx: number, colour: Rgb) {
     this.palette.setColour(idx, colour);
+    for (const obs of this._palChangeObservers) {
+      obs.next({pal: this.palette, new: false});
+    }
+  }
+
+  getLength(): number {
+    if (this.palette) {
+      return this.palette.getLength();
+    }
+    return 0;
+  }
+
+  getDuplicates(idx: number): number[] {
+    const rgb = this.palette.colourAt(idx);
+    const dups = [];
+    for (let i = 0; i < this.palette.getLength(); i++) {
+      if (i === idx) { continue; }
+      const rgb2 = this.palette.colourAt(i);
+      if (Rgbcolour.equals(rgb, rgb2)) { dups.push(i); }
+    }
+    return dups;
   }
 
 }

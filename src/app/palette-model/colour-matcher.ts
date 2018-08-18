@@ -13,10 +13,10 @@ export class ColourMatcher {
     let lowestDiff = 768;
     let lowestDiffIdx = 0;
     for (let c = 0; c < palette.getLength(); c++) {
-      const palColour = palette.colourAt(c);
-      const rDiff = Math.abs(colour.red - palColour.rgb.red);
-      const gDiff = Math.abs(colour.green - palColour.rgb.green);
-      const bDiff = Math.abs(colour.blue - palColour.rgb.blue);
+      const rgb = palette.colourAt(c);
+      const rDiff = Math.abs(colour.red - rgb.red);
+      const gDiff = Math.abs(colour.green - rgb.green);
+      const bDiff = Math.abs(colour.blue - rgb.blue);
       const aggregateDiff = rDiff + gDiff + bDiff;
       if (aggregateDiff < lowestDiff) {
         lowestDiff = aggregateDiff;

@@ -1,4 +1,6 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { PaletteIoService } from '../palette-io.service';
+import { PalcollectionOperationService } from '../palcollection-operation.service';
 
 @Component({
   selector: 'app-palette-loader',
@@ -7,9 +9,8 @@ import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 })
 export class PaletteLoaderComponent implements OnInit {
 
-  @Output() selectPalFile = new EventEmitter<File>();
-
-  constructor() { }
+  constructor(private palIo: PaletteIoService,
+    private colOp: PalcollectionOperationService) { }
 
   ngOnInit() {
   }
@@ -32,14 +33,18 @@ export class PaletteLoaderComponent implements OnInit {
 
     if (event.dataTransfer) {
       const files = event.dataTransfer.files;
-      this.selectPalFile.emit(files[0]);
+      this.palIo.getPaletteFile(files[0]).subscribe((col) => {
+        this.colOp.collection = col;
+      });
     }
   }
 
   selectPalette(event: Event) {
-    const targ = <HTMLInputElement>(event.target);
+    const targ = event.target as HTMLInputElement;
     if (targ.files && targ.files.length > 0) {
-      this.selectPalFile.emit(targ.files[0]);
+      this.palIo.getPaletteFile(targ.files[0]).subscribe((col) => {
+        this.colOp.collection = col;
+      });
     }
   }
 

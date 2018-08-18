@@ -1,9 +1,10 @@
 <div class="palette" [style.grid-template-columns]="settings.palColumnStyle()" *ngIf="palColours">
   <div *ngFor="let colour of palColours"
     class="palcolour" [ngStyle]="getStyles(colour)"
-    [class.selected]="colour.selected"
+    [class.selected]="colour.selected" [class.conflict]="showConflicts && colour.conflicts.length > 0"
     (click)="selectPalColour(colour.index)"><span *ngIf="showNumbers">#{{colour.index}}</span></div>
 </div>
 <span *ngIf="multiple" class="button" (click)="selectAll()" i18n="Select (or deselect) all colours in the palette">Select all</span>
 <label i18n="Prevents selection from changing when navigating between palettes"><input type="checkbox" [(ngModel)]="lockSelection">Lock selection</label>
 <label i18n="Shows or hides palette colour numbers"><input type="checkbox" [(ngModel)]="showNumbers">Colour numbers</label>
+<label i18n="Shows or hides colours that are the same as others"><input type="checkbox" [(ngModel)]="showConflicts">Conflicts</label>

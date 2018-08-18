@@ -1,68 +1,62 @@
-import { Component, OnInit, Input, OnChanges, SimpleChanges, Output, EventEmitter } from '@angular/core';
-import { Palette } from '../palette-model/palette';
-import { ColourRange } from '../palette-model/colour-range';
+import { Component, OnInit } from '@angular/core';
 import { Rgbcolour, Rgb, Hsv } from '../palette-model/rgb';
+import { Palcolour } from '../palette-model/palcolour';
 import { PaletteOperationService } from '../palette-operation.service';
-import { PalcollectionOperationService } from '../palcollection-operation.service';
+import { PaletteSelectionService } from '../palette-selection.service';
 
 @Component({
   selector: 'app-selected-colour',
   templateUrl: './selected-colour.component.html',
   styleUrls: ['./selected-colour.component.css']
 })
-export class SelectedColourComponent implements OnInit, OnChanges {
+export class SelectedColourComponent implements OnInit {
 
-  @Input() range: ColourRange;
-  @Input() palette: Palette;
   public rangeLen: number;
-  private curColour: string;
-  private curRgb: Rgb;
-  private curHsv: Hsv;
-  @Output() colourChange = new EventEmitter<Rgb>();
+  private idx: number;
+  public palColour: Palcolour;
+  public curHex: string;
+  public curHsv: Hsv;
 
   constructor(private palOp: PaletteOperationService,
-    private colOp: PalcollectionOperationService) { }
+    private palSel: PaletteSelectionService) { }
 
   ngOnInit() {
     this.rangeLen = 0;
-    this.colOp.palChangeObv.subscribe(() => {
+    this.palOp.palChangeObv.subscribe(() => {
       if (this.rangeLen === 1) {
-        const idx = this.range.getIndices()[0];
-        const colour = Rgbcolour.toHex(this.palOp.colourAt(idx));
-        this.setHex(colour);
+        const colour = this.palOp.colourAt(this.idx);
+        this.setRgb(colour, this.idx);
+      }
+    });
+    this.palSel.palSelectObv.subscribe((range) => {
+      if (range == null) {
+        this.rangeLen = 0;
+      } else {
+        this.rangeLen = range.getLength();
+        if (this.rangeLen === 1) {
+          this.idx = range.getIndices()[0];
+          const colour = this.palOp.colourAt(this.idx);
+          this.setRgb(colour, this.idx);
+        }
       }
     });
   }
 
-  ngOnChanges(changes: SimpleChanges) {
-    if (changes.hasOwnProperty('range') || changes.hasOwnProperty('palette')) {
-      if (changes.hasOwnProperty('range')) {
-        if (changes['range'].currentValue != null) {
-          this.rangeLen = (changes['range'].currentValue as ColourRange).getLength();
-        } else {
-          this.rangeLen = 0;
-        }
-      }
-
-      if (this.rangeLen === 1) {
-        const idx = this.range.getIndices()[0];
-        const colour = Rgbcolour.toHex(this.palOp.colourAt(idx));
-        this.setHex(colour);
-      }
-    }
-  }
-
-  private setHex(hex: string) {
-    this.curColour = hex;
-    this.curRgb = Rgbcolour.fromHex(hex);
-    this.curHsv = Rgbcolour.hsv(this.curRgb);
+  private setRgb(rgb: Rgb, idx: number) {
+    this.curHex = Rgbcolour.toHex(rgb);
+    this.curHsv = Rgbcolour.hsv(rgb);
+    this.palColour = {
+      index: idx,
+      selected: true,
+      rgb,
+      conflicts: this.palOp.getDuplicates(idx)
+    };
   }
 
   setCurColour(hex: string) {
-    this.setHex(hex);
-    const idx = this.range.getIndices()[0];
-    this.palOp.setColourAt(idx, this.curRgb);
-    this.colourChange.emit(this.curRgb);
+    const rgb = Rgbcolour.fromHex(hex);
+    this.setRgb(rgb, this.idx);
+    this.palOp.setColourAt(this.idx, rgb);
   }
 
 }

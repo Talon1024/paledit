@@ -1,15 +1,31 @@
 import { Injectable } from '@angular/core';
 import * as base64 from 'base64-js';
 import { Palcollection } from './palette-model/palcollection';
-import { Observable, bindNodeCallback } from 'rxjs';
+import { Observable, Observer, TeardownLogic, bindNodeCallback } from 'rxjs';
 import { WadReaderService, DoomWadLump } from './wad-reader.service';
 
 @Injectable()
 export class PaletteIoService {
 
-  constructor(private wadIo: WadReaderService) {}
+  public readonly loadStateObv: Observable<boolean>;
+  private _loadStateObservers: Observer<boolean>[];
 
-  private readFromWadFile = (file: File, callback: (error: any, result: Uint8ClampedArray) => void) => {
+  constructor(private wadIo: WadReaderService) {
+    this._loadStateObservers = [];
+    this.loadStateObv = Observable.create((obs: Observer<boolean>): TeardownLogic => {
+      this._loadStateObservers.push(obs);
+      obs.next(false);
+      return () => {
+        const idx = this._loadStateObservers.findIndex((e) => e === obs);
+        this._loadStateObservers.splice(idx, 1);
+      };
+    });
+  }
+
+  private readFromWadFile = (file: File, callback: (error: any, result: Palcollection) => void) => {
+    for (const obs of this._loadStateObservers) {
+      obs.next(true);
+    }
     this.wadIo.readWadFile(file, (e) => {
       if (e) { callback(e, null); }
 
@@ -18,27 +34,41 @@ export class PaletteIoService {
         return callback(playpal as Error, null);
       }
       const data = new Uint8ClampedArray((playpal as DoomWadLump).data);
-      callback(null, data);
+      const col = Palcollection.fromPlaypal(data);
+      for (const obs of this._loadStateObservers) {
+        obs.next(false);
+      }
+      callback(null, col);
     });
   }
 
   // Wrapper for rxjs bindNodeCallback
-  private readPaletteFile(file: File, callback: (error: any, result: Uint8ClampedArray) => void) {
+  private readPaletteFile = (file: File, callback: (error: any, result: Palcollection) => void) => {
+    for (const obs of this._loadStateObservers) {
+      obs.next(true);
+    }
     const fileReader = new FileReader();
     fileReader.readAsArrayBuffer(file);
     fileReader.onload = () => {
       const data = new Uint8ClampedArray(fileReader.result as ArrayBuffer);
-      callback(null, data);
+      const col = Palcollection.fromPlaypal(data);
+      for (const obs of this._loadStateObservers) {
+        obs.next(false);
+      }
+      callback(null, col);
     };
     fileReader.onerror = () => {
+      for (const obs of this._loadStateObservers) {
+        obs.next(false);
+      }
       callback(fileReader.error, null);
     };
   }
 
-  getPaletteFile(file: File): Observable<Uint8ClampedArray> {
+  getPaletteFile(file: File): Observable<Palcollection> {
     const fname = file.name.toLowerCase();
-    let observableFile: (f: File) => Observable<Uint8ClampedArray>;
-    if (fname.endsWith('wad')) {
+    let observableFile: (f: File) => Observable<Palcollection>;
+    if (fname.endsWith('.wad')) {
       observableFile = bindNodeCallback(this.readFromWadFile);
     } else {
       observableFile = bindNodeCallback(this.readPaletteFile);
@@ -47,7 +77,7 @@ export class PaletteIoService {
   }
 
   savePalCollection(collection: Palcollection): string {
-    const colData = collection.toData();
+    const colData = collection.toPlaypal();
     const data64 = base64.fromByteArray(colData);
     return data64;
   }

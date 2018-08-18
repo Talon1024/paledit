@@ -40,7 +40,7 @@ export class ColourRange {
     return length;
   }
 
-  contains(palIdx: number): boolean {
-    return this.subRanges.some((r) => r.contains(palIdx));
+  contains(palIdx: number): number {
+    return this.subRanges.findIndex((r) => r.contains(palIdx));
   }
 }

@@ -1,12 +1,8 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { Palette } from '../palette-model/palette';
-import { ColourRange } from '../palette-model/colour-range';
-import { Palcollection } from '../palette-model/palcollection';
+import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { PaletteIoService } from '../palette-io.service';
 import { PalcollectionOperationService } from '../palcollection-operation.service';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
-import { MessageService } from '../message.service';
 
 @Component({
   selector: 'app-main-editor-view',
@@ -15,13 +11,10 @@ import { MessageService } from '../message.service';
 })
 export class MainEditorViewComponent implements OnInit {
 
-  public palette: Palette;
   public readonly palFileName = 'palette.pal';
   public palDataURI: SafeUrl;
   public readonly cmapFileName = 'colormap.lmp';
   public cmapDataURI: SafeUrl;
-  public selectionRange: ColourRange;
-  public collection: Palcollection;
 
   public helpVisible = false;
   public loadVisible = false;
@@ -31,35 +24,19 @@ export class MainEditorViewComponent implements OnInit {
   constructor(private httpClient: HttpClient,
     private paletteIo: PaletteIoService,
     private colOp: PalcollectionOperationService,
-    private sanitizer: DomSanitizer,
-    private msg: MessageService) {}
+    private sanitizer: DomSanitizer) {}
 
   ngOnInit() {
     this.httpClient.get(`${this.assetUrl}/bwpal.pal`, {
       responseType: 'arraybuffer'
     }).subscribe((resp: ArrayBuffer) => {
-      const palette = Palette.fromData(new Uint8ClampedArray(resp));
-      this.colOp.createWithInitialPalette(palette);
-      this.collection = this.colOp.collection;
+      const palette = new Uint8ClampedArray(resp);
+      this.colOp.createFromPlaypal(palette);
     });
     this.cmapDataURI = this.sanitizer.bypassSecurityTrustUrl('data:,Not implemented yet.');
-  }
-
-  readPaletteFile(file: File) {
-    this.loadVisible = true;
-    this.paletteIo.getPaletteFile(file)
-        .subscribe((playpal: Uint8ClampedArray) => {
-      this.loadVisible = false;
-      this.colOp.createFromData(playpal);
-      this.collection = this.colOp.collection;
-    }, (error: Error) => {
-      this.loadVisible = false;
-      this.msg.error(error.message);
+    this.paletteIo.loadStateObv.subscribe((loading) => {
+      this.loadVisible = loading;
     });
-  }
-
-  setSelectionRange(range: ColourRange) {
-    this.selectionRange = range;
   }
 
   savePalette() {
@@ -70,9 +47,4 @@ export class MainEditorViewComponent implements OnInit {
   saveColourmap() {
     // console.log('Saving colourmap...');
   }
-
-  showHelp() {
-    this.helpVisible = true;
-  }
-
 }

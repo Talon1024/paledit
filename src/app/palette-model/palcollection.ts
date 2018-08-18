@@ -19,45 +19,33 @@ export class Palcollection {
     this.palettes = new Array();
   }
 
-  static withInitialPal(pal: Palette): Palcollection {
-    const palCollection = new Palcollection();
-    palCollection.palettes = [pal];
-    return palCollection;
-  }
-
-  static fromData(data: Uint8ClampedArray): Palcollection {
+  static fromPlaypal(data: Uint8ClampedArray): Palcollection {
     const validPals = Math.max(1, Math.floor(data.length / 768));
     const palCollection = new Palcollection();
     if (data.byteLength < 768) {
       const palBytes = new Uint8ClampedArray(768);
       palBytes.set(data, 0);
-      palCollection.palettes[0] = Palette.fromData(palBytes);
+      palCollection.palettes[0] = Palette.fromData(palBytes, 256);
     } else {
       for (let i = 0; i < validPals; i++) {
         const curSlice: Uint8ClampedArray = data.slice(i * 768, i * 768 + 768);
-        palCollection.palettes[i] = Palette.fromData(curSlice);
+        palCollection.palettes[i] = Palette.fromData(curSlice, 256);
       }
     }
     return palCollection;
   }
 
-  toData(): Uint8ClampedArray {
+  toPlaypal(): Uint8ClampedArray {
     const palBytes: Uint8ClampedArray = new Uint8ClampedArray(this.palettes.length * 768);
     let curPal = 0;
     for (const pal of this.palettes) {
-      for (let palIdx = 0; palIdx < 768; palIdx++) {
-        palBytes[curPal * 768 + palIdx] = this.palettes[curPal].data[palIdx];
-      }
-
+      palBytes.set(pal.data, curPal * pal.length * 3);
       curPal += 1;
     }
     return palBytes;
   }
 
-  copyRangesTo(palFrom: number, palTo: number) {
-    this.palettes[palTo].ranges = this.palettes[palFrom].ranges.slice();
-  }
-
+  /*
   generateFor(tintTypes: string, palette: Palette) {
     // tintTypes is a DSL
     // 0 - normal palette
@@ -112,5 +100,6 @@ export class Palcollection {
       prevPalLetter = tintTypeChar;
     }
   }
+  */
 
 }

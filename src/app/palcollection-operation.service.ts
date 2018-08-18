@@ -8,9 +8,12 @@ export class PalcollectionOperationService {
 
   get collection(): Palcollection { return this._collection; }
   set collection(value: Palcollection) {
-    this.collection = value;
+    this._collection = value;
     for (const obs of this._palCountObservers) {
       obs.next(this.palCount());
+    }
+    for (const obs of this._palChangeObservers) {
+      obs.next(0);
     }
   }
   private _collection: Palcollection;
@@ -46,18 +49,8 @@ export class PalcollectionOperationService {
     return idx;
   }
 
-  createWithInitialPalette(pal: Palette) {
-    this._collection = Palcollection.withInitialPal(pal);
-    for (const obs of this._palCountObservers) {
-      obs.next(1);
-    }
-    for (const obs of this._palChangeObservers) {
-      obs.next(0);
-    }
-  }
-
-  createFromData(data: Uint8ClampedArray) {
-    this._collection = Palcollection.fromData(data);
+  createFromPlaypal(data: Uint8ClampedArray) {
+    this._collection = Palcollection.fromPlaypal(data);
     for (const obs of this._palCountObservers) {
       obs.next(this.palCount());
     }
@@ -81,8 +74,7 @@ export class PalcollectionOperationService {
 
   addPal(atIdx: number, pal?: Palette) {
     if (pal == null) {
-      pal = new Palette();
-      pal.data = new Uint8ClampedArray(this._collection.palettes[atIdx].data);
+      pal = this._collection.palettes[atIdx];
     }
     this._collection.palettes.splice(atIdx, 0, pal);
     this.palIndex += 1;
