@@ -1,17 +1,16 @@
 import { Injectable } from '@angular/core';
 import { Palette } from './palette-model/palette';
-import { Palcolour } from './palette-model/palcolour';
 import { Rgb, Hsv, Rgbcolour } from './palette-model/rgb';
 import { ColourRange } from './palette-model/colour-range';
 import { ColourSubRange } from './palette-model/colour-sub-range';
 import { GradientService } from './gradient.service';
 import { PalcollectionOperationService } from './palcollection-operation.service';
+import { PaletteSelectionService } from './palette-selection.service';
 import { Observable, Observer, TeardownLogic } from 'rxjs';
 
 interface IRangeOperationOptions {
   pIdx: number;
   rIdx: number;
-  pCol: Palcolour;
   range: ColourRange;
 }
 
@@ -21,18 +20,24 @@ export interface HsvUsage {
   value: boolean;
 }
 
+interface ICopiedColour {
+  rgb: Rgb;
+  idx: number;
+}
+
 @Injectable()
 export class PaletteOperationService {
 
-  private lastSelectedIndex: number;
-  public palette: Palette;
-  public palColours: Palcolour[];
-  public colourClipboard: Palcolour[];
-  public selectionRange?: ColourRange;
+  private palette: Palette;
+  private colourClipboard: ICopiedColour[];
   public readonly palChangeObv: Observable<Palette>;
   private _palChangeObservers: Observer<Palette>[];
 
-  constructor(private grad: GradientService, private colOp: PalcollectionOperationService) {
+  constructor(
+      private grad: GradientService,
+      private colOp: PalcollectionOperationService,
+      private palSel: PaletteSelectionService
+    ) {
     this._palChangeObservers = [];
     this.palChangeObv = Observable.create((obs: Observer<Palette>): TeardownLogic => {
       this._palChangeObservers.push(obs);
@@ -54,105 +59,42 @@ export class PaletteOperationService {
     });
   }
 
-  selectionToRange(): ColourRange {
-    const subRanges: ColourSubRange[] = [];
-    let subRangeStart = 0, subRangeEnd = 0, inSubRange = false;
-
-    for (const colour of this.palColours) {
-      if (!inSubRange && colour.selected) {
-        subRangeStart = colour.index;
-        inSubRange = true;
-      } else if (inSubRange && !colour.selected) {
-        subRangeEnd = colour.index - 1;
-        inSubRange = false;
-        subRanges.push(new ColourSubRange(subRangeStart, subRangeEnd));
-      }
-    }
-
-    if (inSubRange && this.palColours[this.palColours.length - 1].selected) {
-      // The last colour of the palette is selected
-      inSubRange = false;
-      subRangeEnd = this.palColours.length - 1;
-      subRanges.push(new ColourSubRange(subRangeStart, subRangeEnd));
-    }
-
-    if (subRanges.length > 0) {
-      this.selectionRange = new ColourRange(subRanges);
-    } else {
-      this.selectionRange = null;
-    }
-
-    return this.selectionRange;
-  }
-
-  rangeToSelection(range: ColourRange) {
-    this.selectionRange = range;
-    this.updateSelection();
-  }
-
-  private updateSelection() {
-    if (this.selectionRange) {
-      for (const subRange of this.selectionRange.subRanges) {
-        const [start, end] = subRange.sorted();
-        for (let i = start; i <= end; i++) {
-          this.palColours[i].selected = true;
-        }
-      }
-    } else {
-      for (const colour of this.palColours) {
-        colour.selected = false;
-      }
-    }
-  }
-
   setPalette(pal: Palette) {
     this.palette = pal;
-    if (this.palColours == null || pal.getLength() !== this.palColours.length) {
-      this.palColours = new Array(pal.getLength());
-    }
-    for (let i = 0; i < pal.getLength(); i++) {
-      this.palColours[i] = pal.colourAt(i);
+    for (const obs of this._palChangeObservers) {
+      obs.next(pal);
     }
   }
 
-  private updatePalette(updated?: ColourRange) {
-    const idxs: number[] = updated ? updated.getIndices() : (() => {
-      const result = [];
-      for (let i = 0; i < this.palColours.length; i++) {
-        result.push(i);
-      }
-      return result;
-    })();
-    for (const idx of idxs) {
-      const colour = this.palColours[idx].rgb;
-      this.palette.setColour(idx, colour);
+  private getRange(): ColourRange {
+    if (this.palSel.selectionRange == null) {
+      this.palSel.selectionRange = new ColourRange([
+        new ColourSubRange(0, this.palette.getLength())
+      ]);
     }
+    return this.palSel.selectionRange;
   }
 
-  private getRange() {
-    return this.selectionRange || new ColourRange([new ColourSubRange(0, 255)]);
-  }
-
-  private rangeOperate(op: (options: IRangeOperationOptions) => void) {
+  private rangeOperate(op: (options: IRangeOperationOptions) => Rgb) {
     const range = this.getRange();
     for (const x of range.getIndices()) {
-      op({
+      this.palette.setColour(x, op({
         pIdx: x,
         rIdx: range.palToRangeIdx(x),
-        pCol: this.palColours[x],
         range: range
-      });
+      }));
     }
-    this.updatePalette(range);
+    // this.updatePalette(range);
   }
 
   reverse() {
     const swap = (firstIdx: number, secondIdx: number) => {
       if (firstIdx === secondIdx) { return; }
 
-      const tempColour = this.palColours[firstIdx].rgb;
-      this.palColours[firstIdx].rgb = this.palColours[secondIdx].rgb;
-      this.palColours[secondIdx].rgb = tempColour;
+      const firstColour = this.palette.colourAt(firstIdx);
+      const otherColour = this.palette.colourAt(secondIdx);
+      this.palette.setColour(firstIdx, otherColour);
+      this.palette.setColour(secondIdx, firstColour);
     };
 
     const range = this.getRange();
@@ -160,7 +102,7 @@ export class PaletteOperationService {
     for (let x = 0, y = indices.length - 1, m = Math.floor(indices.length / 2); x < m; x++, y--) {
       swap(indices[x], indices[y]);
     }
-    this.updatePalette(range);
+    // this.updatePalette(range);
   }
 
   tint(colour: Rgb, factor: number, factorGrad: boolean = false) {
@@ -170,10 +112,8 @@ export class PaletteOperationService {
         const fgrad = this.grad.gradient;
         factor2 = fgrad.colourAt(o.pIdx, o.range).red / 255;
       }
-      const newColour = Rgbcolour.blend(o.pCol.rgb, factor2, colour, Rgbcolour.tint);
-      o.pCol.rgb.red = newColour.red;
-      o.pCol.rgb.green = newColour.green;
-      o.pCol.rgb.blue = newColour.blue;
+      const pCol = this.palette.colourAt(o.pIdx);
+      return Rgbcolour.blend(pCol, factor2, colour, Rgbcolour.tint);
     });
   }
 
@@ -185,7 +125,8 @@ export class PaletteOperationService {
     */
     this.rangeOperate((o) => {
       const {hue, saturation, value} = Rgbcolour.hsv(colour);
-      const origHsv = Rgbcolour.hsv(o.pCol.rgb);
+      const pCol = this.palette.colourAt(o.pIdx);
+      const origHsv = Rgbcolour.hsv(pCol);
 
       let factor;
       if (factorGrad) {
@@ -201,14 +142,15 @@ export class PaletteOperationService {
         value: use.value ? value * factor + origHsv.value * (1.0 - factor) : origHsv.value
       };
 
-      o.pCol.rgb = Rgbcolour.fromHsv(combined);
+      return Rgbcolour.fromHsv(combined);
     });
   }
 
   saturate(pct: number, factorGrad: boolean = false) {
     this.rangeOperate((o) => {
       let pct2 = pct;
-      const colHsv = Rgbcolour.hsv(o.pCol.rgb);
+      const pCol = this.palette.colourAt(o.pIdx);
+      const colHsv = Rgbcolour.hsv(pCol);
       let newSat = colHsv.saturation;
       if (factorGrad) {
         const fgrad = this.grad.gradient;
@@ -216,17 +158,15 @@ export class PaletteOperationService {
       }
       newSat = Math.min(newSat + pct2, 1);
 
-      const newColour = Rgbcolour.fromHSV(colHsv.hue, newSat, colHsv.value);
-      o.pCol.rgb.red = newColour.red;
-      o.pCol.rgb.green = newColour.green;
-      o.pCol.rgb.blue = newColour.blue;
+      return Rgbcolour.fromHSV(colHsv.hue, newSat, colHsv.value);
     });
   }
 
   shiftHue(by: number, factorGrad: boolean = false) {
     this.rangeOperate((o) => {
       let by2 = by;
-      const hsv = Rgbcolour.hsv(o.pCol.rgb);
+      const pCol = this.palette.colourAt(o.pIdx);
+      const hsv = Rgbcolour.hsv(pCol);
       if (factorGrad) {
         const fgrad = this.grad.gradient;
         console.log(fgrad.colourAt(o.pIdx, o.range).red / 255, by2);
@@ -241,45 +181,38 @@ export class PaletteOperationService {
         newHue += 360;
       }
 
-      const newColour = Rgbcolour.fromHSV(newHue, hsv.saturation, hsv.value);
-      o.pCol.rgb.red = newColour.red;
-      o.pCol.rgb.green = newColour.green;
-      o.pCol.rgb.blue = newColour.blue;
+      return Rgbcolour.fromHSV(newHue, hsv.saturation, hsv.value);
     });
   }
 
   applyGradient() {
     this.rangeOperate((o) => {
       const grad = this.grad.gradient;
-      const colour = grad.colourAt(o.pIdx, o.range);
-      this.palColours[o.pIdx].rgb.red = colour.red;
-      this.palColours[o.pIdx].rgb.green = colour.green;
-      this.palColours[o.pIdx].rgb.blue = colour.blue;
+      return grad.colourAt(o.pIdx, o.range);
     });
   }
 
   copyColours() {
     this.colourClipboard = [];
-    this.rangeOperate((o) => {
-      this.colourClipboard.push(o.pCol);
-    });
+    const range = this.getRange();
+    for (const idx of range.getIndices()) {
+      const rgb = this.palette.colourAt(idx);
+      this.colourClipboard.push({rgb, idx});
+    }
   }
 
   pasteColours() {
     for (const pCol of this.colourClipboard) {
-      this.palColours[pCol.index].rgb = pCol.rgb;
+      this.palette.setColour(pCol.idx, pCol.rgb);
     }
-    this.updatePalette();
   }
 
   colourAt(idx: number): Rgb {
-    return this.palColours[idx].rgb;
+    return this.palette.colourAt(idx);
   }
 
   setColourAt(idx: number, colour: Rgb) {
-    const range = new ColourRange([new ColourSubRange(idx, idx)]);
-    this.palColours[idx].rgb = colour;
-    this.updatePalette(range);
+    this.palette.setColour(idx, colour);
   }
 
 }
