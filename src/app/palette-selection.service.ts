@@ -130,25 +130,40 @@ export class PaletteSelectionService {
       return this.selectSingle(rStart);
     }
 
-    const rIncrement = rEnd - rStart / Math.abs(rEnd - rStart);
-    const deselect: boolean = (() => {
+    let rIncrement = (rEnd - rStart) / Math.abs(rEnd - rStart);
+    if (!Number.isFinite(rIncrement) && !Number.isNaN(rIncrement)) {
+      rIncrement = 1;
+    }
+
+    const deselect: boolean = (function(range: ColourRange) {
       for (let i = rStart; i !== rEnd; i += rIncrement) {
-        if (!this._selectionRange.contains(i)) { return false; }
+        if (range.contains(i) === -1) { return false; }
       }
       return true;
-    })();
+    })(this._selectionRange);
 
     if (deselect) {
-      // this.deselectRange(rStart, rEnd);
-    } else {
-      const mergeSubRanges = [];
+      const removeSubRanges: number[] = [this._selectionRange.contains(rStart)];
       for (let i = rStart; i !== rEnd; i += rIncrement) {
         const subRangeIdx = this._selectionRange.contains(i);
-        if (mergeSubRanges.includes(subRangeIdx)) { continue; }
+        if (subRangeIdx === -1 || removeSubRanges.includes(subRangeIdx)) { continue; }
+        console.warn('More than two sub-ranges are being deselected! This is a BUG!!', subRangeIdx);
+        removeSubRanges.push(subRangeIdx);
+      }
+      for (const subRangeIdx of removeSubRanges.reverse()) {
+        this._selectionRange.subRanges.splice(subRangeIdx, 1);
+      }
+    } else {
+      const mergeSubRanges: number[] = [];
+      for (let i = rStart; i !== rEnd; i += rIncrement) {
+        const subRangeIdx = this._selectionRange.contains(i);
+        if (subRangeIdx === -1 || mergeSubRanges.includes(subRangeIdx)) { continue; }
         mergeSubRanges.push(subRangeIdx);
       }
-      const spliceIdx = mergeSubRanges.shift() || 0;
       const spliceAmt = mergeSubRanges.length;
+      const spliceIdx = mergeSubRanges.shift() || 0;
+      const newSubRange = new ColourSubRange(rStart, rEnd);
+      this._selectionRange.subRanges.splice(spliceIdx, spliceAmt, newSubRange);
     }
   }
 
@@ -175,10 +190,12 @@ export class PaletteSelectionService {
 
     // Selection logic, partly derived from above pseudocode
     if (this.lastSelectedIndex >= 0) {
+      /*
       let subRangeIdx = -1;
       if (this._selectionRange) {
         subRangeIdx = this._selectionRange.contains(colourIndex);
       }
+      */
       if (keyState['Shift'] && !keyState['Control']) {
         // Shift - de/select all colours between last index and current index inclusive
         this.selectRange(this.lastSelectedIndex, colourIndex);
@@ -194,11 +211,15 @@ export class PaletteSelectionService {
       this._selectionRange = this.rangeForIdx(colourIndex);
     }
 
+    console.log(this._selectionRange.subRanges);
+    if (this._selectionRange.subRanges.length === 0) {
+      this._selectionRange = null;
+    }
+
     this.lastSelectedIndex = colourIndex;
     for (const ob of this._palSelectObservers) {
       ob.next(this._selectionRange);
     }
-    console.log(this._selectionRange.subRanges);
     return this._selectionRange;
   }
 
