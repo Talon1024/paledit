@@ -45,6 +45,7 @@ export class PaletteSelectionService {
       subRangeIdx = this._selectionRange.subRanges.findIndex((e) => e.contains(at));
       if (subRangeIdx === -1) { return null; }
     }
+
     const subRange = this._selectionRange.subRanges[subRangeIdx];
     const [start, end] = subRange.sorted();
     if (start !== end) {
@@ -130,13 +131,10 @@ export class PaletteSelectionService {
       return this.selectSingle(rStart);
     }
 
-    let rIncrement = (rEnd - rStart) / Math.abs(rEnd - rStart);
-    if (!Number.isFinite(rIncrement) && !Number.isNaN(rIncrement)) {
-      rIncrement = 1;
-    }
+    const rIncrement = (rEnd - rStart) / Math.abs(rEnd - rStart);
 
     const deselect: boolean = (function(range: ColourRange) {
-      for (let i = rStart; i !== rEnd; i += rIncrement) {
+      for (let i = rStart + rIncrement; i !== rEnd + rIncrement; i += rIncrement) {
         if (range.contains(i) === -1) { return false; }
       }
       return true;
@@ -144,7 +142,7 @@ export class PaletteSelectionService {
 
     if (deselect) {
       const removeSubRanges: number[] = [this._selectionRange.contains(rStart)];
-      for (let i = rStart; i !== rEnd; i += rIncrement) {
+      for (let i = rStart; i !== rEnd + rIncrement; i += rIncrement) {
         const subRangeIdx = this._selectionRange.contains(i);
         if (subRangeIdx === -1 || removeSubRanges.includes(subRangeIdx)) { continue; }
         console.warn('More than two sub-ranges are being deselected! This is a BUG!!', subRangeIdx);
@@ -155,13 +153,13 @@ export class PaletteSelectionService {
       }
     } else {
       const mergeSubRanges: number[] = [];
-      for (let i = rStart; i !== rEnd; i += rIncrement) {
+      for (let i = rStart; i !== rEnd + rIncrement; i += rIncrement) {
         const subRangeIdx = this._selectionRange.contains(i);
         if (subRangeIdx === -1 || mergeSubRanges.includes(subRangeIdx)) { continue; }
         mergeSubRanges.push(subRangeIdx);
       }
       const spliceAmt = mergeSubRanges.length;
-      const spliceIdx = mergeSubRanges.shift() || 0;
+      const spliceIdx = mergeSubRanges.sort().shift() || 0;
       const newSubRange = new ColourSubRange(rStart, rEnd);
       this._selectionRange.subRanges.splice(spliceIdx, spliceAmt, newSubRange);
     }
