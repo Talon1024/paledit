@@ -5,7 +5,7 @@ import { DomSanitizer, SafeStyle, SafeUrl } from '@angular/platform-browser';
 import { PaletteOperationService } from '../palette-operation.service';
 import { PaletteSelectionService } from '../palette-selection.service';
 import { GradientService } from '../gradient.service';
-import { indexArray } from '../indexArray';
+import { indexArray } from '../index-array';
 
 @Component({
   selector: 'app-gradient-editor',
