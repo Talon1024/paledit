@@ -11,6 +11,7 @@ import { Observable, Observer, TeardownLogic } from 'rxjs';
 interface IRangeOperationOptions {
   pIdx: number;
   range: ColourRange;
+  factor: number;
 }
 
 export interface HsvUsage {
@@ -77,10 +78,14 @@ export class PaletteOperationService {
 
   private rangeOperate(op: (options: IRangeOperationOptions) => Rgb) {
     const range = this.getRange();
+    const grad = this.grad.gradient;
+    const rangeLen = range.getLength();
     for (const x of range.getIndices()) {
+      const rangeIdx = range.palToRangeIdx(x);
       this.palette.setColour(x, op({
         pIdx: x,
-        range: range
+        range: range,
+        factor: grad.colourIn(rangeIdx, rangeLen).red / 255
       }));
     }
     for (const obs of this._palChangeObservers) {
@@ -108,15 +113,12 @@ export class PaletteOperationService {
     }
   }
 
-  tint(colour: Rgb, factor: number, factorGrad: boolean = false) {
+  tint(colour: Rgb, pct: number, factorGrad: boolean = false) {
     this.rangeOperate((o) => {
-      let factor2 = factor;
-      if (factorGrad) {
-        const fgrad = this.grad.gradient;
-        factor2 = fgrad.colourAt(o.pIdx, o.range).red / 255;
-      }
+      let factor = pct;
+      if (factorGrad) { factor *= o.factor; }
       const pCol = this.palette.colourAt(o.pIdx);
-      return Rgbcolour.blend(pCol, factor2, colour, Rgbcolour.tint);
+      return Rgbcolour.blend(pCol, factor, colour, Rgbcolour.tint);
     });
   }
 
@@ -126,13 +128,8 @@ export class PaletteOperationService {
       const pCol = this.palette.colourAt(o.pIdx);
       const origHsv = Rgbcolour.hsv(pCol);
 
-      let factor;
-      if (factorGrad) {
-        const fgrad = this.grad.gradient;
-        factor = fgrad.colourAt(o.pIdx, o.range).red / 255;
-      } else {
-        factor = 1.0;
-      }
+      let factor = 1.0;
+      if (factorGrad) { factor = o.factor; }
 
       const combined: Hsv = {
         hue: use.hue ? hue * factor + origHsv.hue * (1.0 - factor) : origHsv.hue,
@@ -151,8 +148,7 @@ export class PaletteOperationService {
       const colHsv = Rgbcolour.hsv(pCol);
       let newSat = colHsv.saturation;
       if (factorGrad) {
-        const fgrad = this.grad.gradient;
-        pct2 *= fgrad.colourAt(o.pIdx, o.range).red / 255;
+        pct2 *= o.factor;
       }
       newSat = Math.min(newSat + pct2, 1);
 
@@ -165,12 +161,7 @@ export class PaletteOperationService {
       let by2 = by;
       const pCol = this.palette.colourAt(o.pIdx);
       const hsv = Rgbcolour.hsv(pCol);
-      if (factorGrad) {
-        const fgrad = this.grad.gradient;
-        console.log(fgrad.colourAt(o.pIdx, o.range).red / 255, by2);
-        by2 *= (fgrad.colourAt(o.pIdx, o.range).red / 255);
-        console.log(by2);
-      }
+      if (factorGrad) { by2 *= o.factor; }
       let newHue = hsv.hue + by2;
 
       if (newHue >= 360) {
