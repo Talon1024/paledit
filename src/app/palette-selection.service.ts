@@ -131,7 +131,18 @@ export class PaletteSelectionService {
       return this.selectSingle(rStart);
     }
 
+    /*
+    // Get increment value in a way that accounts for rStart being less than rEnd
     const rIncrement = (rEnd - rStart) / Math.abs(rEnd - rStart);
+    */
+    const rIncrement = 1;
+    if (rEnd < rStart) {
+      // Ensure rStart is lower so that it comes first
+      [rStart, rEnd] = [rEnd, rStart];
+    }
+
+    const beforeSubRange = this._selectionRange.contains(rStart - 1);
+    const afterSubRange = this._selectionRange.contains(rEnd + 1);
 
     const deselect: boolean = (function(range: ColourRange) {
       for (let i = rStart + rIncrement; i !== rEnd + rIncrement; i += rIncrement) {
@@ -153,13 +164,21 @@ export class PaletteSelectionService {
       }
     } else {
       const mergeSubRanges: number[] = [];
+      if (beforeSubRange !== -1) {
+        rStart = this._selectionRange.subRanges[beforeSubRange].sorted()[0];
+        mergeSubRanges.push(beforeSubRange);
+      }
+      if (afterSubRange !== -1) {
+        rEnd = this._selectionRange.subRanges[afterSubRange].sorted()[1];
+        mergeSubRanges.push(afterSubRange);
+      }
       for (let i = rStart; i !== rEnd + rIncrement; i += rIncrement) {
         const subRangeIdx = this._selectionRange.contains(i);
         if (subRangeIdx === -1 || mergeSubRanges.includes(subRangeIdx)) { continue; }
         mergeSubRanges.push(subRangeIdx);
       }
       const spliceAmt = mergeSubRanges.length;
-      const spliceIdx = mergeSubRanges.sort().shift() || 0;
+      const spliceIdx = mergeSubRanges.sort((a, b) => a - b).shift() || 0;
       const newSubRange = new ColourSubRange(rStart, rEnd);
       this._selectionRange.subRanges.splice(spliceIdx, spliceAmt, newSubRange);
     }
@@ -209,7 +228,7 @@ export class PaletteSelectionService {
       this._selectionRange = this.rangeForIdx(colourIndex);
     }
 
-    console.log(this._selectionRange.subRanges);
+    console.log(keyState, this._selectionRange.subRanges);
     if (this._selectionRange.subRanges.length === 0) {
       this._selectionRange = null;
     }
