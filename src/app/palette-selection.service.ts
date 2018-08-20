@@ -127,42 +127,68 @@ export class PaletteSelectionService {
   }
 
   private selectRange(rStart: number, rEnd: number) {
-    if (rStart === rEnd) {
-      return this.selectSingle(rStart);
-    }
-
     /*
     // Get increment value in a way that accounts for rStart being less than rEnd
     const rIncrement = (rEnd - rStart) / Math.abs(rEnd - rStart);
     */
     const rIncrement = 1;
+    let rReversed = false;
+
     if (rEnd < rStart) {
       // Ensure rStart is lower so that it comes first
       [rStart, rEnd] = [rEnd, rStart];
+      rReversed = true;
+    }
+    if (rStart + rIncrement === rEnd) {
+      return this.selectSingle(rStart);
     }
 
-    const beforeSubRange = this._selectionRange.contains(rStart - 1);
-    const afterSubRange = this._selectionRange.contains(rEnd + 1);
+    const beforeSubRange = this._selectionRange.contains(rStart - rIncrement);
+    const afterSubRange = this._selectionRange.contains(rEnd + rIncrement);
 
     const deselect: boolean = (function(range: ColourRange) {
-      for (let i = rStart + rIncrement; i !== rEnd + rIncrement; i += rIncrement) {
+      const increment = rReversed ? -1 : 1;
+      const start = rReversed ? rEnd + increment : rStart + increment;
+      const end = rReversed ? rStart : rEnd;
+      for (let i = start; i !== end; i += increment) {
         if (range.contains(i) === -1) { return false; }
       }
       return true;
     })(this._selectionRange);
 
     if (deselect) {
-      const removeSubRanges: number[] = [this._selectionRange.contains(rStart)];
-      for (let i = rStart; i !== rEnd + rIncrement; i += rIncrement) {
-        const subRangeIdx = this._selectionRange.contains(i);
-        if (subRangeIdx === -1 || removeSubRanges.includes(subRangeIdx)) { continue; }
-        console.warn('More than two sub-ranges are being deselected! This is a BUG!!', subRangeIdx);
-        removeSubRanges.push(subRangeIdx);
+      if (rReversed) {
+        rEnd -= rIncrement;
+      } else {
+        rStart += rIncrement;
       }
-      for (const subRangeIdx of removeSubRanges.reverse()) {
+      let subRangeIdx = -1;
+      let action = '';
+
+      subRangeIdx = this._selectionRange.contains(rStart);
+      const subRangeStart = this._selectionRange.subRanges[subRangeIdx].start;
+      const subRangeEnd = this._selectionRange.subRanges[subRangeIdx].end;
+      if (subRangeStart === rStart && subRangeEnd === rEnd) {
+        action = 'remove';
+      } else if (rStart === subRangeStart && subRangeEnd >= rEnd) {
+        action = 'ltrim';
+      } else if (rEnd === subRangeEnd && subRangeStart <= rStart) {
+        action = 'rtrim';
+      }
+
+      if (action === '') {
+        console.warn('Nothing to do!');
+      }
+
+      if (action === 'ltrim') {
+        this._selectionRange.subRanges[subRangeIdx].start = rEnd + 1;
+      } else if (action === 'rtrim') {
+        this._selectionRange.subRanges[subRangeIdx].end = rStart - 1;
+      } else if (action === 'remove') {
         this._selectionRange.subRanges.splice(subRangeIdx, 1);
       }
     } else {
+      // Select
       const mergeSubRanges: number[] = [];
       if (beforeSubRange !== -1) {
         rStart = this._selectionRange.subRanges[beforeSubRange].sorted()[0];
