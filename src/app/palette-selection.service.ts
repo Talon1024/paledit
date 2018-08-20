@@ -149,7 +149,7 @@ export class PaletteSelectionService {
     const deselect: boolean = (function(range: ColourRange) {
       const increment = rReversed ? -1 : 1;
       const start = rReversed ? rEnd + increment : rStart + increment;
-      const end = rReversed ? rStart : rEnd;
+      const end = rReversed ? rStart + increment : rEnd + increment;
       for (let i = start; i !== end; i += increment) {
         if (range.contains(i) === -1) { return false; }
       }
