@@ -162,10 +162,9 @@ export class PaletteSelectionService {
       } else {
         rStart += rIncrement;
       }
-      let subRangeIdx = -1;
       let action = '';
 
-      subRangeIdx = this._selectionRange.contains(rStart);
+      const subRangeIdx = this._selectionRange.contains(rStart);
       const subRangeStart = this._selectionRange.subRanges[subRangeIdx].start;
       const subRangeEnd = this._selectionRange.subRanges[subRangeIdx].end;
       if (subRangeStart === rStart && subRangeEnd === rEnd) {
@@ -174,6 +173,8 @@ export class PaletteSelectionService {
         action = 'ltrim';
       } else if (rEnd === subRangeEnd && subRangeStart <= rStart) {
         action = 'rtrim';
+      } else if (rStart > subRangeStart && rEnd < subRangeEnd) {
+        action = 'split';
       }
 
       if (action === '') {
@@ -186,6 +187,19 @@ export class PaletteSelectionService {
         this._selectionRange.subRanges[subRangeIdx].end = rStart - 1;
       } else if (action === 'remove') {
         this._selectionRange.subRanges.splice(subRangeIdx, 1);
+      } else if (action === 'split') {
+        // Modify original sub-range
+        let newStart = rEnd + 1;
+        const newEnd = this._selectionRange.subRanges[subRangeIdx].end;
+        let oldEnd = rStart - 1;
+        if (rReversed) {
+          newStart += 1;
+        } else {
+          oldEnd -= 1;
+        }
+        const newSubRange = new ColourSubRange(newStart, newEnd);
+        this._selectionRange.subRanges[subRangeIdx].end = oldEnd;
+        this._selectionRange.subRanges.splice(subRangeIdx + 1, 0, newSubRange);
       }
     } else {
       // Select
