@@ -59,11 +59,17 @@
 }
 
 @keyframes conflict {
-  from {
-    color: rgb(0,0,0);
+  0% {
+    color: #000;
+    border-color: #000;
   }
-  to {
-    color: rgb(255,0,0);
+  60% {
+    color: #F00;
+    border-color: #F00;
+  }
+  100% {
+    color: #F99;
+    border-color: #F99;
   }
 }
 
@@ -76,5 +82,7 @@
   font-size: 1.5rem;
   font-weight: bold;
   text-align: center;
-  animation: .3s ease-in-out 0s infinite alternate forwards running conflict;
+  border: 3px solid #F00;
+  border-radius: 100%;
+  animation: .5s ease-in-out 0s infinite alternate forwards running conflict;
 }
