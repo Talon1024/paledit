@@ -33,7 +33,7 @@ export class PaletteIoService {
       if (playpal instanceof Error) {
         return callback(playpal as Error, null);
       }
-      const data = new Uint8ClampedArray((playpal as DoomWadLump).data);
+      const data = new Uint8Array((playpal as DoomWadLump).data);
       const col = Palcollection.fromPlaypal(data);
       for (const obs of this._loadStateObservers) {
         obs.next(false);
@@ -50,7 +50,7 @@ export class PaletteIoService {
     const fileReader = new FileReader();
     fileReader.readAsArrayBuffer(file);
     fileReader.onload = () => {
-      const data = new Uint8ClampedArray(fileReader.result as ArrayBuffer);
+      const data = new Uint8Array(fileReader.result as ArrayBuffer);
       const col = Palcollection.fromPlaypal(data);
       for (const obs of this._loadStateObservers) {
         obs.next(false);

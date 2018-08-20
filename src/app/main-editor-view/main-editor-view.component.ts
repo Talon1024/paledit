@@ -30,7 +30,7 @@ export class MainEditorViewComponent implements OnInit {
     this.httpClient.get(`${this.assetUrl}/bwpal.pal`, {
       responseType: 'arraybuffer'
     }).subscribe((resp: ArrayBuffer) => {
-      const palette = new Uint8ClampedArray(resp);
+      const palette = new Uint8Array(resp);
       this.colOp.createFromPlaypal(palette);
     });
     this.cmapDataURI = this.sanitizer.bypassSecurityTrustUrl('data:,Not implemented yet.');

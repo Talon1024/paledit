@@ -49,7 +49,7 @@ export class PalcollectionOperationService {
     return idx;
   }
 
-  createFromPlaypal(data: Uint8ClampedArray) {
+  createFromPlaypal(data: Uint8Array) {
     this._collection = Palcollection.fromPlaypal(data);
     for (const obs of this._palCountObservers) {
       obs.next(this.palCount());

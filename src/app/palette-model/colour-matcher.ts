@@ -12,7 +12,7 @@ export class ColourMatcher {
     const closestMatch = 0;
     let lowestDiff = 768;
     let lowestDiffIdx = 0;
-    for (let c = 0; c < palette.getLength(); c++) {
+    for (let c = 0; c < palette.numColours; c++) {
       const rgb = palette.colourAt(c);
       const rDiff = Math.abs(colour.red - rgb.red);
       const gDiff = Math.abs(colour.green - rgb.green);

@@ -20,16 +20,15 @@ describe('Palette', () => {
   '4ODg4eHh4uLi4+Pj5OTk5eXl5ubm5+fn6Ojo6enp6urq6+vr7Ozs7e3t7u7u7+/v8PDw8fHx8vLy' +
   '8/Pz9PT09fX19vb29/f3+Pj4+fn5+vr6+/v7/Pz8/f39/v7+////';
   it('should create a palette from raw data', () => {
-    const palData: Uint8ClampedArray = base64.toByteArray(palstr);
-    expect(Palette.fromData(palData)).toBeTruthy();
+    const palData: Uint8Array = base64.toByteArray(palstr);
+    expect(Palette.fromData(palData, 256)).toBeTruthy();
   });
   it('should get a colour at a specific index', () => {
-    const palData: Uint8ClampedArray = base64.toByteArray(palstr);
-    const palette = Palette.fromData(palData);
+    const palData: Uint8Array = base64.toByteArray(palstr);
+    const palette = Palette.fromData(palData, 256);
     const palColour = palette.colourAt(162);
-    expect(palColour.rgb.red).toBe(162);
-    expect(palColour.rgb.green).toBe(162);
-    expect(palColour.rgb.blue).toBe(162);
-    expect(palColour.index).toBe(162);
+    expect(palColour.red).toBe(162);
+    expect(palColour.green).toBe(162);
+    expect(palColour.blue).toBe(162);
   });
 });

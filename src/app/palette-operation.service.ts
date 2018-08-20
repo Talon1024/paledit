@@ -212,7 +212,7 @@ export class PaletteOperationService {
 
   getLength(): number {
     if (this.palette) {
-      return this.palette.getLength();
+      return this.palette.numColours;
     }
     return 0;
   }
@@ -220,7 +220,7 @@ export class PaletteOperationService {
   getDuplicates(idx: number): number[] {
     const rgb = this.palette.colourAt(idx);
     const dups = [];
-    for (let i = 0; i < this.palette.getLength(); i++) {
+    for (let i = 0; i < this.palette.numColours; i++) {
       if (i === idx) { continue; }
       const rgb2 = this.palette.colourAt(i);
       if (Rgbcolour.equals(rgb, rgb2)) { dups.push(i); }

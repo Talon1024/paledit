@@ -19,28 +19,32 @@ export class Palcollection {
     this.palettes = new Array();
   }
 
-  static fromPlaypal(data: Uint8ClampedArray): Palcollection {
+  static fromPlaypal(data: Uint8Array): Palcollection {
     const validPals = Math.max(1, Math.floor(data.length / 768));
     const palCollection = new Palcollection();
     if (data.byteLength < 768) {
-      const palBytes = new Uint8ClampedArray(768);
+      const palBytes = new Uint8Array(768);
       palBytes.set(data, 0);
       palCollection.palettes[0] = Palette.fromData(palBytes, 256);
     } else {
       for (let i = 0; i < validPals; i++) {
-        const curSlice: Uint8ClampedArray = data.slice(i * 768, i * 768 + 768);
+        const curSlice: Uint8Array = data.slice(i * 768, i * 768 + 768);
         palCollection.palettes[i] = Palette.fromData(curSlice, 256);
       }
     }
     return palCollection;
   }
 
-  toPlaypal(): Uint8ClampedArray {
-    const palBytes: Uint8ClampedArray = new Uint8ClampedArray(this.palettes.length * 768);
+  toPlaypal(): Uint8Array {
+    const palByteLength = this.palettes.map((p) => p.byteLength)
+      .reduce((n, nn) => n + nn);
+    const palBytes: Uint8Array = new Uint8Array(this.palettes.length * 768);
     let curPal = 0;
+    let curOffset = 0;
     for (const pal of this.palettes) {
-      palBytes.set(pal.data, curPal * pal.length * 3);
+      palBytes.set(pal.data, curOffset);
       curPal += 1;
+      curOffset += pal.byteLength;
     }
     return palBytes;
   }
