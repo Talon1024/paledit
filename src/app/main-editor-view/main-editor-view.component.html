@@ -36,6 +36,7 @@
   <p>Click on a colour in the palette to select it, and deselect all other colours.</p>
   <p>Ctrl-click on a colour to select it if it is not already selected, or to deselect it if it is selected.</p>
   <p>Shift-click on a colour to select or deselect all of the colours between the last selected colour and the colour you click on, depending on whether they are already selected or not.</p>
+  <p>Every <i>x</i>th colour, where <i>x</i> is the given interval, can be selected if you hold down Ctrl and Shift at the same time while clicking on a colour.</p>
   <h3>Palette navigation</h3>
   <p>PLAYPAL files can contain many different palettes. Use the palette navigator to switch between them.</p>
   <p>Controls:</p>
@@ -76,6 +77,10 @@
   <p>Reverse the positions of the stops in the gradient by clicking on the Reverse button</p>
   <p>Export the current gradient to a JSON file by clicking on Export</p>
   <p>Import the gradient from a gradient JSON file by clicking on Import</p>
+  <h2>Credits</h2>
+  <p>Programmed by Kevin "Talon1024" Caccamo</p>
+  <p><a href="https://angular.io">Angular</a> by Google</p>
+  <p>Special thanks to Virgilio "Ozymandias81" Virzo for his help with finding and fixing bugs!</p>
   <h2>Changelog</h2>
   <h3>Youtube preview video -> v0.5 public beta</h3>
   <p>Re-organized UI elements.</p>
@@ -95,4 +100,9 @@
   <p>Added "Use red channel from gradient as factor" checkbox (Palette operations).</p>
   <p>Added "Reverse", "Import", and "Export" buttons (Gradient editor).</p>
   <p>Upgraded to Angular 6.</p>
+  <h3>v0.6 -> 0.7</h3>
+  <p>Re-wrote much of Paledit's internals for better adherence to Model-View-Controller design philosophy and better separation of concerns.</p>
+  <p>Fixed bugs with selected colour widget</p>
+  <p>Added interval selection feature, usable by Shift-Ctrl-clicking on a colour</p>
+  <p>Removed "Save Colourmap" button, since it did nothing</p>
 </app-modal>
