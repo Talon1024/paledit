@@ -164,13 +164,13 @@ export class PaletteSelectionService {
     })(this._selectionRange);
 
     if (deselect) {
-      /*
-      if (rReversed) {
-        rEnd -= rIncrement;
-      } else {
-        rStart += rIncrement;
+      if (this.lastSelectionType === 'single') {
+        if (rReversed) {
+          rEnd -= rIncrement;
+        } else {
+          rStart += rIncrement;
+        }
       }
-      */
       let action: RangeDeselectAction = '';
 
       const subRangeIdx = this._selectionRange.contains(rStart);
