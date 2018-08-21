@@ -63,6 +63,7 @@ export class PaletteOperationService {
 
   setPalette(pal: Palette) {
     this.palette = pal;
+    this.palSel.numColours = pal.numColours;
     for (const obs of this._palChangeObservers) {
       obs.next({pal: this.palette, new: true});
     }

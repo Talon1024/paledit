@@ -3,6 +3,9 @@ import { Observable, Observer, TeardownLogic } from 'rxjs';
 import { ColourRange } from './palette-model/colour-range';
 import { ColourSubRange } from './palette-model/colour-sub-range';
 
+type RangeDeselectAction = '' | 'remove' | 'ltrim' | 'rtrim' | 'split';
+type SelectionType = '' | 'range' | 'single' | 'interval';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -10,6 +13,7 @@ export class PaletteSelectionService {
 
   public readonly palSelectObv: Observable<ColourRange>;
   private _palSelectObservers: Observer<ColourRange>[];
+
   private _selectionRange: ColourRange;
   public get selectionRange(): ColourRange { return this._selectionRange; }
   public set selectionRange(value: ColourRange) {
@@ -18,10 +22,20 @@ export class PaletteSelectionService {
       obs.next(value);
     }
   }
+  private _interval: number;
+  public set interval(value: number) {
+    this._interval = Math.abs(Math.floor(value));
+  }
+  public get interval() { return this._interval; }
+  public numColours: number;
+
   private lastSelectedIndex: number;
+  private lastSelectionType: SelectionType;
 
   constructor() {
     this._palSelectObservers = [];
+    this._interval = 2;
+    this.lastSelectionType = '';
     this.palSelectObv = Observable.create((ob: Observer<ColourRange>): TeardownLogic => {
       ob.next(this._selectionRange);
       this._palSelectObservers.push(ob);
@@ -80,20 +94,8 @@ export class PaletteSelectionService {
       return;
     }
 
-    const beforeSubRange = this._selectionRange.subRanges.findIndex((subRange) => {
-      const [, end] = subRange.sorted();
-      if (at === end + 1) {
-        return true;
-      }
-      return false;
-    });
-    const afterSubRange = this._selectionRange.subRanges.findIndex((subRange) => {
-      const [start, ] = subRange.sorted();
-      if (at === start - 1) {
-        return true;
-      }
-      return false;
-    });
+    const beforeSubRange = this._selectionRange.contains(at - 1);
+    const afterSubRange = this._selectionRange.contains(at + 1);
 
     if (beforeSubRange !== -1 && afterSubRange !== -1) {
       // Merge two sub-ranges
@@ -143,6 +145,11 @@ export class PaletteSelectionService {
       return this.selectSingle(rStart);
     }
 
+    if (this._selectionRange == null && rStart != null) {
+      this._selectionRange = new ColourRange([new ColourSubRange(rStart, rEnd)]);
+      return;
+    }
+
     const beforeSubRange = this._selectionRange.contains(rStart - rIncrement);
     const afterSubRange = this._selectionRange.contains(rEnd + rIncrement);
 
@@ -157,12 +164,14 @@ export class PaletteSelectionService {
     })(this._selectionRange);
 
     if (deselect) {
+      /*
       if (rReversed) {
         rEnd -= rIncrement;
       } else {
         rStart += rIncrement;
       }
-      let action = '';
+      */
+      let action: RangeDeselectAction = '';
 
       const subRangeIdx = this._selectionRange.contains(rStart);
       const subRangeStart = this._selectionRange.subRanges[subRangeIdx].start;
@@ -224,6 +233,15 @@ export class PaletteSelectionService {
     }
   }
 
+  private selectEveryXthColour(start: number, end: number) {
+    for (let i = start; i <= end; i += this._interval) {
+      const subRangeIdx = this._selectionRange.contains(i);
+      if (subRangeIdx === -1) {
+        this.selectSingle(i);
+      }
+    }
+  }
+
   select(colourIndex: number, keyState: {[key: string]: boolean}): ColourRange | null {
     /*
     If nothing is selected:
@@ -247,25 +265,24 @@ export class PaletteSelectionService {
 
     // Selection logic, partly derived from above pseudocode
     if (this.lastSelectedIndex >= 0) {
-      /*
-      let subRangeIdx = -1;
-      if (this._selectionRange) {
-        subRangeIdx = this._selectionRange.contains(colourIndex);
-      }
-      */
       if (keyState['Shift'] && !keyState['Control']) {
         // Shift - de/select all colours between last index and current index inclusive
         this.selectRange(this.lastSelectedIndex, colourIndex);
+        this.lastSelectionType = 'range';
       } else if (keyState['Control'] && !keyState['Shift']) {
         // Control - de/select colour at current index
         this.selectSingle(colourIndex);
+        this.lastSelectionType = 'single';
       } else if (keyState['Control'] && keyState['Shift']) {
-        // Unknown
+        this.selectEveryXthColour(this.lastSelectedIndex, colourIndex);
+        this.lastSelectionType = 'interval';
       } else if (!keyState['Control'] && !keyState['Shift']) {
         this._selectionRange = this.rangeForIdx(colourIndex);
+        this.lastSelectionType = 'single';
       }
     } else {
       this._selectionRange = this.rangeForIdx(colourIndex);
+      this.lastSelectionType = 'single';
     }
 
     console.log(keyState, this._selectionRange.subRanges);
@@ -282,20 +299,19 @@ export class PaletteSelectionService {
 
   selectAll(all: boolean = null): ColourRange {
     if (all == null) {
-      const allSelected = this._selectionRange.getLength() === 256;
+      const allSelected = this._selectionRange.getLength() === this.numColours;
       all = !allSelected;
     }
 
-    let range;
     if (all) {
-      range = new ColourRange([new ColourSubRange(0, 255)]);
+      this._selectionRange = new ColourRange([new ColourSubRange(0, this.numColours)]);
     } else {
-      range = null;
+      this._selectionRange = null;
     }
 
     for (const ob of this._palSelectObservers) {
-      ob.next(range);
+      ob.next(this._selectionRange);
     }
-    return range;
+    return this._selectionRange;
   }
 }

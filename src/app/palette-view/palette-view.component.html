@@ -7,7 +7,8 @@
       <span *ngIf="showNumbers">#{{colour.index}}</span>
   </div>
 </div>
-<span *ngIf="multiple" class="button" (click)="selectAll()" i18n="Select (or deselect) all colours in the palette">Select all</span>
+<!-- <span *ngIf="multiple" class="button" (click)="selectAll()" i18n="Select (or deselect) all colours in the palette">Select all</span> -->
+<label *ngIf="multiple" i18n="Sets the interval for shift-click selection">Interval: <input type="number" [(ngModel)]="selInterval" class="narrowInput" min="0"></label>
 <label i18n="Prevents selection from changing when navigating between palettes"><input type="checkbox" [(ngModel)]="lockSelection">Lock selection</label>
 <label i18n="Shows or hides palette colour numbers"><input type="checkbox" [(ngModel)]="showNumbers">Colour numbers</label>
 <label i18n="Shows or hides colours that are the same as others"><input type="checkbox" [(ngModel)]="showConflicts">Conflicts</label>

@@ -24,6 +24,14 @@ export class PaletteViewComponent implements OnInit {
   public lockSelection: boolean;
   public showNumbers: boolean;
   public showConflicts: boolean;
+  public get selInterval() {
+    return this.palSel.interval.toString(10);
+  }
+  public set selInterval(value: string) {
+    let n = Number.parseInt(value, 10);
+    n = Math.max(n, 0);
+    this.palSel.interval = n;
+  }
 
   constructor(
     private keyboard: KeyboardService,
