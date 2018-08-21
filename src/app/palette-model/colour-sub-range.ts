@@ -3,8 +3,8 @@ export class ColourSubRange {
   end: number;
 
   constructor(start: number = 0, end: number = 0) {
-    this.start = Math.floor(start % 256);
-    this.end = Math.floor(end % 256);
+    this.start = Math.floor(start);
+    this.end = Math.floor(end);
   }
 
   getLength(): number {

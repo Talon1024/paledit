@@ -300,12 +300,16 @@ export class PaletteSelectionService {
 
   selectAll(all: boolean = null): ColourRange {
     if (all == null) {
-      const allSelected = this._selectionRange.getLength() === this.numColours;
+      let rangeLen = 0;
+      if (this._selectionRange != null) {
+        rangeLen = this._selectionRange.getLength();
+      }
+      const allSelected = rangeLen === this.numColours;
       all = !allSelected;
     }
 
     if (all) {
-      this._selectionRange = new ColourRange([new ColourSubRange(0, this.numColours)]);
+      this._selectionRange = new ColourRange([new ColourSubRange(0, this.numColours - 1)]);
     } else {
       this._selectionRange = null;
     }

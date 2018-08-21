@@ -86,3 +86,8 @@
   border-radius: 100%;
   animation: .5s ease-in-out 0s infinite alternate forwards running conflict;
 }
+
+.sbs-wrap {
+  display: flex;
+  flex-wrap: wrap;
+}
