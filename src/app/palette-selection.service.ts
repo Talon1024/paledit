@@ -234,6 +234,7 @@ export class PaletteSelectionService {
   }
 
   private selectEveryXthColour(start: number, end: number) {
+    if (end < start) { [start, end] = [end, start]; }
     for (let i = start; i <= end; i += this._interval) {
       const subRangeIdx = this._selectionRange.contains(i);
       if (subRangeIdx === -1) {
