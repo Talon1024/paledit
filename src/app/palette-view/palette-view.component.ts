@@ -14,8 +14,6 @@ import { PaletteSelectionService } from '../palette-selection.service';
 })
 export class PaletteViewComponent implements OnInit {
 
-  private readonly assetUrl = '/assets';
-
   private keyState: {[key: string]: boolean};
   @Input() multiple: boolean;
   public palColours: Palcolour[];
