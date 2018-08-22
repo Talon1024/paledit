@@ -31,6 +31,9 @@ export class PaletteIoService {
 
       const playpal = this.wadIo.getLump('PLAYPAL');
       if (playpal instanceof Error) {
+        for (const obs of this._loadStateObservers) {
+          obs.next(false);
+        }
         return callback(playpal as Error, null);
       }
       const data = new Uint8Array((playpal as DoomWadLump).data);

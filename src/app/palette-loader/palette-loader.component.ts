@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { PaletteIoService } from '../palette-io.service';
 import { PalcollectionOperationService } from '../palcollection-operation.service';
+import { MessageService } from '../message.service';
 
 @Component({
   selector: 'app-palette-loader',
@@ -10,7 +11,8 @@ import { PalcollectionOperationService } from '../palcollection-operation.servic
 export class PaletteLoaderComponent implements OnInit {
 
   constructor(private palIo: PaletteIoService,
-    private colOp: PalcollectionOperationService) { }
+    private colOp: PalcollectionOperationService,
+    private msg: MessageService) { }
 
   ngOnInit() {
   }
@@ -44,6 +46,8 @@ export class PaletteLoaderComponent implements OnInit {
     if (targ.files && targ.files.length > 0) {
       this.palIo.getPaletteFile(targ.files[0]).subscribe((col) => {
         this.colOp.collection = col;
+      }, (err) => {
+        this.msg.error(err);
       });
     }
   }
