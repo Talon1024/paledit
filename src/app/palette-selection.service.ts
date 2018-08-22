@@ -233,8 +233,10 @@ export class PaletteSelectionService {
   }
 
   private selectEveryXthColour(start: number, end: number) {
-    if (end < start) { [start, end] = [end, start]; }
-    for (let i = start; i <= end; i += this._interval) {
+    let increment = this._interval;
+    if (end < start) { increment *= -1; }
+    const range = new ColourSubRange(start, end);
+    for (let i = start; range.contains(i); i += increment) {
       const subRangeIdx = this._selectionRange.contains(i);
       if (subRangeIdx === -1) {
         this.selectSingle(i);
