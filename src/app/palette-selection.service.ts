@@ -235,11 +235,28 @@ export class PaletteSelectionService {
   private selectEveryXthColour(start: number, end: number) {
     let increment = this._interval;
     if (end < start) { increment *= -1; }
+
     const range = new ColourSubRange(start, end);
-    for (let i = start; range.contains(i); i += increment) {
-      const subRangeIdx = this._selectionRange.contains(i);
-      if (subRangeIdx === -1) {
-        this.selectSingle(i);
+    const deselect = (() => {
+      for (let i = start; range.contains(i); i += increment) {
+        if (this._selectionRange.contains(i) === -1) { return false; }
+      }
+      return true;
+    })();
+
+    if (deselect) {
+      for (let i = start; range.contains(i); i += increment) {
+        const subRangeIdx = this._selectionRange.contains(i);
+        if (subRangeIdx !== -1) {
+          this.deselectSingle(i, subRangeIdx);
+        }
+      }
+    } else {
+      for (let i = start; range.contains(i); i += increment) {
+        const subRangeIdx = this._selectionRange.contains(i);
+        if (subRangeIdx === -1) {
+          this.selectSingle(i);
+        }
       }
     }
   }
