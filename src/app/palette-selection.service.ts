@@ -4,7 +4,7 @@ import { ColourRange } from './palette-model/colour-range';
 import { ColourSubRange } from './palette-model/colour-sub-range';
 
 type RangeDeselectAction = '' | 'remove' | 'ltrim' | 'rtrim' | 'split';
-type SelectionType = '' | 'range' | 'single' | 'interval';
+// type SelectionType = '' | 'range' | 'single' | 'interval';
 
 @Injectable({
   providedIn: 'root'
@@ -24,18 +24,17 @@ export class PaletteSelectionService {
   }
   private _interval: number;
   public set interval(value: number) {
-    this._interval = Math.abs(Math.floor(value));
+    if (value < 1) { value = 1; }
+    this._interval = Math.floor(value);
   }
   public get interval() { return this._interval; }
   public numColours: number;
 
   private lastSelectedIndex: number;
-  private lastSelectionType: SelectionType;
 
   constructor() {
     this._palSelectObservers = [];
     this._interval = 2;
-    this.lastSelectionType = '';
     this.palSelectObv = Observable.create((ob: Observer<ColourRange>): TeardownLogic => {
       ob.next(this._selectionRange);
       this._palSelectObservers.push(ob);
@@ -164,7 +163,7 @@ export class PaletteSelectionService {
     })(this._selectionRange);
 
     if (deselect) {
-      if (this.lastSelectionType === 'single') {
+      if (this._selectionRange.contains(rReversed ? rEnd : rStart) === -1) {
         if (rReversed) {
           rEnd -= rIncrement;
         } else {
@@ -269,21 +268,16 @@ export class PaletteSelectionService {
       if (keyState['Shift'] && !keyState['Control']) {
         // Shift - de/select all colours between last index and current index inclusive
         this.selectRange(this.lastSelectedIndex, colourIndex);
-        this.lastSelectionType = 'range';
       } else if (keyState['Control'] && !keyState['Shift']) {
         // Control - de/select colour at current index
         this.selectSingle(colourIndex);
-        this.lastSelectionType = 'single';
       } else if (keyState['Control'] && keyState['Shift']) {
         this.selectEveryXthColour(this.lastSelectedIndex, colourIndex);
-        this.lastSelectionType = 'interval';
       } else if (!keyState['Control'] && !keyState['Shift']) {
         this._selectionRange = this.rangeForIdx(colourIndex);
-        this.lastSelectionType = 'single';
       }
     } else {
       this._selectionRange = this.rangeForIdx(colourIndex);
-      this.lastSelectionType = 'single';
     }
 
     console.log(keyState, this._selectionRange.subRanges);
