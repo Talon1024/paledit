@@ -22,7 +22,7 @@ export class GradientStop implements IGradientStop {
     return new GradientStop(ob.position, ob.colour);
   }
 
-  toObject() {
+  toObject(): IGradientStop {
     return {position: this.position, colour: this.colour};
   }
 
@@ -40,7 +40,7 @@ export class GradientStop implements IGradientStop {
 }
 
 export interface IGradient {
-  stops: GradientStop[];
+  stops: IGradientStop[];
 }
 
 export class Gradient {
@@ -64,7 +64,7 @@ export class Gradient {
   }
 
   toObject(): IGradient {
-    return {stops: this.stops};
+    return {stops: this.stops.map((stop) => stop.toObject())};
   }
 
   addStop(stop: GradientStop) {
