@@ -18,8 +18,8 @@ export class GradientEditorComponent implements OnInit {
   public curColour: string;
   public curStopPos: number;
 
-  public selectedColours: number[]; // TODO: Write structural directive to repeat an element a certain number of times.
-  public selectedColourCount: number;
+  private _selectedColourCount: number;
+  public get selectedColourCount() { return this._selectedColourCount; }
 
   public gradient: Gradient;
 
@@ -34,14 +34,12 @@ export class GradientEditorComponent implements OnInit {
   ngOnInit() {
     this.gradient = this.grad.gradient;
     this.setCurStopIdx(0);
-    this.selectedColours = [];
     this.palSel.palSelectObv.subscribe((sr) => {
       let count = 0;
       if (sr != null) {
         count = sr.getLength();
       }
-      this.selectedColourCount = count;
-      this.selectedColours = indexArray(count);
+      this._selectedColourCount = count;
     });
   }
 
@@ -51,8 +49,8 @@ export class GradientEditorComponent implements OnInit {
     return this.sanitizer.bypassSecurityTrustStyle(this.gradient.toCssString());
   }
 
-  previewColourStyle(idx: number): SafeStyle {
-    const colour = this.gradient.colourIn(idx, this.selectedColourCount);
+  previewColourStyle(index: number, count: number): SafeStyle {
+    const colour = this.gradient.colourIn(index, count);
     return this.sanitizer.bypassSecurityTrustStyle(Rgbcolour.toHex(colour));
   }
 

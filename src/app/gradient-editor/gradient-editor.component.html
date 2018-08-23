@@ -11,7 +11,8 @@
         (mousedown)="handleStopClickDown($event, i)"></div>
     </div>
     <div class="gradient-preview" *ngIf="selectedColourCount > 0">
-      <div *ngFor="let cidx of selectedColours" [style.background-color]="previewColourStyle(cidx)"></div>
+      <div *appRepeat="selectedColourCount; let cidx = index; let ccnt = count"
+        [style.background-color]="previewColourStyle(cidx, ccnt)"></div>
     </div>
   </div>
   <div class="sbs">

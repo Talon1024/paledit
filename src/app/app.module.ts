@@ -34,6 +34,7 @@ import localeIt from '@angular/common/locales/it';
 import localeItExtra from '@angular/common/locales/extra/it';
 import { PluralPipe } from './plural.pipe';
 import { ReadableRealNumberPipe } from './readable-real-number.pipe';
+import { RepeatDirective } from './repeat.directive';
 
 const assetUrl = '/assets/';
 
@@ -50,7 +51,8 @@ const assetUrl = '/assets/';
     MessageLogComponent,
     SelectedColourComponent,
     PluralPipe,
-    ReadableRealNumberPipe
+    ReadableRealNumberPipe,
+    RepeatDirective
   ],
   imports: [
     BrowserModule,
