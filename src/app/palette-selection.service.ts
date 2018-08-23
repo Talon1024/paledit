@@ -197,14 +197,9 @@ export class PaletteSelectionService {
         this._selectionRange.subRanges.splice(subRangeIdx, 1);
       } else if (action === 'split') {
         // Modify original sub-range
-        let newStart = rEnd + 1;
+        const newStart = rEnd + 1;
         const newEnd = this._selectionRange.subRanges[subRangeIdx].end;
-        let oldEnd = rStart - 1;
-        if (rReversed) {
-          newStart += 1;
-        } else {
-          oldEnd -= 1;
-        }
+        const oldEnd = rStart - 1;
         const newSubRange = new ColourSubRange(newStart, newEnd);
         this._selectionRange.subRanges[subRangeIdx].end = oldEnd;
         this._selectionRange.subRanges.splice(subRangeIdx + 1, 0, newSubRange);
