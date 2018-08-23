@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { PaletteIoService } from '../palette-io.service';
 import { PalcollectionOperationService } from '../palcollection-operation.service';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { KeyboardService } from '../keyboard.service';
 
 @Component({
   selector: 'app-main-editor-view',
@@ -16,15 +17,17 @@ export class MainEditorViewComponent implements OnInit {
   public readonly cmapFileName = 'colormap.lmp';
   public cmapDataURI: SafeUrl;
 
-  public helpVisible = false;
-  public loadVisible = false;
+  public introVisible: boolean;
+  public helpVisible: boolean;
+  public loadVisible: boolean;
 
   private readonly assetUrl = 'assets';
 
   constructor(private httpClient: HttpClient,
     private paletteIo: PaletteIoService,
     private colOp: PalcollectionOperationService,
-    private sanitizer: DomSanitizer) {}
+    private sanitizer: DomSanitizer,
+    private keyboard: KeyboardService) {}
 
   ngOnInit() {
     this.httpClient.get(`${this.assetUrl}/bwpal.pal`, {
@@ -33,9 +36,18 @@ export class MainEditorViewComponent implements OnInit {
       const palette = new Uint8Array(resp);
       this.colOp.createFromPlaypal(palette);
     });
+
     this.cmapDataURI = this.sanitizer.bypassSecurityTrustUrl('data:,Not implemented yet.');
     this.paletteIo.loadStateObv.subscribe((loading) => {
       this.loadVisible = loading;
+    });
+
+    this.introVisible = true;
+    this.helpVisible = false;
+    this.loadVisible = false;
+    this.keyboard.observeKeyboard(['Enter', 'Escape']).subscribe(() => {
+      this.introVisible = false;
+      this.helpVisible = false;
     });
   }
 
