@@ -20,8 +20,10 @@ describe('KeyboardService', () => {
       'key': 'Shift'
     });
     const listener = service.observeKeyboard(['Control', 'Shift']).subscribe((keyState: KeyState) => {
-      if (keyState.key === 'Shift') { expect(keyState).toBeTruthy(); }
+      if (keyState.key === 'Shift') { expect(keyState).toBeTruthy();
+      } else if (keyState.key === 'C') { expect(keyState).toBeFalsy(); }
     });
+    expect(listener).toBeTruthy();
     document.dispatchEvent(invalidEvent);
     document.dispatchEvent(validEvent);
   }));

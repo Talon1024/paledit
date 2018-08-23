@@ -1,4 +1,4 @@
-import { ReadableRealNumberPipe } from './percent.pipe';
+import { ReadableRealNumberPipe } from './readable-real-number.pipe';
 
 describe('PercentPipe', () => {
   it('create an instance', () => {

@@ -62,7 +62,7 @@ export class GradientEditorComponent implements OnInit {
 
   // Gradient stop navigation
 
-  handleStopClickDown(e: MouseEvent, idx: number) {
+  handleStopClickDown(_e: MouseEvent, idx: number) {
     // TODO: Click and drag
     this.setCurStopIdx(idx);
   }

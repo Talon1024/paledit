@@ -1,4 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { SafeStyle } from '@angular/platform-browser';
 import { Palcolour } from '../palette-model/palcolour';
 import { ColourRange } from '../palette-model/colour-range';
 import { Rgbcolour } from '../palette-model/rgb';
@@ -29,6 +30,9 @@ export class PaletteViewComponent implements OnInit {
     let n = Number.parseInt(value, 10);
     n = Math.max(n, 0);
     this.palSel.interval = n;
+  }
+  public get palColumns(): SafeStyle {
+    return this.settings.palColumnStyle();
   }
 
   constructor(

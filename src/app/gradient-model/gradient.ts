@@ -72,30 +72,6 @@ export class Gradient {
     this.stops.sort(Gradient.sortFunction);
   }
 
-  private stopPalIndex(stop: GradientStop, range: ColourRange): number {
-    const length = range.getLength();
-    const rangePalIdxs = range.getIndices();
-    const stopPos = stop.position;
-
-    const rangeIdx = Math.floor(stopPos * length);
-    const palIdx = rangePalIdxs[rangeIdx];
-    return palIdx;
-  }
-
-  getStopPalIdxs(range: ColourRange): number[] {
-    const stopIdxs: number[] = new Array(this.stops.length);
-    for (let i = 0; i < this.stops.length; i++) {
-      const stop = this.stops[i];
-      stopIdxs[i] = this.stopPalIndex(stop, range);
-    }
-    return stopIdxs;
-  }
-
-
-  private stopRangeIndex(stop: GradientStop, range: ColourRange): number {
-    return this.stopIndex(stop, range.getLength());
-  }
-
   private stopIndex(stop: GradientStop, length: number): number {
     length -= 1;
     const stopPos = stop.position;

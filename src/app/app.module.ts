@@ -1,5 +1,5 @@
 // Core stuff and modules
-import { LOCALE_ID, NgModule } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
@@ -27,15 +27,8 @@ import { MessageLogComponent } from './message-log/message-log.component';
 import { ModalComponent } from './modal/modal.component';
 import { SelectedColourComponent } from './selected-colour/selected-colour.component';
 
-// Languages/locales
-import localeEnCanada from '@angular/common/locales/en-CA';
-import localeEnCanadaExtra from '@angular/common/locales/extra/en-CA';
-import localeIt from '@angular/common/locales/it';
-import localeItExtra from '@angular/common/locales/extra/it';
 import { PluralPipe } from './plural.pipe';
 import { ReadableRealNumberPipe } from './readable-real-number.pipe';
-
-const assetUrl = '/assets/';
 
 @NgModule({
   declarations: [
@@ -59,7 +52,6 @@ const assetUrl = '/assets/';
     ColorPickerModule
   ],
   providers: [
-    {provide: LOCALE_ID, useValue: 'en-CA'},
     KeyboardService,
     PaletteIoService,
     SettingsService,

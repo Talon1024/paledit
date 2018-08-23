@@ -1,4 +1,4 @@
-<div class="palette" [style.grid-template-columns]="settings.palColumnStyle()" *ngIf="palColours">
+<div class="palette" [style.grid-template-columns]="palColumns" *ngIf="palColours">
   <div *ngFor="let colour of palColours"
     class="palcolour" [ngStyle]="getStyles(colour)"
     [class.selected]="colour.selected"
