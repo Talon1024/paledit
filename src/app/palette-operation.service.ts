@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Palette } from './palette-model/palette';
-import { Rgb, Hsv, Rgbcolour } from './palette-model/rgb';
+import { Rgb, Rgbcolour } from './palette-model/rgb';
 import { ColourRange } from './palette-model/colour-range';
 import { ColourSubRange } from './palette-model/colour-sub-range';
 import { GradientService } from './gradient.service';
@@ -133,12 +133,12 @@ export class PaletteOperationService {
       if (factorGrad) { factor = o.factor; }
 
       const newColour = Rgbcolour.fromHsv({
-        hue: use.hue ? origHsv.hue : hue,
-        saturation: use.saturation ? origHsv.saturation : saturation,
-        value: use.value ? origHsv.value : value
+        hue: use.hue ? hue : origHsv.hue,
+        saturation: use.saturation ? saturation : origHsv.saturation,
+        value: use.value ? value : origHsv.value
       });
 
-      const combined: Rgb = Rgbcolour.blend(colour, factor, newColour, Rgbcolour.tint);
+      const combined: Rgb = Rgbcolour.blend(pCol, factor, newColour, Rgbcolour.tint);
 
       return combined;
     });
