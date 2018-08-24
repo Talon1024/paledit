@@ -24,7 +24,7 @@ export class GradientEditorComponent implements OnInit {
   public curColour: string;
   public curStopPos: number;
 
-  public selectedColours: RgbEx[]; // TODO: Write structural directive to repeat an element a certain number of times.
+  public selectedColours: RgbEx[];
   public selectedColourCount: number;
 
   public gradient: Gradient;

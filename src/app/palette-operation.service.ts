@@ -132,13 +132,15 @@ export class PaletteOperationService {
       let factor = 1.0;
       if (factorGrad) { factor = o.factor; }
 
-      const combined: Hsv = {
-        hue: use.hue ? hue * factor + origHsv.hue * (1.0 - factor) : origHsv.hue,
-        saturation: use.saturation ? saturation * factor + origHsv.saturation * (1.0 - factor) : origHsv.saturation,
-        value: use.value ? value * factor + origHsv.value * (1.0 - factor) : origHsv.value
-      };
+      const newColour = Rgbcolour.fromHsv({
+        hue: use.hue ? origHsv.hue : hue,
+        saturation: use.saturation ? origHsv.saturation : saturation,
+        value: use.value ? origHsv.value : value
+      });
 
-      return Rgbcolour.fromHsv(combined);
+      const combined: Rgb = Rgbcolour.blend(colour, factor, newColour, Rgbcolour.tint);
+
+      return combined;
     });
   }
 
