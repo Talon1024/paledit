@@ -1,11 +1,17 @@
 import { Component, OnInit } from '@angular/core';
-import { Rgbcolour } from '../palette-model/rgb';
+import { Rgb, Rgbcolour } from '../palette-model/rgb';
 import { Gradient, GradientStop } from '../gradient-model/gradient';
 import { DomSanitizer, SafeStyle, SafeUrl } from '@angular/platform-browser';
 import { PaletteOperationService } from '../palette-operation.service';
 import { PaletteSelectionService } from '../palette-selection.service';
 import { GradientService } from '../gradient.service';
-import { indexArray } from '../index-array';
+
+interface RgbEx extends Rgb {
+  hex: string;
+  hue: number;
+  saturation: number;
+  value: number;
+}
 
 @Component({
   selector: 'app-gradient-editor',
@@ -18,7 +24,7 @@ export class GradientEditorComponent implements OnInit {
   public curColour: string;
   public curStopPos: number;
 
-  public selectedColours: number[]; // TODO: Write structural directive to repeat an element a certain number of times.
+  public selectedColours: RgbEx[]; // TODO: Write structural directive to repeat an element a certain number of times.
   public selectedColourCount: number;
 
   public gradient: Gradient;
@@ -41,7 +47,7 @@ export class GradientEditorComponent implements OnInit {
         count = sr.getLength();
       }
       this.selectedColourCount = count;
-      this.selectedColours = indexArray(count);
+      this.updateGradientPreview();
     });
   }
 
@@ -51,13 +57,22 @@ export class GradientEditorComponent implements OnInit {
     return this.sanitizer.bypassSecurityTrustStyle(this.gradient.toCssString());
   }
 
-  previewColourStyle(idx: number): SafeStyle {
-    const colour = this.gradient.colourIn(idx, this.selectedColourCount);
-    return this.sanitizer.bypassSecurityTrustStyle(Rgbcolour.toHex(colour));
+  previewColourStyle(colour: RgbEx): SafeStyle {
+    return this.sanitizer.bypassSecurityTrustStyle(colour.hex);
   }
 
   stopPositionStyle(stop: GradientStop): SafeStyle {
     return this.sanitizer.bypassSecurityTrustStyle(stop.posPercent());
+  }
+
+  private updateGradientPreview() {
+    this.selectedColours = [];
+    for (let i = 0; i < this.selectedColourCount; i++) {
+      const {red, green, blue} = this.gradient.colourIn(i, this.selectedColourCount);
+      const {hue, saturation, value} = Rgbcolour.hsv({red, green, blue});
+      const hex = Rgbcolour.toHex({red, green, blue});
+      this.selectedColours.push({red, green, blue, hue, saturation, value, hex});
+    }
   }
 
   // Gradient stop navigation
@@ -143,6 +158,7 @@ export class GradientEditorComponent implements OnInit {
       reader.onload = () => {
         this.grad.import(reader.result);
         this.gradient = this.grad.gradient;
+        this.updateGradientPreview();
       };
     }
   }

@@ -43,6 +43,46 @@
   height: 30px;
   margin: 2px;
 }
+
+.colour {
+  position: relative;
+}
+
+.colour-info {
+  position: absolute;
+  top: 100%;
+  z-index: 5;
+  justify-content: center;
+  width: 100%;
+}
+
+.colour-info-display {
+  background-color: #000;
+  color: #FFF;
+  padding: 4px;
+  border-radius: 7px;
+}
+
+.colour-info-display::before {
+  content: "";
+  background-color: #000;
+  transform: rotate(45deg);
+  width: 10px;
+  height: 10px;
+  position: absolute;
+  left: 50%;
+  top: -5px;
+  z-index: 4;
+}
+
+.colour > .colour-info {
+  display: none;
+}
+
+.colour:hover > .colour-info {
+  display: flex;
+}
+
 .sbs {
   display: flex;
 }

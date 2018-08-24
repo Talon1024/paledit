@@ -143,13 +143,13 @@ export class Rgbcolour {
   }
 
   static toHex(colour: Rgb): string {
-    const rgb = {red: '', green: '', blue: ''};
+    const rgb: string[] = [];
     for (const part of Rgbcolour.components) {
-      rgb[part] = colour[part].toString(16);
-      if (rgb[part].length < 2) { rgb[part] = `0${rgb[part]}`; }
+      let hexbyte = colour[part].toString(16);
+      if (hexbyte.length < 2) { hexbyte = `0${hexbyte}`; }
+      rgb.push(hexbyte);
     }
-    const { red, green, blue } = rgb;
-    return `#${red}${green}${blue}`;
+    return `#${rgb.join('')}`;
   }
 
   static opposite(colour: Rgb, minDiff: number = 0): Rgb {

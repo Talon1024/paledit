@@ -14,8 +14,6 @@ export class MainEditorViewComponent implements OnInit {
 
   public readonly palFileName = 'palette.pal';
   public palDataURI: SafeUrl;
-  public readonly cmapFileName = 'colormap.lmp';
-  public cmapDataURI: SafeUrl;
 
   public introVisible: boolean;
   public helpVisible: boolean;
@@ -37,7 +35,6 @@ export class MainEditorViewComponent implements OnInit {
       this.colOp.createFromPlaypal(palette);
     });
 
-    this.cmapDataURI = this.sanitizer.bypassSecurityTrustUrl('data:,Not implemented yet.');
     this.paletteIo.loadStateObv.subscribe((loading) => {
       this.loadVisible = loading;
     });
