@@ -4,7 +4,7 @@ import { Palcolour } from '../palette-model/palcolour';
 import { ColourRange } from '../palette-model/colour-range';
 import { Rgbcolour } from '../palette-model/rgb';
 import { KeyboardService } from '../keyboard.service';
-import { SettingsService } from '../settings.service';
+import { DomSanitizer } from '@angular/platform-browser';
 import { PaletteOperationService, IPaletteUpdate } from '../palette-operation.service';
 import { PaletteSelectionService } from '../palette-selection.service';
 
@@ -32,12 +32,14 @@ export class PaletteViewComponent implements OnInit {
     this.palSel.interval = n;
   }
   public get palColumns(): SafeStyle {
-    return this.settings.palColumnStyle();
+    const numColumns = Math.round(Math.sqrt(this.palOp.getLength()));
+    const style = `repeat(${numColumns}, 1fr)`;
+    return this.sanitizer.bypassSecurityTrustStyle(style);
   }
 
   constructor(
     private keyboard: KeyboardService,
-    private settings: SettingsService,
+    private sanitizer: DomSanitizer,
     private palOp: PaletteOperationService,
     private palSel: PaletteSelectionService) {
     }
