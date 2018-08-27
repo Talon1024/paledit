@@ -70,3 +70,11 @@ label > * {
 .importer {
   display: none;
 }
+
+.flex { display: flex; }
+
+.flex-spaced { justify-content: space-around; }
+.flex-spaced > * { flex-grow: 1; }
+
+.flex-center { justify-content: center; }
+.flex-wrap { flex-wrap: wrap; }

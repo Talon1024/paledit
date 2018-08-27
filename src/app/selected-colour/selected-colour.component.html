@@ -8,7 +8,7 @@
   <div *ngIf="rangeLen === 1">
     Colour #{{idx}}: <span [colorPicker]="curHex" cpPosition="bottom" (colorPickerChange)="setCurColour($event)"
       class="colourPick widget" [style.background-color]="curHex"></span><br/>
-    <div class="sbs">
+    <div class="flex flex-spaced">
       <table>
         <tr>
           <th>Red:</th>

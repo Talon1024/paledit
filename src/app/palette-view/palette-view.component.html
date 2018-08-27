@@ -1,13 +1,15 @@
-<div class="palette" [style.grid-template-columns]="palColumns" *ngIf="palColours">
-  <div *ngFor="let colour of palColours"
-    class="palcolour" [ngStyle]="getStyles(colour)"
-    [class.selected]="colour.selected"
-    (click)="selectPalColour(colour.index)">
-      <div *ngIf="showConflicts && colour.conflicts.length > 0" class="conflict">!</div>
-      <span *ngIf="showNumbers">#{{colour.index}}</span>
+<div class="flex flex-center">
+  <div class="palette" [style.grid-template-columns]="palColumns" *ngIf="palColours">
+    <div *ngFor="let colour of palColours"
+      class="palcolour" [ngStyle]="getStyles(colour)"
+      [class.selected]="colour.selected"
+      (click)="selectPalColour(colour.index)">
+        <div *ngIf="showConflicts && colour.conflicts.length > 0" class="conflict">!</div>
+        <span *ngIf="showNumbers">#{{colour.index}}</span>
+    </div>
   </div>
 </div>
-<div class="sbs-wrap">
+<div class="flex flex-wrap">
   <span *ngIf="multiple" class="button" (click)="selectAll()" i18n="Select (or deselect) all colours in the palette">Select all</span>
   <label *ngIf="multiple" i18n="Sets the interval for shift-click selection">Interval: <input type="number" [(ngModel)]="selInterval" class="narrowInput" min="0"></label>
   <label i18n="Prevents selection from changing when navigating between palettes"><input type="checkbox" [(ngModel)]="lockSelection">Lock selection</label>

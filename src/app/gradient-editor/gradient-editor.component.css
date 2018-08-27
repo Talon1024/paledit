@@ -35,9 +35,6 @@
   animation: .3s ease-in-out 0s infinite alternate forwards running stopSelected;
 }
 
-.gradient-preview {
-  display: flex;
-}
 .gradient-preview > * {
   flex-grow: 1;
   height: 30px;
@@ -81,9 +78,5 @@
 }
 
 .colour:hover > .colour-info {
-  display: flex;
-}
-
-.sbs {
   display: flex;
 }

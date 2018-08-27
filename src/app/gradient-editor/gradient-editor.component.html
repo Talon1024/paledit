@@ -10,7 +10,7 @@
         [style.left]="stopPositionStyle(stop)"
         (mousedown)="handleStopClickDown($event, i)"></div>
     </div>
-    <div class="gradient-preview" *ngIf="selectedColourCount > 0">
+    <div class="gradient-preview flex" *ngIf="selectedColourCount > 0">
       <div *ngFor="let colour of selectedColours" class="colour" [style.background-color]="previewColourStyle(colour)">
         <div class="colour-info">
           <div class="colour-info-display">
@@ -40,7 +40,7 @@
       </div>
     </div>
   </div>
-  <div class="sbs">
+  <div class="flex">
     <div class="">
       <span class="button" (click)="addStop()" i18n="Add a stop to the gradient">+</span>
       <span class="button" (click)="removeStop()" i18n="Remove a stop from the gradient">-</span>
