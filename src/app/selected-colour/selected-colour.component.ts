@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Rgbcolour, Rgb, Hsv } from '../palette-model/rgb';
+import { Rgb } from '../palette-model/rgb';
 import { Palcolour } from '../palette-model/palcolour';
 import { PaletteOperationService } from '../palette-operation.service';
 import { PaletteSelectionService } from '../palette-selection.service';
@@ -9,13 +9,20 @@ import { PaletteSelectionService } from '../palette-selection.service';
   templateUrl: './selected-colour.component.html',
   styleUrls: ['./selected-colour.component.css']
 })
-export class SelectedColourComponent implements OnInit {
+export class SelectedColourComponent implements OnInit, Palcolour {
+
+  public index: number;
+  public selected: boolean;
+  private _rgb: Rgb;
+  public get rgb() { return this._rgb; }
+  public set rgb(val: Rgb) {
+    this._rgb = val;
+    this.conflicts = this.palOp.getDuplicates(this.index);
+    this.palOp.setColourAt(this.index, val);
+  }
+  public conflicts: number[];
 
   public rangeLen: number;
-  private idx: number;
-  public palColour: Palcolour;
-  public curHex: string;
-  public curHsv: Hsv;
 
   constructor(private palOp: PaletteOperationService,
     private palSel: PaletteSelectionService) { }
@@ -24,8 +31,8 @@ export class SelectedColourComponent implements OnInit {
     this.rangeLen = 0;
     this.palOp.palChangeObv.subscribe(() => {
       if (this.rangeLen === 1) {
-        const colour = this.palOp.colourAt(this.idx);
-        this.setRgb(colour, this.idx);
+        this._rgb = this.palOp.colourAt(this.index);
+        this.conflicts = this.palOp.getDuplicates(this.index);
       }
     });
     this.palSel.palSelectObv.subscribe((range) => {
@@ -34,29 +41,20 @@ export class SelectedColourComponent implements OnInit {
       } else {
         this.rangeLen = range.getLength();
         if (this.rangeLen === 1) {
-          this.idx = range.getIndices()[0];
-          const colour = this.palOp.colourAt(this.idx);
-          this.setRgb(colour, this.idx);
+          this.index = range.getIndices()[0];
+          this._rgb = this.palOp.colourAt(this.index);
+          this.conflicts = this.palOp.getDuplicates(this.index);
         }
       }
     });
   }
 
-  private setRgb(rgb: Rgb, idx: number) {
-    this.curHex = Rgbcolour.toHex(rgb);
-    this.curHsv = Rgbcolour.hsv(rgb);
-    this.palColour = {
-      index: idx,
-      selected: true,
-      rgb,
-      conflicts: this.palOp.getDuplicates(idx)
-    };
-  }
-
-  setCurColour(hex: string) {
-    const rgb = Rgbcolour.fromHex(hex);
-    this.setRgb(rgb, this.idx);
-    this.palOp.setColourAt(this.idx, rgb);
+  get conflictStr() {
+    if (this.conflicts.length > 0) {
+      return this.conflicts.map((n) => `#${n.toString(10)}`).join(', ');
+    } else {
+      return null;
+    }
   }
 
 }

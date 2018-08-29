@@ -6,41 +6,9 @@
   </div>
   <!-- 1 colour selected -->
   <div *ngIf="rangeLen === 1">
-    Colour #{{idx}}: <span [colorPicker]="curHex" cpPosition="bottom" (colorPickerChange)="setCurColour($event)"
-      class="colourPick widget" [style.background-color]="curHex"></span><br/>
-    <div class="flex flex-spaced">
-      <table>
-        <tr>
-          <th>Red:</th>
-          <td>{{palColour.rgb.red}}</td>
-        </tr>
-        <tr>
-          <th>Green:</th>
-          <td>{{palColour.rgb.green}}</td>
-        </tr>
-        <tr>
-          <th>Blue:</th>
-          <td>{{palColour.rgb.blue}}</td>
-        </tr>
-      </table>
-      <table>
-        <tr>
-          <th>Hue:</th>
-          <td>{{curHsv.hue | realnum}}°</td>
-        </tr>
-        <tr>
-          <th>Saturation:</th>
-          <td>{{curHsv.saturation * 100 | realnum}}%</td>
-        </tr>
-        <tr>
-          <th>Value:</th>
-          <td>{{curHsv.value}}</td>
-        </tr>
-      </table>
-    </div>
-    <div *ngIf="palColour.conflicts.length > 0" class="conflicts">
-      Same as:
-      <span *ngFor="let x of palColour.conflicts">#{{x}}, </span>
+    Colour #{{index}}: <app-colour-info [(rgb)]="rgb" [pickable]="true"></app-colour-info>
+    <div *ngIf="conflicts.length > 0" class="conflicts">
+      Same as: {{conflictStr}}
     </div>
   </div>
 </div>

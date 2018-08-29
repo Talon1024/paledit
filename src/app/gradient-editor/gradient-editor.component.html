@@ -14,27 +14,7 @@
       <div *ngFor="let colour of selectedColours" class="colour" [style.background-color]="previewColourStyle(colour)">
         <div class="colour-info">
           <div class="colour-info-display">
-            <p><span class="colourPick widget" [style.background-color]="previewColourStyle(colour)"></span> {{colour.hex}}</p>
-            <table>
-              <tr>
-                <th>Red:</th>
-                <td>{{colour.red}}</td>
-                <th>Hue:</th>
-                <td>{{colour.hue | realnum}}</td>
-              </tr>
-              <tr>
-                <th>Green:</th>
-                <td>{{colour.green}}</td>
-                <th>Saturation:</th>
-                <td>{{colour.saturation | realnum}}</td>
-              </tr>
-              <tr>
-                <th>Blue:</th>
-                <td>{{colour.blue}}</td>
-                <th>Value:</th>
-                <td>{{colour.value}}</td>
-              </tr>
-            </table>
+            <app-colour-info [rgb]="colour"></app-colour-info>
           </div>
         </div>
       </div>

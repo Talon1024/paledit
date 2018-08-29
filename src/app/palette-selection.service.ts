@@ -294,7 +294,7 @@ export class PaletteSelectionService {
       this._selectionRange = this.rangeForIdx(colourIndex);
     }
 
-    console.log(keyState, this._selectionRange.subRanges);
+    // console.log(keyState, this._selectionRange.subRanges);
     if (this._selectionRange.subRanges.length === 0) {
       this._selectionRange = null;
     }

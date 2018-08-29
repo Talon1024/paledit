@@ -26,6 +26,7 @@ import { PaletteOperationsComponent } from './palette-operations/palette-operati
 import { MessageLogComponent } from './message-log/message-log.component';
 import { ModalComponent } from './modal/modal.component';
 import { SelectedColourComponent } from './selected-colour/selected-colour.component';
+import { ColourInfoComponent } from './colour-info/colour-info.component';
 
 import { PluralPipe } from './plural.pipe';
 import { ReadableRealNumberPipe } from './readable-real-number.pipe';
@@ -42,6 +43,7 @@ import { ReadableRealNumberPipe } from './readable-real-number.pipe';
     ModalComponent,
     MessageLogComponent,
     SelectedColourComponent,
+    ColourInfoComponent,
     PluralPipe,
     ReadableRealNumberPipe
   ],

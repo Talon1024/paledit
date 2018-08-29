@@ -6,13 +6,6 @@ import { PaletteOperationService } from '../palette-operation.service';
 import { PaletteSelectionService } from '../palette-selection.service';
 import { GradientService } from '../gradient.service';
 
-interface RgbEx extends Rgb {
-  hex: string;
-  hue: number;
-  saturation: number;
-  value: number;
-}
-
 @Component({
   selector: 'app-gradient-editor',
   templateUrl: './gradient-editor.component.html',
@@ -24,7 +17,7 @@ export class GradientEditorComponent implements OnInit {
   public curColour: string;
   public curStopPos: number;
 
-  public selectedColours: RgbEx[];
+  public selectedColours: Rgb[];
   public selectedColourCount: number;
 
   public gradient: Gradient;
@@ -57,8 +50,9 @@ export class GradientEditorComponent implements OnInit {
     return this.sanitizer.bypassSecurityTrustStyle(this.gradient.toCssString());
   }
 
-  previewColourStyle(colour: RgbEx): SafeStyle {
-    return this.sanitizer.bypassSecurityTrustStyle(colour.hex);
+  previewColourStyle(colour: Rgb): SafeStyle {
+    const hex = Rgbcolour.toHex(colour);
+    return this.sanitizer.bypassSecurityTrustStyle(hex);
   }
 
   stopPositionStyle(stop: GradientStop): SafeStyle {
@@ -68,10 +62,8 @@ export class GradientEditorComponent implements OnInit {
   private updateGradientPreview() {
     this.selectedColours = [];
     for (let i = 0; i < this.selectedColourCount; i++) {
-      const {red, green, blue} = this.gradient.colourIn(i, this.selectedColourCount);
-      const {hue, saturation, value} = Rgbcolour.hsv({red, green, blue});
-      const hex = Rgbcolour.toHex({red, green, blue});
-      this.selectedColours.push({red, green, blue, hue, saturation, value, hex});
+      const colour = this.gradient.colourIn(i, this.selectedColourCount);
+      this.selectedColours.push(colour);
     }
   }
 
