@@ -140,9 +140,12 @@ export class PaletteSelectionService {
       [rStart, rEnd] = [rEnd, rStart];
       rReversed = true;
     }
+
+    /*
     if (rStart + rIncrement === rEnd) {
       return this.selectSingle(rStart);
     }
+    */
 
     if (this._selectionRange == null && rStart != null) {
       this._selectionRange = new ColourRange([new ColourSubRange(rStart, rEnd)]);
