@@ -3,6 +3,7 @@
   <div class="">
     <span class="button" (click)="reverse()">Reverse</span>
   </div>
+  <hr>
   <div class="">
     <span class="button" (click)="tint(tintPct.value)" i18n="Blends the source colours with the selected colour">Tint:</span>
     <span [(colorPicker)]="tintColour" cpPosition="bottom" class="colourPick widget" [style.background-color]="tintColour"></span>
@@ -27,8 +28,8 @@
   <hr>
   <div class="">
     <p>{{numCopiedColours}} colours copied.</p>
-    <span class="button" (click)="copy()">Copy selection</span>
-    <span class="button" (click)="paste()">Paste</span>
+    <span class="button" (click)="copy()">Copy selected</span>
+    <span class="button" (click)="paste()">Paste in place</span>
     <span class="button" (click)="resizePaste()">Paste (resize)</span>
     <span class="button" (click)="movePaste()">Paste (move)</span>
   </div>

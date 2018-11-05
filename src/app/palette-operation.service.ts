@@ -195,7 +195,7 @@ export class PaletteOperationService {
   }
 
   pasteColoursInPlace() {
-    if (this.colourClipboard == null || this.colourClipboard.length === 0) { return; }
+    if (this.numCopiedColours === 0) { return; }
     for (const pCol of this.colourClipboard) {
       this.palette.setColour(pCol.idx, pCol.rgb);
     }
@@ -205,7 +205,7 @@ export class PaletteOperationService {
   }
 
   pasteColoursResize() {
-    if (this.colourClipboard == null || this.colourClipboard.length === 0) { return; }
+    if (this.numCopiedColours === 0) { return; }
     const range = this.getRange();
     const origSize = this.colourClipboard.length;
     const newSize = range.getLength();
@@ -226,7 +226,7 @@ export class PaletteOperationService {
   }
 
   pasteColoursMove() {
-    if (this.colourClipboard == null || this.colourClipboard.length === 0) { return; }
+    if (this.numCopiedColours === 0) { return; }
     const range = this.getRange();
     const indices = range.getIndices();
     const end = Math.min(this.colourClipboard.length, indices.length);
