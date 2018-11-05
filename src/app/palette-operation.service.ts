@@ -210,10 +210,47 @@ export class PaletteOperationService {
     const origSize = this.colourClipboard.length;
     const newSize = range.getLength();
     const indices = range.getIndices();
-    if (newSize > origSize) {
-      // Expand
-    } else if (newSize < origSize) {
-      // Shrink
+
+    const colours = this.colourClipboard
+      .sort((a, b) => a.idx - b.idx)
+      .map((col, idx) => {
+        col.idx = Math.floor(idx / (this.colourClipboard.length - 1) * newSize);
+        return col;
+      });
+
+    if (newSize !== origSize) {
+      for (let idx = 0; idx < newSize; idx++) {
+        const coloursAtCurIdx = colours.filter((col) => col.idx === idx);
+        if (coloursAtCurIdx.length === 0) {
+          const nextColourIdxIdx = colours.findIndex((col) => {
+            return col.idx > idx;
+          });
+          const nextColourIdx = colours[nextColourIdxIdx].idx;
+          const prevColourIdx = colours[nextColourIdxIdx - 1].idx;
+          const nextColour = colours[nextColourIdxIdx].rgb;
+          const prevColour = colours[nextColourIdxIdx - 1].rgb;
+
+          const prevColourDist = idx - prevColourIdx;
+          const blendFactor = prevColourDist / (nextColourIdx - prevColourIdx);
+          const averageColour = Rgbcolour.blend(prevColour, blendFactor, nextColour, Rgbcolour.tint);
+
+          this.palette.setColour(indices[idx], averageColour);
+        } else {
+          const blendFactor = 1 / coloursAtCurIdx.length;
+
+          // Calculate average colour
+          let averageColour: Rgb;
+          if (coloursAtCurIdx.length === 1) {
+            averageColour = coloursAtCurIdx[0].rgb;
+          } else {
+            averageColour = coloursAtCurIdx.reduce<Rgb>((avg, col) => {
+              return Rgbcolour.blend(avg, blendFactor, col.rgb, Rgbcolour.tint);
+            }, coloursAtCurIdx[0].rgb);
+          }
+
+          this.palette.setColour(indices[idx], averageColour);
+        }
+      }
     } else {
       // Move
       this.pasteColoursMove();

@@ -150,7 +150,7 @@ export class GradientEditorComponent implements OnInit {
       const file = input.files[0];
       reader.readAsText(file);
       reader.onload = () => {
-        this.grad.import(reader.result);
+        this.grad.import(reader.result as string);
         this.gradient = this.grad.gradient;
         this.updateGradientPreview();
       };
