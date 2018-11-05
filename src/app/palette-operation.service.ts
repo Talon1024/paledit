@@ -35,6 +35,7 @@ export class PaletteOperationService {
 
   private palette: Palette;
   private colourClipboard: ICopiedColour[];
+  public get numCopiedColours() { return this.colourClipboard.length || 0; }
   public readonly palChangeObv: Observable<IPaletteUpdate>;
   private _palChangeObservers: Observer<IPaletteUpdate>[];
 
@@ -193,10 +194,46 @@ export class PaletteOperationService {
     }
   }
 
-  pasteColours() {
+  pasteColoursInPlace() {
+    if (this.colourClipboard == null || this.colourClipboard.length === 0) { return; }
     for (const pCol of this.colourClipboard) {
       this.palette.setColour(pCol.idx, pCol.rgb);
     }
+    for (const obs of this._palChangeObservers) {
+      obs.next({pal: this.palette, new: false});
+    }
+  }
+
+  pasteColoursResize() {
+    if (this.colourClipboard == null || this.colourClipboard.length === 0) { return; }
+    const range = this.getRange();
+    const origSize = this.colourClipboard.length;
+    const newSize = range.getLength();
+    const indices = range.getIndices();
+    if (newSize > origSize) {
+      // Expand
+    } else if (newSize < origSize) {
+      // Shrink
+    } else {
+      // Move
+      this.pasteColoursMove();
+      return;
+    }
+
+    for (const obs of this._palChangeObservers) {
+      obs.next({pal: this.palette, new: false});
+    }
+  }
+
+  pasteColoursMove() {
+    if (this.colourClipboard == null || this.colourClipboard.length === 0) { return; }
+    const range = this.getRange();
+    const indices = range.getIndices();
+    const end = Math.min(this.colourClipboard.length, indices.length);
+    for (let idx = 0; idx < end; idx++) {
+      this.palette.setColour(indices[idx], this.colourClipboard[idx].rgb);
+    }
+
     for (const obs of this._palChangeObservers) {
       obs.next({pal: this.palette, new: false});
     }

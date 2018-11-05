@@ -13,6 +13,7 @@ export class PaletteOperationsComponent implements OnInit {
   public tintColour: string;
   public colourizeColour: string;
   public colourizeUse: HsvUsage;
+  public numCopiedColours: number;
 
   constructor(private palOp: PaletteOperationService) { }
 
@@ -25,6 +26,7 @@ export class PaletteOperationsComponent implements OnInit {
       value: false
     };
     this.gradFactor = false;
+    this.numCopiedColours = 0;
   }
 
   tint(pct: string) {
@@ -50,10 +52,19 @@ export class PaletteOperationsComponent implements OnInit {
 
   copy() {
     this.palOp.copyColours();
+    this.numCopiedColours = this.palOp.numCopiedColours;
   }
 
   paste() {
-    this.palOp.pasteColours();
+    this.palOp.pasteColoursInPlace();
+  }
+
+  resizePaste() {
+    this.palOp.pasteColoursResize();
+  }
+
+  movePaste() {
+    this.palOp.pasteColoursMove();
   }
 
   reverse() {

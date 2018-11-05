@@ -24,10 +24,16 @@
     <input class="narrowInput widget" type="number" step="1" min="-360" max="360" value="0" #hueShiftAmt>
     degrees
   </div>
+  <hr>
   <div class="">
-    <span class="button" (click)="copy()">Copy selection</span> <span class="button" (click)="paste()">Paste</span>
+    <p>{{numCopiedColours}} colours copied.</p>
+    <span class="button" (click)="copy()">Copy selection</span>
+    <span class="button" (click)="paste()">Paste</span>
+    <span class="button" (click)="resizePaste()">Paste (resize)</span>
+    <span class="button" (click)="movePaste()">Paste (move)</span>
   </div>
   <div class="">
-    <label><input type="checkbox" [(ngModel)]="gradFactor"> Use red channel from gradient as factor</label>
+    <label><p><input type="checkbox" [(ngModel)]="gradFactor"> Use red channel from gradient as factor</p>
+    <p>NOTE: Only affects tint, colourize, saturate, and hue shift.</p></label>
   </div>
 </div>
