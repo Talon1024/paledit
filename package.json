@@ -1,6 +1,6 @@
 {
   "name": "paledit",
-  "version": "0.72",
+  "version": "0.73",
   "license": "MIT",
   "scripts": {
     "ng": "ng",
