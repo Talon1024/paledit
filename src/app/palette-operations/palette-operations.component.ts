@@ -70,4 +70,8 @@ export class PaletteOperationsComponent implements OnInit {
   reverse() {
     this.palOp.reverse();
   }
+
+  undo() {
+    this.palOp.undo();
+  }
 }

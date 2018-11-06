@@ -25,6 +25,11 @@ interface ICopiedColour {
   idx: number;
 }
 
+interface IUndoStep {
+  palette: Palette;
+  colIdx: number;
+}
+
 export interface IPaletteUpdate {
   pal: Palette;
   new: boolean;
@@ -33,7 +38,9 @@ export interface IPaletteUpdate {
 @Injectable()
 export class PaletteOperationService {
 
+  private prevPalette: Palette;
   private palette: Palette;
+  private undoHistory: IUndoStep[];
   private colourClipboard: ICopiedColour[];
   public get numCopiedColours() { return this.colourClipboard.length || 0; }
   public readonly palChangeObv: Observable<IPaletteUpdate>;
@@ -60,13 +67,40 @@ export class PaletteOperationService {
         this.setPalette(pal);
       }
     });
+    this.undoHistory = [];
   }
 
   setPalette(pal: Palette) {
+    if (this.palette) {
+      this.prevPalette = Palette.fromData(this.palette.data, this.palette.numColours);
+    }
     this.palette = pal;
     this.palSel.numColours = pal.numColours;
     for (const obs of this._palChangeObservers) {
       obs.next({pal: this.palette, new: true});
+    }
+  }
+
+  private updatePalette(undoable: boolean) {
+    if (undoable) {
+      this.undoHistory.push({
+        palette: this.prevPalette,
+        colIdx: this.colOp.palIndex
+      });
+    }
+    for (const obs of this._palChangeObservers) {
+      obs.next({pal: this.palette, new: false});
+    }
+  }
+
+  undo(): boolean {
+    const undoStep = this.undoHistory.pop();
+    console.log(undoStep);
+    if (undoStep) {
+      this.colOp.setPal(undoStep.colIdx, undoStep.palette);
+      return true;
+    } else {
+      return false;
     }
   }
 
@@ -79,6 +113,7 @@ export class PaletteOperationService {
   }
 
   private rangeOperate(op: (options: IRangeOperationOptions) => Rgb) {
+    this.prevPalette = Palette.fromData(this.palette.data, this.palette.numColours);
     const range = this.getRange();
     const grad = this.grad.gradient;
     const rangeLen = range.getLength();
@@ -90,12 +125,11 @@ export class PaletteOperationService {
         factor: grad.colourIn(rangeIdx, rangeLen).red / 255
       }));
     }
-    for (const obs of this._palChangeObservers) {
-      obs.next({pal: this.palette, new: false});
-    }
+    this.updatePalette(true);
   }
 
   reverse() {
+    this.prevPalette = Palette.fromData(this.palette.data, this.palette.numColours);
     const swap = (firstIdx: number, secondIdx: number) => {
       if (firstIdx === secondIdx) { return; }
 
@@ -110,12 +144,11 @@ export class PaletteOperationService {
     for (let x = 0, y = indices.length - 1, m = Math.floor(indices.length / 2); x < m; x++, y--) {
       swap(indices[x], indices[y]);
     }
-    for (const obs of this._palChangeObservers) {
-      obs.next({pal: this.palette, new: false});
-    }
+    this.updatePalette(true);
   }
 
   tint(colour: Rgb, pct: number, factorGrad: boolean = false) {
+    this.prevPalette = Palette.fromData(this.palette.data, this.palette.numColours);
     this.rangeOperate((o) => {
       let factor = pct;
       if (factorGrad) { factor *= o.factor; }
@@ -125,6 +158,7 @@ export class PaletteOperationService {
   }
 
   colourize(colour: Rgb, use: HsvUsage, factorGrad: boolean = false) {
+    this.prevPalette = Palette.fromData(this.palette.data, this.palette.numColours);
     this.rangeOperate((o) => {
       const {hue, saturation, value} = Rgbcolour.hsv(colour);
       const pCol = this.palette.colourAt(o.pIdx);
@@ -146,6 +180,7 @@ export class PaletteOperationService {
   }
 
   saturate(pct: number, factorGrad: boolean = false) {
+    this.prevPalette = Palette.fromData(this.palette.data, this.palette.numColours);
     this.rangeOperate((o) => {
       let pct2 = pct;
       const pCol = this.palette.colourAt(o.pIdx);
@@ -161,6 +196,7 @@ export class PaletteOperationService {
   }
 
   shiftHue(by: number, factorGrad: boolean = false) {
+    this.prevPalette = Palette.fromData(this.palette.data, this.palette.numColours);
     this.rangeOperate((o) => {
       let by2 = by;
       const pCol = this.palette.colourAt(o.pIdx);
@@ -179,6 +215,7 @@ export class PaletteOperationService {
   }
 
   applyGradient() {
+    this.prevPalette = Palette.fromData(this.palette.data, this.palette.numColours);
     const grad = this.grad.gradient;
     this.rangeOperate((o) => {
       return grad.colourAt(o.pIdx, o.range);
@@ -196,16 +233,16 @@ export class PaletteOperationService {
 
   pasteColoursInPlace() {
     if (this.numCopiedColours === 0) { return; }
+    this.prevPalette = Palette.fromData(this.palette.data, this.palette.numColours);
     for (const pCol of this.colourClipboard) {
       this.palette.setColour(pCol.idx, pCol.rgb);
     }
-    for (const obs of this._palChangeObservers) {
-      obs.next({pal: this.palette, new: false});
-    }
+    this.updatePalette(true);
   }
 
   pasteColoursResize() {
     if (this.numCopiedColours === 0) { return; }
+    this.prevPalette = Palette.fromData(this.palette.data, this.palette.numColours);
     const range = this.getRange();
     const origSize = this.colourClipboard.length;
     const newSize = range.getLength();
@@ -264,13 +301,12 @@ export class PaletteOperationService {
       return;
     }
 
-    for (const obs of this._palChangeObservers) {
-      obs.next({pal: this.palette, new: false});
-    }
+    this.updatePalette(true);
   }
 
   pasteColoursMove() {
     if (this.numCopiedColours === 0) { return; }
+    this.prevPalette = Palette.fromData(this.palette.data, this.palette.numColours);
     const range = this.getRange();
     const indices = range.getIndices();
     const end = Math.min(this.colourClipboard.length, indices.length);
@@ -278,9 +314,7 @@ export class PaletteOperationService {
       this.palette.setColour(indices[idx], this.colourClipboard[idx].rgb);
     }
 
-    for (const obs of this._palChangeObservers) {
-      obs.next({pal: this.palette, new: false});
-    }
+    this.updatePalette(true);
   }
 
   colourAt(idx: number): Rgb {
@@ -288,10 +322,9 @@ export class PaletteOperationService {
   }
 
   setColourAt(idx: number, colour: Rgb) {
+    this.prevPalette = Palette.fromData(this.palette.data, this.palette.numColours);
     this.palette.setColour(idx, colour);
-    for (const obs of this._palChangeObservers) {
-      obs.next({pal: this.palette, new: false});
-    }
+    this.updatePalette(true);
   }
 
   getLength(): number {
