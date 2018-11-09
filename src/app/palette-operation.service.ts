@@ -64,14 +64,14 @@ export class PaletteOperationService {
     this.colOp.palChangeObv.subscribe((cidx: number) => {
       const pal = this.colOp.getPal(cidx);
       if (pal) {
-        this.setPalette(pal);
+        this.newPalette(pal);
       }
     });
     this.undoHistory = [];
     this.undoing = false;
   }
 
-  setPalette(pal: Palette) {
+  newPalette(pal: Palette) {
     this.palette = pal;
     this.palSel.numColours = pal.numColours;
     for (const obs of this._palChangeObservers) {
@@ -79,6 +79,8 @@ export class PaletteOperationService {
     }
     if (this.undoing) {
       this.undoing = false;
+    } else {
+      this.undoHistory = [];
     }
   }
 
@@ -246,16 +248,17 @@ export class PaletteOperationService {
     const range = this.getRange();
     const origSize = this.colourClipboard.length;
     const newSize = range.getLength();
-    const indices = range.getIndices();
-
-    const colours = this.colourClipboard
-      .sort((a, b) => a.idx - b.idx)
-      .map((col, idx) => {
-        col.idx = Math.floor(idx / (this.colourClipboard.length - 1) * newSize);
-        return col;
-      });
 
     if (newSize !== origSize) {
+
+      const indices = range.getIndices();
+      const colours = this.colourClipboard
+        .sort((a, b) => a.idx - b.idx)
+        .map((col, idx) => {
+          col.idx = Math.floor(idx / (this.colourClipboard.length - 1) * newSize);
+          return col;
+        });
+
       if (origSize === 1) {
         const colour = colours[0].rgb;
         for (let idx = 0; idx < newSize; idx++) {
