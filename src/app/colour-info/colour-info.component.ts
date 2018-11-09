@@ -27,13 +27,17 @@ export class ColourInfoComponent implements OnInit {
   public get curHex() { return this._hex; }
   public set curHex(val: string) {
     this.rgb = Rgbcolour.fromHex(val);
-    this.rgbChange.emit(this.rgb);
   }
 
   constructor(private sanitizer: DomSanitizer) {}
 
   previewColourStyle(colour: string): SafeStyle {
     return this.sanitizer.bypassSecurityTrustStyle(colour);
+  }
+
+  saveColour(colour: string) {
+    this.curHex = colour;
+    this.rgbChange.emit(this._rgb);
   }
 
   ngOnInit() {

@@ -1,5 +1,6 @@
 <div>
   <span *ngIf="pickable; else nonPickable" [(colorPicker)]="curHex" cpPosition="bottom"
+    (colorPickerClose)="saveColour($event)"
     class="colourPick widget" [style.background-color]="previewColourStyle(curHex)"></span>
   <ng-template #nonPickable>
     <span class="colourPick widget" [style.background-color]="previewColourStyle(curHex)"></span>
